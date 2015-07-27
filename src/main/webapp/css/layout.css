@@ -1,0 +1,25 @@
+@charset "UTF-8";
+
+html, body, ul, ol, li, p, h1, h2, h3, h4, h5, h6, table, thead, tbody, tr, th, td, hr, img, strong {
+	margin: 0px;
+	padding: 0px;
+	border: none;
+	border-collapse: collapse;
+}
+body {
+	background: #000000 url('../img/bg/default.jpg') repeat-y center top;
+	padding: 20px 0px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #FFFFFF;
+	font-size: 13px;
+}
+a, a:link, a:visited {
+	color: #90C040;
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
+strong {
+	font-weight: bold;
+}
