@@ -23,3 +23,20 @@ a:hover {
 strong {
 	font-weight: bold;
 }
+
+#content {
+	width: 765px;
+	margin: 0 auto;
+	text-align: left;
+	position: relative;
+}
+#footer {
+	clear: both;
+	font-size: 11px;
+	text-align: center;
+	margin-top: 10px;
+}
+
+.clear {
+	clear: both;
+}

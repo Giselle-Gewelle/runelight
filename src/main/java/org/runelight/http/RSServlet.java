@@ -1,13 +1,12 @@
-package io.almighty.rs.http;
+package org.runelight.http;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-
-import io.almighty.rs.Config;
-import io.almighty.rs.db.RSDataSource;
+import org.runelight.Config;
+import org.runelight.db.RSDataSource;
 
 public final class RSServlet extends HttpServlet {
 

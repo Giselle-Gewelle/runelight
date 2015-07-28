@@ -5,7 +5,7 @@
 		<#local mod = "www" />
 	</#if>
 	
-	<#if secure>
+	<#if secure && sslEnabled>
 		<#local protocol = "https" />
 	<#else>
 		<#local protocol = "http" />

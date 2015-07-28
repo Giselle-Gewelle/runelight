@@ -1,6 +1,6 @@
-package io.almighty.rs.controller.impl.account;
+package org.runelight.controller.impl.account;
 
-import io.almighty.rs.controller.Controller;
+import org.runelight.controller.Controller;
 
 public final class CreateAccount extends Controller {
 

@@ -1,4 +1,4 @@
-package io.almighty.rs.http;
+package org.runelight.http;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,13 +13,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-
-import io.almighty.rs.Config;
-import io.almighty.rs.controller.Controller;
-import io.almighty.rs.controller.impl.account.CreateAccount;
-import io.almighty.rs.controller.impl.main1.Title;
-import io.almighty.rs.db.RSDataSource;
-import io.almighty.rs.util.ModUtil;
+import org.runelight.Config;
+import org.runelight.controller.Controller;
+import org.runelight.controller.impl.account.CreateAccount;
+import org.runelight.controller.impl.main1.Title;
+import org.runelight.db.RSDataSource;
+import org.runelight.util.ModUtil;
 
 public final class RequestHandler {
 	
@@ -73,7 +72,7 @@ public final class RequestHandler {
 			controller = controllerClass.newInstance();
 			
 			if(controller.isSecure() && !request.isSecure()) {
-				// TODO make this secure
+				// TODO make this more secure (for the client?)
 				LOG.warn("Client attempted an insecure connection on a secure-only section of the website, 403 response returned.");
 				sendError(response, 403);
 				return;
@@ -105,6 +104,7 @@ public final class RequestHandler {
 		request.setAttribute("sslEnabled", Config.isSslEnabled());
 		request.setAttribute("gameName", Config.getGameName());
 		request.setAttribute("companyName", Config.getCompanyName());
+		request.setAttribute("securePage", controller.isSecure());
 		
 		try {
 			controller.setup(request, response, requestType, requestIP, requestTime, con, mod, dest);

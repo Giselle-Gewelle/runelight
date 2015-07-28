@@ -1,4 +1,4 @@
-package io.almighty.rs.http;
+package org.runelight.http;
 
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -19,8 +19,9 @@ import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import io.almighty.rs.db.RSDataSource;
+import org.runelight.db.RSDataSource;
+import org.runelight.http.HttpRequestType;
+import org.runelight.http.RequestHandler;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(RSDataSource.class)

@@ -1,4 +1,4 @@
-package io.almighty.rs.db;
+package org.runelight.db;
 
 import java.sql.Connection;
 import java.sql.SQLException;

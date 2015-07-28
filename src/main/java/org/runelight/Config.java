@@ -1,4 +1,4 @@
-package io.almighty.rs;
+package org.runelight;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,7 +18,7 @@ public final class Config {
 	
 	public static void init() {
 		Properties properties = new Properties();
-		File propertiesFile = new File(System.getenv("TOMCAT_HOME") + File.separatorChar + "conf" + File.separatorChar + "rs.properties");
+		File propertiesFile = new File(System.getenv("TOMCAT_HOME") + File.separatorChar + "conf" + File.separatorChar + "runelight.properties");
 		
 		if(!propertiesFile.exists()) {
 			LOG.error("Properties file not found!");

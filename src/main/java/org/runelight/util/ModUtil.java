@@ -1,4 +1,4 @@
-package io.almighty.rs.util;
+package org.runelight.util;
 
 public final class ModUtil {
 	

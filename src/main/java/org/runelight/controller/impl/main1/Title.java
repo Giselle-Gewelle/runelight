@@ -1,6 +1,6 @@
-package io.almighty.rs.controller.impl.main1;
+package org.runelight.controller.impl.main1;
 
-import io.almighty.rs.controller.Controller;
+import org.runelight.controller.Controller;
 
 public final class Title extends Controller {
 

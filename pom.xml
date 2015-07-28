@@ -16,15 +16,15 @@
 			</plugin>
 		</plugins>
 		
-		<finalName>ProjectAlmighty</finalName>
+		<!--<finalName>RuneLight</finalName>-->
 	</build>
 
-	<groupId>io.almighty</groupId>
-	<artifactId>Almighty</artifactId>
+	<groupId>org.runelight</groupId>
+	<artifactId>runelight</artifactId>
 	<version>0.0.1</version>
 	<packaging>war</packaging>
 
-	<name>Project Almighty</name>
+	<name>RuneLight</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>

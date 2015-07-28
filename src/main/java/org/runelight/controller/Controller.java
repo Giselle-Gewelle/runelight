@@ -1,11 +1,11 @@
-package io.almighty.rs.controller;
+package org.runelight.controller;
 
 import java.sql.Connection;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import io.almighty.rs.http.HttpRequestType;
+import org.runelight.http.HttpRequestType;
 
 public abstract class Controller {
 

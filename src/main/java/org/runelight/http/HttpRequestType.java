@@ -1,4 +1,4 @@
-package io.almighty.rs.http;
+package org.runelight.http;
 
 public enum HttpRequestType {
 	
