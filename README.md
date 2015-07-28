@@ -10,6 +10,8 @@ Download and setup Tomcat + MySQL Server:
 
 Set Tomcat to port 80 (if desired) and MySQL to 3306.
 
+Run 1.0.0-DDL.sql and 1.0.0-DML.sql on your new SQL server.
+
 
 runelight.properties:
 Copy file into Tomcat/conf/

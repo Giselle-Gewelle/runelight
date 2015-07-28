@@ -32,7 +32,10 @@
 </div>
 
 <div id="right">
-	
+	<div id="buttons">
+		<a class="button" href="${url('create', 'index.html', true)}"><span>CREATE A<br />FREE ACCOUNT<br />(NEW USER)</span></a>
+		<a class="button" href="${url('main1', 'detail.ws')}"><span>PLAY<br />${gameName?upper_case}<br />(EXISTING USER)</span></a>
+	</div>
 </div>
 
 <#include "../inc/footer.ftl" />

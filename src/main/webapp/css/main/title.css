@@ -17,7 +17,7 @@ fieldset {
 	display: block;
 	padding: 0 5px 5px 5px;
 	background-position: bottom right;
-	background-repeat no-repeat;
+	background-repeat: no-repeat;
 }
 legend {
 	color: #FFFFFF;
@@ -34,4 +34,44 @@ fieldset li {
 
 #right {
 	float: right;
+}
+#buttons {
+	width: 457px;
+	height: 110px;
+	position: relative;
+}
+.button {
+	width: 200px;
+	height: 100px;
+	font-family: "Arial Bold", Arial, sans-serif;
+	font-weight: bold;
+	text-align: center;
+	font-size: 20px;
+	background: url('../../img/main/title/bigButton.png') no-repeat 0 0;
+	cursor: pointer;
+	position: absolute;
+	top: 0;
+	display: block;
+	text-decoration: none;
+}
+.button:hover {
+	background-position: 0 -100px;
+}
+.button span {
+	position: absolute;
+	width: 100%;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+	color: #D1B77C !important;
+}
+.button:hover span {
+	color: #FFE8A3 !important;
+}
+#buttons .button:first-child {
+	left: 15px;
+}
+#buttons .button:last-child {
+	right: 15px;
 }
