@@ -1,0 +1,37 @@
+@charset "UTF-8";
+
+#header {
+	text-align: center;
+	width: 765px;
+	margin: 0 auto 10px;
+}
+
+#left {
+	float: left;
+}
+fieldset {
+	background-color: #000000;
+	border: 2px solid #382418;
+	width: 260px;
+	margin-bottom: 10px;
+	display: block;
+	padding: 0 5px 5px 5px;
+	background-position: bottom right;
+	background-repeat no-repeat;
+}
+legend {
+	color: #FFFFFF;
+	font-weight: bold;
+}
+fieldset ul, fieldset li {
+	margin: 0;
+	padding: 0;
+}
+fieldset li {
+	list-style: square inside;
+	width: 220px;
+}
+
+#right {
+	float: right;
+}

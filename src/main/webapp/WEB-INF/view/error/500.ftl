@@ -1,0 +1,2 @@
+<#include "errorPage.ftl" />
+<@errorPage code=500 name="Internal server error">An unknown error has occurred within the application while trying to load the requested page. Please try again or contact support if the issue persists.</@errorPage>
