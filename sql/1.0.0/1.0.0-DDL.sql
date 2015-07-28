@@ -1,11 +1,11 @@
 
-DROP DATABASE IF EXISTS `almighty`;
+DROP DATABASE IF EXISTS `runelight`;
 
-CREATE DATABASE `almighty` 
+CREATE DATABASE `runelight` 
 	DEFAULT CHARACTER SET utf8 
 	DEFAULT COLLATE utf8_general_ci;
 	
-USE `almighty`;
+USE `runelight`;
 
 
 DROP TABLE IF EXISTS `account_users`;

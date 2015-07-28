@@ -26,8 +26,8 @@
 <div id="left">
 	<@navBox title=gameName>
 		<@navItem icon="" mod="create" dest="index.html" secure=true>Create a free account (New user)</@navItem>
-		<li class="i-play"><a href="${url('main1', 'detail.ws')}">Play RuneScape (Existing user)</a></li>
-		<li class="i-screen"><a href="${url('main1', 'screenshots/screenshots.ws')}">View in-game screenshots</a></li>
+		<@navItem icon="" mod="main1" dest="detail.ws">Play ${gameName} (Existing user)</@navItem>
+		<@navItem icon="" mod="main1" dest="screenshots/screenshots.ws">View in-game screenshots</@navItem>
 	</@navBox>
 </div>
 
