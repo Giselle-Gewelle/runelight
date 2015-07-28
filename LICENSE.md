@@ -653,7 +653,7 @@ Also add information on how to contact you by electronic and paper mail.
   If the program does terminal interaction, make it output a short
 notice like this when it starts in an interactive mode:
 
-    {project}  Copyright (C) 2015  Giselle of Rune-Server.org - 
+    RuneLight  Copyright (C) 2015  Giselle of Rune-Server.org - 
     http://www.rune-server.org/members/giselle/
     This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
     This is free software, and you are welcome to redistribute it

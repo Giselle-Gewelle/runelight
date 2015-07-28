@@ -11,8 +11,8 @@
 	</fieldset>
 </#macro>
 
-<#macro navItem icon mod dest secure=false>
-	<li><a href="${url(mod, dest, secure)}"><#nested /></a></li>
+<#macro navItem mod dest icon="" secure=false>
+	<#if icon != ""><li style="list-style-image: url(${url('main1', 'img/main/title/menus/bullets/${icon}.png')});"><#else><li></#if><a href="${url(mod, dest, secure)}"><#nested /></a></li>
 </#macro>
 
 <div id="header">
@@ -25,9 +25,9 @@
 
 <div id="left">
 	<@navBox title=gameName>
-		<@navItem icon="" mod="create" dest="index.html" secure=true>Create a free account (New user)</@navItem>
-		<@navItem icon="" mod="main1" dest="detail.ws">Play ${gameName} (Existing user)</@navItem>
-		<@navItem icon="" mod="main1" dest="screenshots/screenshots.ws">View in-game screenshots</@navItem>
+		<@navItem mod="create" dest="index.html" secure=true icon="create">Create a free account (New user)</@navItem>
+		<@navItem mod="main1" dest="detail.ws" icon="play">Play ${gameName} (Existing user)</@navItem>
+		<@navItem mod="main1" dest="screenshots/screenshots.ws" icon="screenshot">View in-game screenshots</@navItem>
 	</@navBox>
 </div>
 

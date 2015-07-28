@@ -4,7 +4,7 @@ RSPS website project.
 
 
 
-# Setup
+# Local (Development) Setup
 
 Download and setup Tomcat + MySQL Server:
 
@@ -36,6 +36,16 @@ In Tomcat/conf/context.xml add a new jdbc resource:
 		  driverClassName="com.mysql.jdbc.Driver"
 		  url="jdbc:mysql://127.0.0.1:3306/runelight" 
 		  maxActive="15" maxIdle="3" />
+
+
+Add some subdomains/domains to your Windows hosts file (in whichever format you wish, the following is what I use):
+127.0.0.1             runelight.giselle
+127.0.0.1             www.runelight.giselle
+127.0.0.1             create.runelight.giselle
+127.0.0.1             news.runelight.giselle
+127.0.0.1             forum.runelight.giselle
+
+etc, etc...
 		  
 
 Add two environment variables:
