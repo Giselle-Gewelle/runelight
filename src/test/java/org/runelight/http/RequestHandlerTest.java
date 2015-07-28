@@ -19,12 +19,13 @@ import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.runelight.Config;
 import org.runelight.db.RSDataSource;
 import org.runelight.http.HttpRequestType;
 import org.runelight.http.RequestHandler;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(RSDataSource.class)
+@PrepareForTest({RSDataSource.class,Config.class})
 public final class RequestHandlerTest {
 
 	@Mock private HttpServletRequest mockRequest;
@@ -35,6 +36,7 @@ public final class RequestHandlerTest {
 	public void setup() {
 		when(mockRequest.getServerName()).thenReturn("create.test.com");
 		mockStatic(RSDataSource.class);
+		mockStatic(Config.class);
 	}
 	
 	@Test
@@ -58,6 +60,7 @@ public final class RequestHandlerTest {
 	@Test
 	public void testSubmitViewRequest_sslRequired() throws Exception {
 		when(mockRequest.getRequestURI()).thenReturn("/index.html");
+		when(Config.isSslEnabled()).thenReturn(true);
 		when(mockRequest.isSecure()).thenReturn(false);
 		
 		RequestHandler.submitViewRequest(HttpRequestType.GET, mockRequest, mockResponse);
@@ -68,6 +71,7 @@ public final class RequestHandlerTest {
 	@Test
 	public void testSubmitViewRequest_nullConnection() throws Exception {
 		when(mockRequest.getRequestURI()).thenReturn("/index.html");
+		when(Config.isSslEnabled()).thenReturn(true);
 		when(mockRequest.isSecure()).thenReturn(true);
 		when(RSDataSource.getConnection()).thenReturn(null);
 		
@@ -79,6 +83,7 @@ public final class RequestHandlerTest {
 	@Test
 	public void testSubmitViewRequest_closedConnection() throws Exception {
 		when(mockRequest.getRequestURI()).thenReturn("/index.html");
+		when(Config.isSslEnabled()).thenReturn(true);
 		when(mockRequest.isSecure()).thenReturn(true);
 		when(RSDataSource.getConnection()).thenReturn(mockConnection);
 		when(mockConnection.isClosed()).thenReturn(true);
@@ -91,6 +96,7 @@ public final class RequestHandlerTest {
 	@Test
 	public void testSubmitViewRequest_happy() throws Exception {
 		when(mockRequest.getRequestURI()).thenReturn("/index.html");
+		when(Config.isSslEnabled()).thenReturn(true);
 		when(mockRequest.isSecure()).thenReturn(true);
 		when(RSDataSource.getConnection()).thenReturn(mockConnection);
 		when(mockConnection.isClosed()).thenReturn(false);

@@ -71,11 +71,13 @@ public final class RequestHandler {
 			Class<? extends Controller> controllerClass = CONTROLLER_MAP.get(mod + " " + dest);
 			controller = controllerClass.newInstance();
 			
-			if(controller.isSecure() && !request.isSecure()) {
-				// TODO make this more secure (for the client?)
-				LOG.warn("Client attempted an insecure connection on a secure-only section of the website, 403 response returned.");
-				sendError(response, 403);
-				return;
+			if(Config.isSslEnabled()) {
+				if(controller.isSecure() && !request.isSecure()) {
+					// TODO make this more secure (for the client?)
+					LOG.warn("Client attempted an insecure connection on a secure-only section of the website, 403 response returned.");
+					sendError(response, 403);
+					return;
+				}
 			}
 		} catch(Exception e) {
 			LOG.error("Controller is null: " + mod + ":" + dest, e);
