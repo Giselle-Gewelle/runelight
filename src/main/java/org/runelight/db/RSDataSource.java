@@ -24,7 +24,7 @@ public final class RSDataSource {
 		
 		try {
 			Context context = new InitialContext();
-			dataSource = (DataSource) context.lookup("java:comp/env/jdbc/almighty");
+			dataSource = (DataSource) context.lookup("java:comp/env/jdbc/runelight");
 			
 			LOG.info("RSDataSource initialized.");
 		} catch(NamingException e) {

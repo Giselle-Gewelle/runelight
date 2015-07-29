@@ -16,7 +16,7 @@
 </#macro>
 
 <div id="header">
-	<img src="${url('main1', 'img/main/title/logos/rslogo3.gif')}" alt="${gameName}" />
+	<img src="${url('main1', 'img/main/title/logos/default1.png')}" alt="${gameName}" />
 	
 	<br />
 	
