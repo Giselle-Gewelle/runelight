@@ -1,6 +1,6 @@
 @charset "UTF-8";
 
-html, body, ul, ol, li, p, h1, h2, h3, h4, h5, h6, table, thead, tbody, tr, th, td, hr, img, strong {
+html, body, h1, h2, h3, h4, h5, h6, table, thead, tbody, tr, th, td, hr, img, strong {
 	margin: 0px;
 	padding: 0px;
 	border: none;

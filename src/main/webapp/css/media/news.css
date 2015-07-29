@@ -1,0 +1,35 @@
+@charset "UTF-8";
+
+#header {
+	width: 759px;
+	height: 130px;
+	/* TODO bg */
+	padding: 4px;
+	margin: 0 auto;
+}
+#header .titleFrame {
+	width: 165px;
+	margin-top: 50px;
+}
+
+#categoryList {
+	text-align: center;
+}
+#articleTitle {
+	font-weight: bold;
+	text-align: center;
+	margin-bottom: 1em;
+}
+#articleBody {
+	text-align: justify;
+}
+
+p#articleNotFound {
+	font-weight: bold;
+	text-align: center;
+}
+
+.arrow {
+	width: 30px;
+	height: 15px;
+}

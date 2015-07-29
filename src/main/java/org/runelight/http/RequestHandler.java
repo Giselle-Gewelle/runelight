@@ -17,6 +17,7 @@ import org.runelight.Config;
 import org.runelight.controller.Controller;
 import org.runelight.controller.impl.account.CreateAccount;
 import org.runelight.controller.impl.main1.Title;
+import org.runelight.controller.impl.media.News;
 import org.runelight.db.RSDataSource;
 import org.runelight.util.ModUtil;
 
@@ -30,7 +31,11 @@ public final class RequestHandler {
 		
 		{
 			put("main1 title.ws", Title.class);
+			
 			put("create index.html", CreateAccount.class);
+			
+			put("news newsitem.ws", News.class);
+			put("news list.ws", News.class);
 		}
 		
 	};

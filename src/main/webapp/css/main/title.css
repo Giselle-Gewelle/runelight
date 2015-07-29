@@ -119,3 +119,8 @@ fieldset li {
 	margin-top: 0.5em;
 	clear: both;
 }
+
+#newsList {
+	padding-bottom: 0.5em;
+	text-align: right;
+}

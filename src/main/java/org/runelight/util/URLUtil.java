@@ -1,0 +1,29 @@
+package org.runelight.util;
+
+import javax.servlet.http.HttpServletRequest;
+
+public final class URLUtil {
+	
+	public static int getIntParam(HttpServletRequest request, String name) {
+		String paramStr = request.getParameter(name);
+		if(paramStr == null || paramStr.length() < 1) {
+			return -1;
+		}
+		
+		if(paramStr.contains(".")) {
+			return -1;
+		}
+		
+		try {
+			int param = Integer.parseInt(paramStr);
+			if(param < 1) {
+				return -1;
+			}
+			
+			return param;
+		} catch(NumberFormatException e) {
+			return -1;
+		}
+	}
+	
+}

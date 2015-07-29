@@ -44,69 +44,33 @@
 			<div id="newsContainer">
 				<img id="newsHeader" src="${url('main1', 'img/main/title/recentNews.png')}" alt="Recent News" />
 				
-				<div class="newsItem">
-					<div class="header">
-						<div class="floatRight">02-Jul-2015</div>
-						
-						<div>This is a placeholder title</div>
-					</div>
-					
-					<img src="" alt="" />
-					
-					<div class="description">
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris luctus sodales nunc, at mattis metus tempus id. 
-						Nulla eget laoreet ligula. Duis et est suscipit, finibus orci sit amet, lobortis lacus. Fusce porta dictum lacus sit amet aliquam. 
-						Duis suscipit tincidunt vestibulum. Sed eleifend mattis ullamcorper. Nam vel lorem nulla. 
-						Fusce quis diam faucibus, tempus magna non, aliquam nisi. Suspendisse dictum leo id ante pretium aliquam. 
-						Vivamus eleifend augue at ex ornare scelerisque. Suspendisse iaculis tempus accumsan. 
-					</div>
-					
-					<div class="more">
-						<a href="">Read more...</a>
-					</div>
-				</div>
-				
-				<div class="newsItem">
-					<div class="header">
-						<div class="floatRight">01-Jul-2015</div>
-						
-						<div>This is a placeholder title</div>
-					</div>
-					
-					<img src="" alt="" />
-					
-					<div class="description">
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris luctus sodales nunc, at mattis metus tempus id. 
-						Nulla eget laoreet ligula. Duis et est suscipit, finibus orci sit amet, lobortis lacus. Fusce porta dictum lacus sit amet aliquam. 
-						Duis suscipit tincidunt vestibulum. Sed eleifend mattis ullamcorper. Nam vel lorem nulla. 
-					</div>
-					
-					<div class="more">
-						<a href="">Read more...</a>
-					</div>
-				</div>
-				
-				<div class="newsItem">
-					<div class="header">
-						<div class="floatRight">02-Jul-2015</div>
-						
-						<div>This is a placeholder title</div>
-					</div>
-					
-					<img src="" alt="" />
-					
-					<div class="description">
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris luctus sodales nunc, at mattis metus tempus id. 
-						Nulla eget laoreet ligula. Duis et est suscipit, finibus orci sit amet, lobortis lacus. Fusce porta dictum lacus sit amet aliquam. 
-						Duis suscipit tincidunt vestibulum. Sed eleifend mattis ullamcorper. Nam vel lorem nulla. 
-						Fusce quis diam faucibus, tempus magna non, aliquam nisi. Suspendisse dictum leo id ante pretium aliquam. 
-						Vivamus eleifend augue at ex ornare scelerisque. Suspendisse iaculis tempus accumsan. 
-					</div>
-					
-					<div class="more">
-						<a href="">Read more...</a>
-					</div>
-				</div>
+				<#if newsList??>
+					<#list newsList as newsItem>
+						<div class="newsItem">
+							<div class="header">
+								<div class="floatRight">${newsItem.date}</div>
+								
+								<div>${newsItem.title}</div>
+							</div>
+							
+							<img src="${url('main1', 'img/media/news/icons/${newsItem.iconName}.png')}" alt="[icon]" />
+							
+							<div class="description">
+								${newsItem.description}
+							</div>
+							
+							<div class="more">
+								<a href="${url('news', 'newsitem.ws?id=${newsItem.id}')}">Read more...</a>
+							</div>
+						</div>
+					</#list>
+				<#else>
+					<p>An error has occurred while attempting to load the news feed, please <a href="title.ws">reload the page</a> to try again.</p>
+				</#if>
+			</div>
+			
+			<div id="newsList">
+				<a href="${url('news', 'list.ws')}">Browse the news archives</a>
 			</div>
 		</div>
 		
