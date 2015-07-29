@@ -58,6 +58,32 @@ strong {
 	text-align: center;
 }
 
+.scroll {
+	position: relative;
+	width: 765px;
+	padding: 20px 0;
+	margin: 25px auto 0;
+}
+.scroll .top, .scroll .bottom {
+	position: absolute;
+	left: 0;
+	height: 49px;
+	width: 100%;
+}
+.scroll .top {
+	top: 0;
+	background: url('../img/layout/scrollTop.png') no-repeat 0 0;
+}
+.scroll .bottom {
+	bottom: 0;
+	background: url('../img/layout/scrollBottom.png') no-repeat 0 0;
+}
+.scroll .content {
+	width: 745px;
+	margin: 0 auto;
+	background: url('../img/layout/scrollContent.png') repeat-y 0 0;
+}
+
 .clear {
 	clear: both;
 }

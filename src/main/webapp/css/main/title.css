@@ -33,7 +33,7 @@ fieldset li {
 }
 
 #right {
-	float: right;
+	margin: 0 0 110px 290px;
 }
 #buttons {
 	width: 457px;
@@ -74,4 +74,18 @@ fieldset li {
 }
 #buttons .button:last-child {
 	right: 15px;
+}
+
+.scroll {
+	width: 466px;
+}
+.scroll .top {
+	background-image: url('../../img/main/title/scrollTop.png');
+}
+.scroll .bottom {
+	background-image: url('../../img/main/title/scrollBottom.png');
+}
+.scroll .content {
+	background-image: url('../../img/main/title/scrollContent.png');
+	width: 457px;
 }
