@@ -41,9 +41,73 @@
 		<div class="top"></div>
 		
 		<div class="content">
-			<br /><br /><br /><br /><br />
-			<br /><br /><br /><br /><br />
-			<br /><br /><br /><br /><br />
+			<div id="newsContainer">
+				<img id="newsHeader" src="${url('main1', 'img/main/title/recentNews.png')}" alt="Recent News" />
+				
+				<div class="newsItem">
+					<div class="header">
+						<div class="floatRight">02-Jul-2015</div>
+						
+						<div>This is a placeholder title</div>
+					</div>
+					
+					<img src="" alt="" />
+					
+					<div class="description">
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris luctus sodales nunc, at mattis metus tempus id. 
+						Nulla eget laoreet ligula. Duis et est suscipit, finibus orci sit amet, lobortis lacus. Fusce porta dictum lacus sit amet aliquam. 
+						Duis suscipit tincidunt vestibulum. Sed eleifend mattis ullamcorper. Nam vel lorem nulla. 
+						Fusce quis diam faucibus, tempus magna non, aliquam nisi. Suspendisse dictum leo id ante pretium aliquam. 
+						Vivamus eleifend augue at ex ornare scelerisque. Suspendisse iaculis tempus accumsan. 
+					</div>
+					
+					<div class="more">
+						<a href="">Read more...</a>
+					</div>
+				</div>
+				
+				<div class="newsItem">
+					<div class="header">
+						<div class="floatRight">01-Jul-2015</div>
+						
+						<div>This is a placeholder title</div>
+					</div>
+					
+					<img src="" alt="" />
+					
+					<div class="description">
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris luctus sodales nunc, at mattis metus tempus id. 
+						Nulla eget laoreet ligula. Duis et est suscipit, finibus orci sit amet, lobortis lacus. Fusce porta dictum lacus sit amet aliquam. 
+						Duis suscipit tincidunt vestibulum. Sed eleifend mattis ullamcorper. Nam vel lorem nulla. 
+					</div>
+					
+					<div class="more">
+						<a href="">Read more...</a>
+					</div>
+				</div>
+				
+				<div class="newsItem">
+					<div class="header">
+						<div class="floatRight">02-Jul-2015</div>
+						
+						<div>This is a placeholder title</div>
+					</div>
+					
+					<img src="" alt="" />
+					
+					<div class="description">
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris luctus sodales nunc, at mattis metus tempus id. 
+						Nulla eget laoreet ligula. Duis et est suscipit, finibus orci sit amet, lobortis lacus. Fusce porta dictum lacus sit amet aliquam. 
+						Duis suscipit tincidunt vestibulum. Sed eleifend mattis ullamcorper. Nam vel lorem nulla. 
+						Fusce quis diam faucibus, tempus magna non, aliquam nisi. Suspendisse dictum leo id ante pretium aliquam. 
+						Vivamus eleifend augue at ex ornare scelerisque. Suspendisse iaculis tempus accumsan. 
+					</div>
+					
+					<div class="more">
+						<a href="">Read more...</a>
+					</div>
+				</div>
+			</div>
 		</div>
 		
 		<div class="bottom"></div>

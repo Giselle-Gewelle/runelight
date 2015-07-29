@@ -87,5 +87,35 @@ fieldset li {
 }
 .scroll .content {
 	background-image: url('../../img/main/title/scrollContent.png');
-	width: 457px;
+	width: 437px;
+}
+
+#newsHeader {
+	width: 196px;
+	height: 27px;
+	display: block;
+	margin: 0 auto 16px;
+}
+#newsContainer {
+	padding: 13px 0;
+}
+.newsItem {
+	margin-bottom: 13px;
+}
+.newsItem .header {
+	font-weight: bold;
+}
+.newsItem .description {
+	padding: 2px;
+}
+.newsItem img {
+	float: right;
+	margin: 0 0 1em 1em;
+	display: block;
+	width: 50px;
+	height: 50px;
+}
+.newsItem .more {
+	margin-top: 0.5em;
+	clear: both;
 }

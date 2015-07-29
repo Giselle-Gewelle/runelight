@@ -61,7 +61,7 @@ strong {
 .scroll {
 	position: relative;
 	width: 765px;
-	padding: 20px 0;
+	padding: 22px 0;
 	margin: 25px auto 0;
 }
 .scroll .top, .scroll .bottom {
@@ -79,11 +79,20 @@ strong {
 	background: url('../img/layout/scrollBottom.png') no-repeat 0 0;
 }
 .scroll .content {
-	width: 745px;
+	width: 725px;
 	margin: 0 auto;
 	background: url('../img/layout/scrollContent.png') repeat-y 0 0;
+	padding: 25px 10px;
+	color: #000000;
+}
+.scroll .content a {
+	color: #7B4F17;
+	font-weight: bold;
 }
 
 .clear {
 	clear: both;
+}
+.floatRight {
+	float: right;
 }
