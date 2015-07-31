@@ -34,9 +34,10 @@ public final class RequestHandlerTest {
 	
 	@Before
 	public void setup() {
-		when(mockRequest.getServerName()).thenReturn("create.test.com");
 		mockStatic(RSDataSource.class);
 		mockStatic(Config.class);
+		when(mockRequest.getServerName()).thenReturn("create.test.com");
+		when(Config.getHostName()).thenReturn("create.test.com");
 	}
 	
 	@Test

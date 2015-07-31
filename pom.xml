@@ -16,6 +16,18 @@
 			</plugin>
 			
 			<plugin>
+			  	<artifactId>maven-war-plugin</artifactId>
+			  	
+			  	<configuration>
+			    	<webResources combine.children="append">
+			      		<resource>
+			        		<directory>${basedir}/target/scss/</directory>
+			      		</resource>
+			    	</webResources>
+			  	</configuration>
+			</plugin>
+			
+			<plugin>
 			   	<groupId>com.github.warmuuh</groupId>
 			   	<artifactId>libsass-maven-plugin</artifactId>
 			   	<version>0.1.5-libsass_3.2.4</version>
@@ -32,7 +44,7 @@
 			   	<configuration>
 			      	<imgPath>../img</imgPath>
 			      	<inputPath>${basedir}/src/main/sass/</inputPath>
-			      	<outputPath>${basedir}/target/</outputPath>
+			      	<outputPath>${basedir}/target/scss/css/</outputPath>
 			      	<includePath>${basedir}/src/main/sass/plugins/</includePath>
 			   	</configuration>
 			</plugin>

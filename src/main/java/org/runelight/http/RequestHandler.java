@@ -63,6 +63,12 @@ public final class RequestHandler {
 			return;
 		}
 		
+		int truncateUriIdx = Config.getHostName().indexOf('/');
+		if(truncateUriIdx >= 0) {
+			String stringToTruncate = Config.getHostName().substring(truncateUriIdx, Config.getHostName().length());
+			dest = dest.substring(stringToTruncate.length());
+		}
+		
 		if(!CONTROLLER_MAP.containsKey(mod + " " + dest)) {
 			LOG.info("Controller not found: " + mod + ":" + dest);
 			sendError(response, 404);
