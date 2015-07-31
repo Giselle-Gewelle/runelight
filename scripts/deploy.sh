@@ -1,10 +1,10 @@
-cd "$RS_HOME"
+cd "$RUNELIGHT_HOME"
 
 mvn clean install
 
 cd target
-mv *.war "$RS_HOME"
+mv *.war "$RUNELIGHT_HOME"
 
-cd "$RS_HOME"
+cd "$RUNELIGHT_HOME"
 
 cp *.war "$TOMCAT_HOME/webapps"
