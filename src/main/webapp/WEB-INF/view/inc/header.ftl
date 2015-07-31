@@ -12,6 +12,12 @@
 				<link rel="stylesheet" type="text/css" href="${url('main1', 'css/${cssImport}.css?rt=${rsTime}', securePage??)}" />
 			</#list>
 		</#if>
+		
+		<#if jsImports??>
+			<#list jsImports as jsImport>
+				<script type="text/javascript" src="${url('main1', 'js/${jsImport}.js?rt=${rsTime}', securePage??)}"></script>
+			</#list>
+		</#if>
 	</head>
 	
 	<body>

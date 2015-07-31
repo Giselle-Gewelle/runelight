@@ -30,16 +30,15 @@ strong {
 	text-align: left;
 	position: relative;
 
-	.frame, .titleFrame {
+	.frame {
 		margin: 0 auto;
 		border: 2px solid #382418;
 		background-color: #000000;
 		padding: 4px;
-	}
-	.frame {
 		width: 753px;
 	}
 	.titleFrame {
+		@extend .frame;
 		text-align: center;
 		width: 500px;
 		

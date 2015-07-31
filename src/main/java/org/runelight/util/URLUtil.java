@@ -16,7 +16,7 @@ public final class URLUtil {
 		
 		try {
 			int param = Integer.parseInt(paramStr);
-			if(param < 1) {
+			if(param < 0) {
 				return -1;
 			}
 			

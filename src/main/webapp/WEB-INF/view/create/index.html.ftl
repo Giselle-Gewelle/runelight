@@ -3,7 +3,7 @@
 
 <div class="titleFrame">
 	<h1>Create an Account</h1>
-	<a href="">Main Menu</a>
+	<a href="${url('main1', 'title.ws')}">Main Menu</a>
 </div>
 
 <br />
