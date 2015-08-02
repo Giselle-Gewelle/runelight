@@ -1,14 +1,20 @@
 package org.runelight.controller.impl.account;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.runelight.Config;
 import org.runelight.controller.Controller;
+import org.runelight.db.dao.account.CreateAccountDAO;
 import org.runelight.http.HttpRequestType;
+import org.runelight.security.Password;
 import org.runelight.util.CountryUtil;
+import org.runelight.util.StringUtil;
 import org.runelight.view.dto.account.CreateAccountDTO;
 
 public final class CreateAccount extends Controller {
@@ -46,13 +52,7 @@ public final class CreateAccount extends Controller {
 		} else {
 			if(!getRequestType().equals(HttpRequestType.POST) && !getDest().equals("chooseagerange.ws")) {
 				LOG.warn("User attempting to access an account creation section using the wrong request method.");
-				
-				try {
-					sendHome();
-				} catch (IOException e) {
-					LOG.error("IOException occurred while attempting to redirect an invalid account creation request.", e);
-				}
-				
+				sendHome();
 				return;
 			}
 			
@@ -63,11 +63,189 @@ public final class CreateAccount extends Controller {
 					setMaps();
 					validateAgeAndCountry();
 					break;
+				case "chooseusername.ws":
+					if(!validateAgeAndCountry()) {
+						sendHome();
+						return;
+					}
+					
+					int usernameReturnCode = validateUsername();
+					if(usernameReturnCode > -1) {
+						getRequest().setAttribute("usernameError", usernameReturnCode);
+					}
+					break;
+				case "choosepassword.ws":
+					if(!validateAgeAndCountry() || validateUsername() != -1) {
+						sendHome();
+						return;
+					}
+					
+					if(!validateTerms()) {
+						getRequest().setAttribute("termsError", true);
+					}
+					break;
+				case "createaccount.ws":
+					if(!validateAgeAndCountry() || validateUsername() != -1 || !validateTerms()) {
+						sendHome();
+						return;
+					}
+					
+					int passwordReturnCode = validatePassword();
+					if(passwordReturnCode > -1) {
+						getRequest().setAttribute("passwordError", passwordReturnCode);
+					}
+					break;
 			}
 			
 			getRequest().setAttribute("createData", data);
 		}
-	} 
+	}
+	
+	/**
+	 * Submits the data entered by the user to create a new user account. 
+	 * @param passwordStr The password to assign to the account.
+	 * @return -1 on success, 6 on failure (generally means a SQL error).
+	 */
+	private int submitAccountCreation(String passwordStr) {
+		Date date = new Date();
+		Password password = new Password(passwordStr);
+		
+		try {
+			if(!CreateAccountDAO.createAccount(getDbConnection(), data.getUsername(), password.getHash(), password.getSalt(), Integer.parseInt(data.getAgeRange()), 
+					Integer.parseInt(data.getCountryCode()), date, getRequestIP())) {
+				return 6;
+			}
+		} catch(NumberFormatException e) {
+			LOG.error("NumberFormatException while attempting to create user account.", e);
+			return 6;
+		}
+		
+		return -1;
+	}
+	
+	/**
+	 * Validates the password fields and privacy policy agreement.
+	 * @return -1 if the passwords are valid, or something greater than -1 if invalid 
+	 * (used to determine which error string to pull, which are all stored in the FTL).
+	 */
+	private int validatePassword() {
+		String password1 = getRequest().getParameter("password1");
+		if(password1 == null || password1.equals("")) {
+			return 0;
+		}
+		
+		int password1Length = password1.length();
+		if(password1Length < 5 || password1Length > 20) {
+			return 1;
+		}
+		
+		String password2 = getRequest().getParameter("password2");
+		if(password2 == null || !password2.equals(password1)) {
+			return 2;
+		}
+		
+		String regex = "^[a-zA-Z0-9]{5,20}$";
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(password1);
+		if(!matcher.find()) {
+			return 3;
+		}
+		
+		if(Password.passwordContainsUsername(data.getUsername(), password1)) {
+			return 4;
+		}
+		
+		String privacyStr = getRequest().getParameter("agree_privacy");
+		if(privacyStr == null || !privacyStr.equals("on")) {
+			return 5;
+		}
+		
+		return submitAccountCreation(password1);
+	}
+	
+	/**
+	 * Validates the terms+conditions agreement.
+	 * @return True if the user has agreed, false if not.
+	 */
+	private boolean validateTerms() {
+		String termsStr = getRequest().getParameter("agree_terms");
+		boolean success = true;
+		
+		if(termsStr == null || !termsStr.equals("on")) {
+			success = false;
+		}
+		
+		return success;
+	}
+	
+	/**
+	 * Validates the username field.
+	 * @return -1 if the username is valid, or something greater than -1 if invalid 
+	 * (used to determine which error string to pull, which are all stored in the FTL).
+	 */
+	private int validateUsername() {
+		String username = getRequest().getParameter("username");
+		if(username == null) {
+			return 0;
+		}
+
+		/*
+		 * Replace any leading and trailing spaces (underscores).
+		 */
+		username = username.replace("_", " ").trim();
+		if(username.equals("")) {
+			return 0;
+		}
+		
+		username = username.toLowerCase();
+		int length = username.length();
+		
+		if(length < 1) {
+			return 0;
+		}
+		
+		if(length > 12) {
+			return 1;
+		}
+		
+		/*
+		 * Replace all spaces with underscores, and make sure there are no double-underscores.
+		 */
+		username = username.replace(" ", "_");
+		while(username.contains("__")) {
+			username = username.replace("__", "_");
+		}
+		
+		/*
+		 * Make sure the username is using valid characters.
+		 */
+		String regex = "^[a-z0-9_]{1,12}$";
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(username);
+		if(!matcher.find()) {
+			return 1;
+		}
+		
+		// TODO check if username violates T+C. Check for offensive names, etc...
+		
+		/*
+		 * Now make sure the username isn't already in use by another user.
+		 */
+		int usernameCheckCode = CreateAccountDAO.usernameExists(getDbConnection(), username);
+		if(usernameCheckCode == -1) {
+			// SQL Error
+			return 3;
+		}
+		if(usernameCheckCode == 1) {
+			// Username already exists!
+			// TODO username suggestions
+			return 2;
+		}
+		
+		data.setUsername(username);
+		data.setFormattedUsername(StringUtil.formatUsername(username));
+		return -1;
+	}
 	
 	/**
 	 * Validates the age range and country of residence fields, setting an error code for each if they are invalid.
@@ -112,10 +290,13 @@ public final class CreateAccount extends Controller {
 	
 	/**
 	 * Sends a redirect back to the client for the account creation index.
-	 * @throws IOException
 	 */
-	private void sendHome() throws IOException {
+	private void sendHome() {
+		try {
 		getResponse().sendRedirect((Config.isSslEnabled() ? "https" : "http") + "://create." + Config.getHostName() + "/index.html");
+		} catch(IOException e) {
+			LOG.error("IOException while attempting to send the user back to the account creation index.", e);
+		}
 	}
 	
 	/**

@@ -7,7 +7,7 @@
 	
 	<div class="frame">
 		<form method="post" action="${url('create', 'chooseusername.ws', true)}" autocomplete="off">
-			<div style="margin: 20px;">
+			<div id="usernameForm">
 				Creating an account for ${gameName} is a very simple process.<br /><br />
 				To begin you must first select a username. Once you have found a username that you like and is not already taken, you will be asked to choose a password.<br /><br />
 				When you have done that, you are ready to play!<br /><br />

@@ -40,6 +40,51 @@ table {
 	}
 }
 
+#usernameForm {
+	padding: 20px;
+}
+#termsForm {
+	padding: 4px;
+	text-align: center;
+}
+#passwordForm td {
+	padding: 5px;
+}
+#creationComplete {
+	padding: 10px;
+}
+
+#playButton {
+	width: 200px;
+	height: 100px;
+	font-family: "Arial Bold", Arial, sans-serif;
+	font-weight: bold;
+	text-align: center;
+	font-size: 20px;
+	background: url('../../img/main/title/bigButton.png') no-repeat 0 0;
+	cursor: pointer;
+	display: block;
+	text-decoration: none;
+	margin: 0 auto;
+	position: relative;
+
+	span {
+		position: absolute;
+		width: 100%;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		-webkit-transform: translate(-50%, -50%);
+		color: #D1B77C !important;
+	}
+}
+#playButton:hover {
+	background-position: 0 -100px;
+}
+#playButton:hover span {
+	color: #FFE8A3 !important;
+}
+
 .alert {
     color: #FF0000;
 }

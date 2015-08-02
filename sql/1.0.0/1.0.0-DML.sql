@@ -30,4 +30,12 @@ INSERT INTO `media_news` (
 
 
 
+-- Testing
+
+INSERT INTO `account_users` ( 
+	`username`, `passwordHash`, `passwordSalt`, `ageRange`, `countryCode`, `creationDate`, `creationIP`
+) VALUES ( 
+	'test', '', '', '3', '225', '2015-08-02 12:56:00', '127.0.0.1'
+);
+
 

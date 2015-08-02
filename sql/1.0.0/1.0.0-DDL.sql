@@ -46,20 +46,43 @@ CREATE TABLE `media_news` (
 DELIMITER $$
 
 
-DROP PROCEDURE IF EXISTS `account_checkUsername`;
+DROP PROCEDURE IF EXISTS `account_checkUsername` $$
 CREATE PROCEDURE `account_checkUsername` (
 	IN `in_username`		VARCHAR(12),
 	OUT `out_returnCode`	BIT
 ) 
 BEGIN 
-	SELECT COUNT(`id`) INTO `out_returnCode` 
+	SELECT COUNT(`accountId`) INTO `out_returnCode` 
 	FROM `account_users` 
 	WHERE `username` = `in_username` 
 	LIMIT 1;
 END $$
 
 
-DROP PROCEDURE IF EXISTS `media_getTitleNews`;
+DROP PROCEDURE IF EXISTS `account_createUserAccount` $$
+CREATE PROCEDURE `account_createUserAccount` (
+	IN `in_username`		VARCHAR(12),
+	IN `in_passwordHash`	CHAR(128),
+	IN `in_passwordSalt`	VARCHAR(50),
+	IN `in_ageRange`		TINYINT(1),
+	IN `in_countryCode`		TINYINT(3), 
+	IN `in_date`			DATETIME, 
+	IN `in_ip`				VARCHAR(128),
+	OUT `out_returnCode`	TINYINT(1)
+) 
+BEGIN 
+	INSERT INTO `account_users` (
+		`username`, `passwordHash`, `passwordSalt`, `ageRange`, `countryCode`, `creationDate`, `creationIP`
+	) VALUES (
+		`in_username`, `in_passwordHash`, `in_passwordSalt`, `in_ageRange`, `in_countryCode`, `in_date`, `in_ip`
+	);
+	
+	SELECT ROW_COUNT() INTO `out_returnCode`;
+END $$
+
+
+
+DROP PROCEDURE IF EXISTS `media_getTitleNews` $$
 CREATE PROCEDURE `media_getTitleNews` () 
 BEGIN 
 	SELECT `id`, `date`, `title`, `iconName`, `description` 
@@ -69,7 +92,7 @@ BEGIN
 END $$
 
 
-DROP PROCEDURE IF EXISTS `media_getNewsList`;
+DROP PROCEDURE IF EXISTS `media_getNewsList` $$
 CREATE PROCEDURE `media_getNewsList` (
 	IN `in_cat`			TINYINT(2),
 	IN `in_page`		SMALLINT(5),
@@ -103,7 +126,7 @@ BEGIN
 END $$
 
 
-DROP PROCEDURE IF EXISTS `media_getNewsItem`;
+DROP PROCEDURE IF EXISTS `media_getNewsItem` $$
 CREATE PROCEDURE `media_getNewsItem` (
 	IN `in_articleId`	MEDIUMINT(8),
 	OUT `out_nextId`	MEDIUMINT(8),
