@@ -46,6 +46,19 @@ CREATE TABLE `media_news` (
 DELIMITER $$
 
 
+DROP PROCEDURE IF EXISTS `account_checkUsername`;
+CREATE PROCEDURE `account_checkUsername` (
+	IN `in_username`		VARCHAR(12),
+	OUT `out_returnCode`	BIT
+) 
+BEGIN 
+	SELECT COUNT(`id`) INTO `out_returnCode` 
+	FROM `account_users` 
+	WHERE `username` = `in_username` 
+	LIMIT 1;
+END $$
+
+
 DROP PROCEDURE IF EXISTS `media_getTitleNews`;
 CREATE PROCEDURE `media_getTitleNews` () 
 BEGIN 

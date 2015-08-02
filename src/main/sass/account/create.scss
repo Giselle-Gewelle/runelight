@@ -1,2 +1,75 @@
 @charset "UTF-8";
 
+#progress {
+    margin: 0px auto 3px auto;
+    text-align: center;
+
+	.stage {
+	    padding: 2px 4px;
+	    background-color: #382418;
+	    border-top: 1px solid #000000;
+	    border-bottom: 1px solid #A39EA2;
+	    border-left: 1px solid #000000;
+	    color: #A39EA2;
+	}
+	
+	.finish {
+	    border-right: 1px solid #000000;
+	}
+	.active {
+	    background-color: #382418;
+	    border-left: 1px solid #A39EA2;
+	    border-top: 1px solid #A39EA2;
+	    border-bottom: 1px solid #382418;
+	    color: #D9A813;
+	}
+	.completed {
+	    color: #D9A813;
+	}
+}
+
+table {
+    width: 100%;
+    
+    td {
+	    padding: 5px;
+	}
+	
+	#passwordTable td {
+		padding: 5px;
+	}
+}
+
+.alert {
+    color: #FF0000;
+}
+
+#playOuter {
+    display: block;
+    position: relative;
+    width: 180px;
+    height: 80px;
+    margin: 5px auto;
+    background: #808080;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    border: 5px outset #909090;
+    
+	#play {
+	    display: block;
+	    background: transparent url('../../../img/main1/title/doublebutton_play.gif') no-repeat left top;
+	    height: 100px;
+	    width: 200px;
+	    position: absolute;
+	    top: -10px;
+	    left: -10px;
+	}
+	#play:hover {
+	    background-position: 0 -100px;
+	}
+}
+#playOuter:hover {
+    background: #A0A0A0;
+    border-color: #ffffff;
+}

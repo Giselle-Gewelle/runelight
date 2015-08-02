@@ -33,6 +33,10 @@ public final class RequestHandler {
 			put("main1 title.ws", Title.class);
 			
 			put("create index.html", CreateAccount.class);
+			put("create chooseagerange.ws", CreateAccount.class);
+			put("create chooseusername.ws", CreateAccount.class);
+			put("create choosepassword.ws", CreateAccount.class);
+			put("create createaccount.ws", CreateAccount.class);
 			
 			put("news newsitem.ws", News.class);
 			put("news list.ws", News.class);
