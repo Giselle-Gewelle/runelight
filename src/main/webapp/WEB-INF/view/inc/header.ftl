@@ -18,6 +18,9 @@
 				<script type="text/javascript" src="${url('main1', 'js/${jsImport}.js?rt=${rsTime}', securePage??)}"></script>
 			</#list>
 		</#if>
+		
+		<link rel="icon" type="image/x-icon" href="${url('main1', 'favicon.ico')}" />
+		<link rel="shortcut icon" type="image/x-icon" href="${url('main1', 'favicon.ico')}" />
 	</head>
 	
 	<body>

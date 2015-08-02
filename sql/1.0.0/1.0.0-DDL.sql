@@ -46,6 +46,41 @@ CREATE TABLE `media_news` (
 DELIMITER $$
 
 
+DROP PROCEDURE IF EXISTS `account_creationFloodCheck` $$ 
+CREATE PROCEDURE `account_creationFloodCheck` (
+	IN `in_smallDate`		DATETIME, 
+	IN `in_largeDate`		DATETIME, 
+	IN `in_maxForLarge`		TINYINT(3), 
+	IN `in_ip`				VARCHAR(128),
+	OUT `out_returnCode`	BIT
+) 
+BEGIN 
+	DECLARE `creationCount` TINYINT(3) DEFAULT 0;
+	
+	SELECT COUNT(`accountId`) INTO `creationCount` 
+	FROM `account_users` 
+	WHERE `creationIP` = `in_ip` 
+		AND `creationDate` > `in_smallDate` 
+	ORDER BY `creationDate` DESC 
+	LIMIT 1;
+		
+	IF (`creationCount` < 1) THEN 
+		SELECT COUNT(`accountId`) INTO `creationCount` 
+		FROM `account_users` 
+		WHERE `creationIP` = `in_ip` 
+			AND `creationDate` > `in_largeDate` 
+		ORDER BY `creationDate` DESC 
+		LIMIT 5;
+		
+		IF (`creationCount` >= `in_maxForLarge`) THEN 
+			SET `out_returnCode` = 1;
+		END IF;
+	ELSE 
+		SET `out_returnCode` = 1;
+	END IF;
+END $$
+
+
 DROP PROCEDURE IF EXISTS `account_checkUsername` $$
 CREATE PROCEDURE `account_checkUsername` (
 	IN `in_username`		VARCHAR(12),

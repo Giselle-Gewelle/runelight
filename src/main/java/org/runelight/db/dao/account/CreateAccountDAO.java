@@ -13,6 +13,25 @@ public final class CreateAccountDAO {
 	
 	private static final Logger LOG = Logger.getLogger(CreateAccountDAO.class);
 	
+	public static boolean tooManyAttempts(Connection con, String ip, Date smallDate, Date largeDate, int maxForLarge) {
+		try {
+			String sql = "CALL `account_creationFloodCheck`(?, ?, ?, ?, ?);";
+			CallableStatement stmt = con.prepareCall(sql);
+			stmt.setString("in_smallDate", DateUtil.SQL_DATETIME_FORMAT.format(smallDate));
+			stmt.setString("in_largeDate", DateUtil.SQL_DATETIME_FORMAT.format(largeDate));
+			stmt.setInt("in_maxForLarge", maxForLarge);
+			stmt.setString("in_ip", ip);
+			stmt.registerOutParameter("out_returnCode", Types.TINYINT);
+			stmt.execute();
+			
+			byte returnCode = stmt.getByte("out_returnCode");
+			return returnCode != 0;
+		} catch(SQLException e) {
+			LOG.error("SQLException occurred while attempting to perform a basic flood check.", e);
+			return false;
+		}
+	}
+	
 	public static boolean createAccount(Connection con, String username, String passwordHash, String passwordSalt, int ageRange, int countryCode, 
 			Date date, String ip) {
 		try {

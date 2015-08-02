@@ -1,6 +1,7 @@
 package org.runelight.controller.impl.account;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -21,7 +22,9 @@ public final class CreateAccount extends Controller {
 
 	private static final Logger LOG = Logger.getLogger(CreateAccount.class);
 	
-	private static Map<String, String> AGE_RANGE_MAP = new LinkedHashMap<String, String>() {
+	private static final int MAX_ATTEMPTS_PER_HALF_HOUR = 3;
+	
+	private static final Map<String, String> AGE_RANGE_MAP = new LinkedHashMap<String, String>() {
 
 		private static final long serialVersionUID = 1L;
 		
@@ -38,14 +41,14 @@ public final class CreateAccount extends Controller {
 		
 	};
 	
-	private CreateAccountDTO data;
+	private CreateAccountDTO data = new CreateAccountDTO();
 	
 	@Override
 	public void init() {
-		// TODO flood/spam protection - triple layer:
-		// 1. ip + date in mysql
-		// 2. HttpSession
-		// 3. Cookies
+		if(flooding()) {
+			tooManyAttempts();
+			return;
+		}
 		
 		if(getDest().equals("index.html")) {
 			setMaps();
@@ -55,8 +58,6 @@ public final class CreateAccount extends Controller {
 				sendHome();
 				return;
 			}
-			
-			data = new CreateAccountDTO();
 			
 			switch(getDest()) {
 				case "chooseagerange.ws":
@@ -90,15 +91,41 @@ public final class CreateAccount extends Controller {
 						return;
 					}
 					
-					int passwordReturnCode = validatePassword();
+					int passwordReturnCode = validatePasswords();
 					if(passwordReturnCode > -1) {
 						getRequest().setAttribute("passwordError", passwordReturnCode);
+					} else {
+						getRequest().getSession().setAttribute("latestCreation", Calendar.getInstance());
 					}
 					break;
 			}
 			
 			getRequest().setAttribute("createData", data);
 		}
+	}
+	
+	/**
+	 * Checks to see if the requester is creating too many user accounts in quick succession. 
+	 * @return True if they are detected to be creating too many, false if not.
+	 */
+	private boolean flooding() {
+		Calendar smallCal = Calendar.getInstance();
+		Calendar largeCal = Calendar.getInstance();
+		smallCal.add(Calendar.MINUTE, -5);
+		largeCal.add(Calendar.MINUTE, -30);
+		
+		try {
+			Calendar latestCreation = (Calendar) getRequest().getSession().getAttribute("latestCreation");
+			if(latestCreation.after(smallCal)) {
+				return true;
+			}
+		} catch(Throwable t) {}
+		
+		if(CreateAccountDAO.tooManyAttempts(getDbConnection(), getRequestIP(), smallCal.getTime(), largeCal.getTime(), MAX_ATTEMPTS_PER_HALF_HOUR)) {
+			return true;
+		}
+		
+		return false;
 	}
 	
 	/**
@@ -128,7 +155,7 @@ public final class CreateAccount extends Controller {
 	 * @return -1 if the passwords are valid, or something greater than -1 if invalid 
 	 * (used to determine which error string to pull, which are all stored in the FTL).
 	 */
-	private int validatePassword() {
+	protected int validatePasswords() {
 		String password1 = getRequest().getParameter("password1");
 		if(password1 == null || password1.equals("")) {
 			return 0;
@@ -167,7 +194,7 @@ public final class CreateAccount extends Controller {
 	 * Validates the terms+conditions agreement.
 	 * @return True if the user has agreed, false if not.
 	 */
-	private boolean validateTerms() {
+	protected boolean validateTerms() {
 		String termsStr = getRequest().getParameter("agree_terms");
 		boolean success = true;
 		
@@ -183,7 +210,7 @@ public final class CreateAccount extends Controller {
 	 * @return -1 if the username is valid, or something greater than -1 if invalid 
 	 * (used to determine which error string to pull, which are all stored in the FTL).
 	 */
-	private int validateUsername() {
+	protected int validateUsername() {
 		String username = getRequest().getParameter("username");
 		if(username == null) {
 			return 0;
@@ -251,7 +278,7 @@ public final class CreateAccount extends Controller {
 	 * Validates the age range and country of residence fields, setting an error code for each if they are invalid.
 	 * @return True if both are valid, false if one or both are invalid.
 	 */
-	private boolean validateAgeAndCountry() {
+	protected boolean validateAgeAndCountry() {
 		String ageStr = getRequest().getParameter("age");
 		String countryStr = getRequest().getParameter("country");
 		
@@ -293,9 +320,20 @@ public final class CreateAccount extends Controller {
 	 */
 	private void sendHome() {
 		try {
-		getResponse().sendRedirect((Config.isSslEnabled() ? "https" : "http") + "://create." + Config.getHostName() + "/index.html");
+			getResponse().sendRedirect((Config.isSslEnabled() ? "https" : "http") + "://create." + Config.getHostName() + "/index.html");
 		} catch(IOException e) {
 			LOG.error("IOException while attempting to send the user back to the account creation index.", e);
+		}
+	}
+	
+	/**
+	 * Sends the user off to the "too many recent account creation attempts" page.
+	 */
+	private void tooManyAttempts() {
+		try {
+			getResponse().sendRedirect((Config.isSslEnabled() ? "https" : "http") + "://create." + Config.getHostName() + "/toomanyattempts.ws");
+		} catch(IOException e) {
+			LOG.error("IOException while attempting to send the user to the 'too many account creation attempts' page.", e);
 		}
 	}
 	
@@ -305,6 +343,10 @@ public final class CreateAccount extends Controller {
 	private void setMaps() {
 		getRequest().setAttribute("ageRangeMap", AGE_RANGE_MAP);
 		getRequest().setAttribute("countryMap", CountryUtil.COUNTRY_MAP);
+	}
+	
+	protected CreateAccountDTO getData() {
+		return data;
 	}
 	
 	@Override

@@ -16,9 +16,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
 import org.runelight.Config;
 import org.runelight.db.RSDataSource;
 import org.runelight.http.HttpRequestType;
@@ -92,20 +92,6 @@ public final class RequestHandlerTest {
 		RequestHandler.submitViewRequest(HttpRequestType.GET, mockRequest, mockResponse);
 		
 		verify(mockResponse, times(1)).sendError(503);
-	}
-	
-	@Test
-	public void testSubmitViewRequest_happy() throws Exception {
-		when(mockRequest.getRequestURI()).thenReturn("/index.html");
-		when(Config.isSslEnabled()).thenReturn(true);
-		when(mockRequest.isSecure()).thenReturn(true);
-		when(RSDataSource.getConnection()).thenReturn(mockConnection);
-		when(mockConnection.isClosed()).thenReturn(false);
-		
-		RequestHandler.submitViewRequest(HttpRequestType.GET, mockRequest, mockResponse);
-		
-		PowerMockito.verifyStatic();
-		RSDataSource.closeConnection(mockConnection);
 	}
 	
 }

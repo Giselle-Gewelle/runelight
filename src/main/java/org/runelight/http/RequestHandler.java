@@ -9,12 +9,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.runelight.Config;
 import org.runelight.controller.Controller;
+import org.runelight.controller.impl.GenericPage;
 import org.runelight.controller.impl.account.CreateAccount;
 import org.runelight.controller.impl.main1.Title;
 import org.runelight.controller.impl.media.News;
@@ -37,12 +39,24 @@ public final class RequestHandler {
 			put("create chooseusername.ws", CreateAccount.class);
 			put("create choosepassword.ws", CreateAccount.class);
 			put("create createaccount.ws", CreateAccount.class);
+			put("create toomanyattempts.ws", GenericPage.class);
 			
 			put("news newsitem.ws", News.class);
 			put("news list.ws", News.class);
 		}
 		
 	};
+	
+	public static String getCookie(HttpServletRequest request, String name) {
+		Cookie[] cookies = request.getCookies();
+		for(Cookie cookie : cookies) {
+			if(cookie.getName().equals(name)) {
+				return cookie.getValue();
+			}
+		}
+		
+		return null;
+	}
 	
 	public static void sendError(HttpServletResponse response, int errorCode) {
 		try {
