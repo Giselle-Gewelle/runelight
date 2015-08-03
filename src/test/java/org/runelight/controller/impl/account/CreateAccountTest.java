@@ -7,6 +7,7 @@ import java.sql.Connection;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -29,11 +31,15 @@ public final class CreateAccountTest {
 	private String testMod = "create";
 	
 	@Mock private HttpServletRequest mockRequest;
+	@Mock private HttpSession mockSession;
 	@Mock private HttpServletResponse mockResponse;
 	@Mock private Connection mockConnection;
 	
 	@Before
 	public void setup() {
+		when(mockRequest.getSession()).thenReturn(mockSession);
+		when(mockSession.getAttribute(Mockito.anyString())).thenReturn(null);
+		
 		testObject = new CreateAccount();
 		testObject.setup(mockRequest, mockResponse, HttpRequestType.GET, testIP, 1L, mockConnection, testMod, "index.html");
 		

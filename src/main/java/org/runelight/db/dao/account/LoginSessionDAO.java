@@ -5,17 +5,110 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
+import org.runelight.http.RequestHandler;
 import org.runelight.security.Hashing;
+import org.runelight.security.LoginSession;
 import org.runelight.security.Password;
 import org.runelight.util.DateUtil;
+import org.runelight.view.dto.account.SessionCheckDTO;
 import org.runelight.view.dto.account.UserDTO;
+import org.runelight.view.dto.account.UserSessionDTO;
 
 public final class LoginSessionDAO {
 	
 	private static final Logger LOG = Logger.getLogger(LoginSessionDAO.class);
+	
+	/**
+	 * Gets the user login session details for the specified session ID.
+	 * @param con The database connection instance. 
+	 * @param sessionId The session ID to look for.
+	 * @param secure Whether or not the current website section is a secure (https) section.
+	 * @param mod The mod of the current website section.
+	 * @param dest The user's current destination. 
+	 * @param endDate The end date for the session.
+	 * @return A UserSessionDTO, or null on failure.
+	 */
+	public static UserSessionDTO getLoginSessionDetails(Connection con, int sessionId, boolean secure, String mod, String dest, String endDate) {
+		try {
+			String hash = Hashing.generateSessionHash();
+			
+			String sql = "CALL `account_getLoginSessionDetails`(?, ?, ?, ?, ?, ?);";
+			CallableStatement stmt = con.prepareCall(sql);
+			stmt.setInt("in_sessionId", sessionId);
+			stmt.setBoolean("in_secure", secure);
+			stmt.setString("in_newMod", mod);
+			stmt.setString("in_newDest", dest);
+			stmt.setString("in_newHash", hash);
+			stmt.setString("in_endDate", endDate);
+			stmt.execute();
+			
+			ResultSet results = stmt.getResultSet();
+			if(results == null || !results.next()) {
+				return null;
+			}
+			
+			return new UserSessionDTO(
+				results.getInt("accountId"), results.getString("username"), results.getBoolean("staff"), results.getBoolean("fmod"), results.getBoolean("pmod"), results.getString("currentIP"),
+				sessionId, hash, secure, mod, dest
+			);
+		} catch(SQLException e) {
+			LOG.error("SQLException occurred while attempting to fetch detailed login session info for [" + sessionId + "].", e);
+			return null;
+		}
+	}
+	
+	/**
+	 * Soft-kills a user login session by setting the endDate to the current date.
+	 * @param con The database connection instance.
+	 * @param sessionId The ID of the session to kill.
+	 */
+	public static void killSession(Connection con, int sessionId) {
+		try {
+			Calendar killCal = Calendar.getInstance();
+			killCal.add(Calendar.MINUTE, -(LoginSession.IDLE_TIME + 5));
+			
+			String sql = "CALL `account_killLoginSession`(?, ?);";
+			CallableStatement stmt = con.prepareCall(sql);
+			stmt.setInt("in_sessionId", sessionId);
+			stmt.setString("in_date", DateUtil.SQL_DATETIME_FORMAT.format(killCal.getTime()));
+			stmt.execute();
+		} catch(SQLException e) {
+			LOG.error("SQLException occurred while attempting to kill the login session [" + sessionId + "].", e);
+		}
+	}
+	
+	/**
+	 * Looks for a valid login session that matches the given information.
+	 * @param con The database connection instance.
+	 * @param hash The hash that corresponds to the login session we're looking for.
+	 * @param ip The ip that the login session is connected to.
+	 * @param minDate The minimum date that the session has to be within.
+	 * @return A SessionCheckDTO on success, or null on failure.
+	 */
+	public static SessionCheckDTO findSession(Connection con, String hash, String ip, Date minDate) {
+		try {
+			String sql = "CALL `account_findLoginSession`(?, ?, ?);";
+			CallableStatement stmt = con.prepareCall(sql);
+			stmt.setString("in_hash", hash);
+			stmt.setString("in_ip", ip);
+			stmt.setString("in_minDate", DateUtil.SQL_DATETIME_FORMAT.format(minDate));
+			stmt.execute();
+			
+			ResultSet results = stmt.getResultSet();
+			if(results == null || !results.next()) {
+				return null;
+			}
+			
+			return new SessionCheckDTO(results.getInt("sessionId"), results.getBoolean("secure"), DateUtil.SQL_DATETIME_FORMAT.format(results.getTimestamp("endDate")));
+		} catch(SQLException e) {
+			LOG.error("SQLException occurred while attempting to find a user login session for [" + hash + "] : [" + ip + "].", e);
+			return null;
+		}
+	}
 	
 	/**
 	 * Grabs the number of login attempts the user at the specified IP has made in the given timeFrame.
@@ -56,7 +149,7 @@ public final class LoginSessionDAO {
 		try {
 			String hash = Hashing.generateSessionHash();
 			
-			String sql = "CALL `account_submitLoginSession`(?, ?, ?, ?, ?, ?, ?);";
+			String sql = "CALL `account_submitLoginSession`(?, ?, ?, ?, ?, ?, ?, ?);";
 			CallableStatement stmt = con.prepareCall(sql);
 			stmt.setInt("in_accountId", user.getAccountId());
 			stmt.setString("in_ip", user.getCurrentIP());
@@ -65,6 +158,7 @@ public final class LoginSessionDAO {
 			stmt.setString("in_endDate", DateUtil.SQL_DATETIME_FORMAT.format(endDate));
 			stmt.setString("in_mod", mod);
 			stmt.setString("in_dest", dest);
+			stmt.setBoolean("in_secure", RequestHandler.SECURE_MODS.contains(mod));
 			stmt.execute();
 			
 			return hash;
@@ -96,9 +190,8 @@ public final class LoginSessionDAO {
 				return null;
 			}
 			
-			UserDTO user = new UserDTO();
+			UserDTO user = new UserDTO(new Password(results.getString("passwordHash"), results.getString("passwordSalt")));
 			user.setAccountId(results.getInt("accountId"));
-			user.setPassword(new Password(results.getString("passwordHash"), results.getString("passwordSalt")));
 			return user;
 		} catch(SQLException e) {
 			LOG.error("SQLException occurred while attempting to fetch user details for the user [" + username + "].", e);

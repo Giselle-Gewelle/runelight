@@ -25,9 +25,27 @@
 	
 	<body>
 		<div id="content">
-			<#if showSessionBar?? && showSessionBar>
+			<#if showSessionBar??>
 				<div class="frame">
-					
+					<#if loginSession.loggedIn>
+						<div class="floatRight">
+							<@a mod="main1" dest="title.ws">Main Menu</@a> | 
+							<@a mod=currentMod dest="logout.ws" secure=true>Logout</@a>
+						</div>
+						
+						<div>
+							Logged in as <span class="orange">${loginSession.user.formattedUsername}</span>
+						</div>
+					<#else>
+						<div class="floatRight">
+							<@a mod="main1" dest="title.ws">Main Menu</@a> | 
+							<@a mod="main1" dest="loginform.ws?mod=${currentMod?html}&amp;dest=${currentDest?html}${currentQuery?html}" secure=true>Login</@a>
+						</div>
+						
+						<div>
+							You are not logged in.
+						</div>
+					</#if>
 				</div>
 				
 				<br />

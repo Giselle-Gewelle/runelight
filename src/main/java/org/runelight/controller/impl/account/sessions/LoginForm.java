@@ -9,6 +9,7 @@ import org.runelight.Config;
 import org.runelight.controller.Controller;
 import org.runelight.http.RequestHandler;
 import org.runelight.util.ModUtil;
+import org.runelight.util.URLUtil;
 
 public final class LoginForm extends Controller {
 
@@ -55,7 +56,7 @@ public final class LoginForm extends Controller {
 		setRedirecting(true);
 		
 		try {
-			getResponse().sendRedirect("http://www." + Config.getHostName() + "/title.ws");
+			getResponse().sendRedirect(URLUtil.getUrl("main1", "title.ws"));
 		} catch(IOException e) {
 			LOG.error("IOException while attempting to send the user back to the main page from an invalid loginform mod/dest.", e);
 		}

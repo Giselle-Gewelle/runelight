@@ -10,6 +10,14 @@ public final class UserDTO {
 	private Password password;
 	private String currentIP;
 	
+	public UserDTO() {
+		this.password = null;
+	}
+	
+	public UserDTO(Password password) {
+		this.password = password;
+	}
+	
 	public int getAccountId() {
 		return accountId;
 	}
@@ -33,9 +41,6 @@ public final class UserDTO {
 	
 	public Password getPassword() {
 		return password;
-	}
-	public void setPassword(Password password) {
-		this.password = password;
 	}
 	
 	public String getCurrentIP() {

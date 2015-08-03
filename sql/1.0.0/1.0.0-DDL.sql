@@ -27,7 +27,7 @@ CREATE TABLE `account_users` (
 	`fmod`			BIT				NOT NULL DEFAULT 0,
 	
 	`lastLoginDate`	DATETIME		NULL, 
-	`lastLoginIP`	VARCHAR(128)	NULL, 
+	`currentIP`		VARCHAR(128)	NOT NULL, 
 	
 	PRIMARY KEY (`accountId`)
 ) ENGINE=InnoDB;
@@ -41,6 +41,7 @@ CREATE TABLE `account_sessions` (
 	`hash`			CHAR(128)		NOT NULL, 
 	`startDate`		DATETIME		NOT NULL, 
 	`endDate`		DATETIME		NOT NULL, 
+	`secure`		BIT				NOT NULL DEFAULT 1,
 	
 	`startMod`		VARCHAR(30)		NOT NULL, 
 	`currentMod`	VARCHAR(30)		NOT NULL, 
@@ -82,6 +83,64 @@ CREATE TABLE `media_news` (
 DELIMITER $$
 
 
+DROP PROCEDURE IF EXISTS `account_getLoginSessionDetails` $$ 
+CREATE PROCEDURE `account_getLoginSessionDetails` (
+	`in_sessionId`	BIGINT(20), 
+	`in_secure`		BIT,
+	`in_newMod`		VARCHAR(30),
+	`in_newDest`	VARCHAR(50),
+	`in_newHash`	CHAR(128),
+	`in_endDate`	DATETIME
+) 
+BEGIN 
+	UPDATE `account_sessions` 
+	SET `hash` = `in_newHash`, 
+		`secure` = `in_secure`, 
+		`currentMod` = `in_newMod`, 
+		`currentDest` = `in_newDest`, 
+		`endDate` = `in_endDate` 
+	WHERE `sessionId` = `in_sessionId` 
+	LIMIT 1;
+	
+	SELECT `a`.`accountId`, `a`.`username`, `a`.`staff`, `a`.`fmod`, `a`.`pmod`, `a`.`currentIP`
+	FROM `account_sessions` AS `s` 
+		JOIN `account_users` AS `a` 
+			ON `s`.`accountId` = `a`.`accountId` 
+	WHERE `s`.`sessionId` = `in_sessionId` 
+	LIMIT 1;
+END $$
+
+
+DROP PROCEDURE IF EXISTS `account_findLoginSession` $$ 
+CREATE PROCEDURE `account_findLoginSession` (
+	IN `in_hash`		CHAR(128),
+	IN `in_ip`			VARCHAR(128),
+	IN `in_minDate`		DATETIME
+) 
+BEGIN 
+	SELECT `sessionId`, `secure`, `endDate` 
+	FROM `account_sessions` 
+	WHERE `hash` = `in_hash` 
+		AND `ip` = `in_ip` 
+		AND `endDate` > `in_minDate` 
+	ORDER BY `endDate` DESC 
+	LIMIT 1;
+END $$
+
+
+DROP PROCEDURE IF EXISTS `account_killLoginSession` $$ 
+CREATE PROCEDURE `account_killLoginSession` (
+	IN `in_sessionId`	BIGINT(20),
+	IN `in_date`		DATETIME
+) 
+BEGIN 
+	UPDATE `account_sessions` 
+	SET `endDate` = `in_date` 
+	WHERE `sessionId` = `in_sessionId` 
+	LIMIT 1;
+END $$
+
+
 DROP PROCEDURE IF EXISTS `account_loginFloodCheck` $$ 
 CREATE PROCEDURE `account_loginFloodCheck` (
 	IN `in_ip`			VARCHAR(128),
@@ -107,18 +166,19 @@ CREATE PROCEDURE `account_submitLoginSession` (
 	IN `in_date`		DATETIME, 
 	IN `in_endDate`		DATETIME, 
 	IN `in_mod`			VARCHAR(30),
-	IN `in_dest`		VARCHAR(128)
+	IN `in_dest`		VARCHAR(128),
+	IN `in_secure`		BIT
 ) 
 BEGIN 
 	INSERT INTO `account_sessions` (
-		`accountId`, `ip`, `hash`, `startDate`, `endDate`, `startMod`, `currentMod`, `startDest`, `currentDest`
+		`accountId`, `ip`, `hash`, `secure`, `startDate`, `endDate`, `startMod`, `currentMod`, `startDest`, `currentDest`
 	) VALUES (
-		`in_accountId`, `in_ip`, `in_sessionHash`, `in_date`, `in_endDate`, `in_mod`, `in_mod`, `in_dest`, `in_dest`
+		`in_accountId`, `in_ip`, `in_sessionHash`, `in_secure`, `in_date`, `in_endDate`, `in_mod`, `in_mod`, `in_dest`, `in_dest`
 	);
 	
 	UPDATE `account_users` 
 	SET `lastLoginDate` = `in_date`, 
-		`lastLoginIP` = `in_ip` 
+		`currentIP` = `in_ip` 
 	WHERE `accountId` = `in_accountId` 
 	LIMIT 1;
 END $$
@@ -205,9 +265,9 @@ CREATE PROCEDURE `account_createUserAccount` (
 ) 
 BEGIN 
 	INSERT INTO `account_users` (
-		`username`, `passwordHash`, `passwordSalt`, `ageRange`, `countryCode`, `creationDate`, `creationIP`
+		`username`, `passwordHash`, `passwordSalt`, `ageRange`, `countryCode`, `creationDate`, `creationIP`, `currentIP` 
 	) VALUES (
-		`in_username`, `in_passwordHash`, `in_passwordSalt`, `in_ageRange`, `in_countryCode`, `in_date`, `in_ip`
+		`in_username`, `in_passwordHash`, `in_passwordSalt`, `in_ageRange`, `in_countryCode`, `in_date`, `in_ip`, `in_ip` 
 	);
 	
 	SELECT ROW_COUNT() INTO `out_returnCode`;

@@ -9,7 +9,7 @@ import org.runelight.Config;
 import org.runelight.db.RSDataSource;
 
 public final class RSServlet extends HttpServlet {
-
+	
 	private static final long serialVersionUID = 2464603724605833400L;
 	
 	private static final Logger LOG = Logger.getLogger(RSServlet.class);

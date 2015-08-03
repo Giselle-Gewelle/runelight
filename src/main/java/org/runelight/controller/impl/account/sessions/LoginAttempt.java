@@ -16,6 +16,7 @@ import org.runelight.http.HttpRequestType;
 import org.runelight.http.RequestHandler;
 import org.runelight.security.LoginSession;
 import org.runelight.util.ModUtil;
+import org.runelight.util.URLUtil;
 import org.runelight.view.dto.account.UserDTO;
 
 public final class LoginAttempt extends Controller {
@@ -38,8 +39,7 @@ public final class LoginAttempt extends Controller {
 			getRequest().setAttribute("error", loginCode);
 		} else {
 			try {
-				getResponse().sendRedirect((Config.isSslEnabled() && RequestHandler.SECURE_MODS.contains(toMod) ? "https" : "http") + 
-						"://" + ModUtil.modToSubdomain(toMod) + "." + Config.getHostName() + "/" + toDest + toQuery);
+				getResponse().sendRedirect(URLUtil.getUrl(toMod, toDest + toQuery, RequestHandler.SECURE_MODS.contains(toMod)));
 			} catch (IOException e) {
 				LOG.error("IOException occurred while attempting to redirect the newly logged-in user to their destination.", e);
 			}	
@@ -106,7 +106,6 @@ public final class LoginAttempt extends Controller {
 			return 2;
 		}
 		
-		user.setPassword(null);
 		user.setCurrentIP(getRequestIP());
 		
 		Calendar startCal = Calendar.getInstance();
