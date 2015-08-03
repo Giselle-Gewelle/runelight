@@ -48,7 +48,17 @@ CREATE TABLE `account_sessions` (
 	`currentDest`	VARCHAR(128)	NOT NULL, 
 	
 	PRIMARY KEY (`sessionId`), 
-	FOREIGN KEY `accountId` REFERENCES `account_users` (`accountId`)
+	FOREIGN KEY (`accountId`) REFERENCES `account_users` (`accountId`)
+) ENGINE=InnoDB;
+
+
+DROP TABLE IF EXISTS `account_loginAttempts`;
+CREATE TABLE `account_loginAttempts` (
+	`username`		VARCHAR(12)		NOT NULL, 
+	`date`			DATETIME		NOT NULL, 
+	`ip`			VARCHAR(128)	NOT NULL, 
+	
+	PRIMARY KEY (`username`, `date`)
 ) ENGINE=InnoDB;
 
 
@@ -70,6 +80,23 @@ CREATE TABLE `media_news` (
 
 
 DELIMITER $$
+
+
+DROP PROCEDURE IF EXISTS `account_loginFloodCheck` $$ 
+CREATE PROCEDURE `account_loginFloodCheck` (
+	IN `in_ip`			VARCHAR(128),
+	IN `in_dateCheck`	DATETIME,
+	IN `in_maxAttempts`	TINYINT(2),
+	OUT `out_attempts`	TINYINT(2)
+) 
+BEGIN 
+	SELECT COUNT(`date`) INTO `out_attempts` 
+	FROM `account_loginAttempts` 
+	WHERE `date` > `in_dateCheck` 
+		AND `ip` = `in_ip` 
+	ORDER BY `date` DESC 
+	LIMIT `in_maxAttempts`;
+END $$
 
 
 DROP PROCEDURE IF EXISTS `account_submitLoginSession` $$ 
@@ -99,9 +126,17 @@ END $$
 
 DROP PROCEDURE IF EXISTS `account_getUserForUsername` $$ 
 CREATE PROCEDURE `account_getUserForUsername` (
-	`in_username`	VARCHAR(12)
+	`in_username`	VARCHAR(12),
+	`in_date`		DATETIME, 
+	`in_ip`			VARCHAR(128)
 ) 
 BEGIN 
+	INSERT INTO `account_loginAttempts` (
+		`username`, `date`, `ip`
+	) VALUES (
+		`in_username`, `in_date`, `in_ip`
+	);
+	
 	SELECT `accountId`, `passwordHash`, `passwordSalt` 
 	FROM `account_users` 
 	WHERE `username` = `in_username` 

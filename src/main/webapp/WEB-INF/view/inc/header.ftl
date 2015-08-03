@@ -25,3 +25,10 @@
 	
 	<body>
 		<div id="content">
+			<#if showSessionBar?? && showSessionBar>
+				<div class="frame">
+					
+				</div>
+				
+				<br />
+			</#if>

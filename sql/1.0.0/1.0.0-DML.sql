@@ -35,7 +35,7 @@ INSERT INTO `media_news` (
 INSERT INTO `account_users` ( 
 	`username`, `passwordHash`, `passwordSalt`, `ageRange`, `countryCode`, `creationDate`, `creationIP`
 ) VALUES ( 
-	'test', '', '', '3', '225', '2015-08-02 12:56:00', '127.0.0.1'
+	'a', 'c6ea238d987fd6650c91c265a5b3b5e38157b5eb5793f68b5b7dfb3164c398d739fdb73809131e32f6c9b12b6c7bce8737da25f902efb9550f683cb83c1e6613', '#|-s)Xue&)?UJT|[qfZRO0l8E$9y8=D}-gOFwXG)x_MiG:Pd7*', '3', '225', '2015-08-02 12:56:00', '127.0.0.1'
 );
 
 

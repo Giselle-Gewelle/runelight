@@ -7,7 +7,11 @@
 <br />
 
 <div class="frame center">
-	<#if error??>
+	<#if flooding??>
+		<p>You have made too many login attempts lately, please try again later.</p>
+		<p>If you have lost or forgotten your password, try contacting support to recover it.</p>
+		<p><@a mod="main1" dest="title.ws">Click here to return to the main menu</@a>.</p>
+	<#elseif error??>
 		<#assign errorMessages = [
 			"Sorry, there was an error trying to log you in to this part of the website.",
 			"You must enter a valid username to proceed.",

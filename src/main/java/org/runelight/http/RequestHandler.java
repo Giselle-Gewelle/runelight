@@ -20,6 +20,7 @@ import org.runelight.Config;
 import org.runelight.controller.Controller;
 import org.runelight.controller.impl.GenericPage;
 import org.runelight.controller.impl.account.CreateAccount;
+import org.runelight.controller.impl.account.password.ChangePassword;
 import org.runelight.controller.impl.account.sessions.LoginAttempt;
 import org.runelight.controller.impl.account.sessions.LoginForm;
 import org.runelight.controller.impl.account.sessions.LogoutAttempt;
@@ -65,6 +66,9 @@ public final class RequestHandler {
 			put("create createaccount.ws", CreateAccount.class);
 			put("create toomanyattempts.ws", GenericPage.class);
 			
+			put("password_history passchange.html", ChangePassword.class);
+			put("password_history password.ws", ChangePassword.class);
+
 			put("news newsitem.ws", News.class);
 			put("news list.ws", News.class);
 			
