@@ -1,6 +1,5 @@
 package org.runelight.http;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -185,7 +184,7 @@ public final class RequestHandler {
 			}
 			
 			if(!controller.isRedirecting()) {
-				char s = File.separatorChar;
+				char s = '/';
 				String location = new StringBuilder().append(s).append("WEB-INF").append(s).append("view").append(s).append(mapMod).append(s).append(dest).append(".ftl").toString();
 				RequestDispatcher dispatcher = request.getRequestDispatcher(location);
 				if(dispatcher != null && !response.isCommitted()) {

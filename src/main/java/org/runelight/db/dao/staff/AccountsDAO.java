@@ -55,7 +55,7 @@ public final class AccountsDAO {
 				return null;
 			}
 			
-			return new AccountListDTO(stmt.getInt("out_realPage"), stmt.getInt("out_pageCount"), usernameSearch, accountList);
+			return new AccountListDTO(stmt.getInt("out_realPage"), stmt.getInt("out_pageCount"), usernameSearch == null ? "" : usernameSearch.replace("%", ""), accountList);
 		} catch(SQLException e) {
 			LOG.error("SQLException occurred while attempting to fetch the administrative account list.", e);
 			return null;

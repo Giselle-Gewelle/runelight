@@ -1,2 +1,65 @@
 @charset "UTF-8";
 
+.arrow {
+	width: 30px;
+	height: 15px;
+}
+.doubleArrow {
+	width: 60px;
+	height: 15px;
+}
+
+.nav {
+	display: inline;
+	
+	input[name="page"] {
+		text-align: center;
+	}
+}
+
+#accountList {
+	width: 100%;
+	margin: 1em 0;
+	border: 1px solid #7B4F17;
+	
+	thead {
+		td {
+			font-weight: bold;
+			background-color: #C9AD7A;
+			border-bottom: 1px solid #7B4F17;
+		}
+	}
+	
+	tbody {
+		tr:nth-child(odd) {
+			td {
+				background-color: #D8CDA0;
+			}
+		}
+		
+		tr:nth-child(even) {
+			td {
+				background-color: #C9AD7A;
+			}
+		}
+	}
+	
+	td {
+		padding: 5px;
+		text-align: left;
+		vertical-align: middle;
+	}
+}
+
+h4 {
+	font-weight: bold;
+	display: block;
+	font-size: 22px;
+	margin: 0.5em 0;
+}
+
+label {
+	font-weight: bold;
+	cursor: pointer;
+	font-size: 14px;
+}

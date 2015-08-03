@@ -78,6 +78,22 @@ strong {
 			background: url('../img/layout/scrollContent.png') repeat-y 0 0;
 			padding: 25px 10px;
 			color: #000000;
+			
+			input[type="text"], input[type="password"], textarea {
+				border: 1px solid #7B4F17;
+				background-color: #D8CDA0;
+				color: #7B4F17;
+				outline: none !important;
+				padding: 2px;
+			}
+			
+			hr {
+				margin: 1em 0;
+				padding: 0;
+				height: 1px;
+				width: 100%;
+				background-color: #7B4F17;
+			}
 		}
 			
 		a {
