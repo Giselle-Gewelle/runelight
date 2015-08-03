@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
@@ -18,6 +20,7 @@ import org.runelight.Config;
 import org.runelight.controller.Controller;
 import org.runelight.controller.impl.GenericPage;
 import org.runelight.controller.impl.account.CreateAccount;
+import org.runelight.controller.impl.account.sessions.LoginForm;
 import org.runelight.controller.impl.main1.Title;
 import org.runelight.controller.impl.media.News;
 import org.runelight.db.RSDataSource;
@@ -27,12 +30,30 @@ public final class RequestHandler {
 	
 	private static final Logger LOG = Logger.getLogger(RequestHandler.class);
 	
-	private static final Map<String, Class<? extends Controller>> CONTROLLER_MAP = new HashMap<String, Class<? extends Controller>>() {
+	public static final List<String> SECURE_MODS = new ArrayList<String>() {
+		
+		private static final long serialVersionUID = 7121714950285554587L;
+
+		{
+			add("create");
+			add("password_history");
+			add("password");
+			add("recovery_questions");
+			add("offenceappeal");
+			add("ticketing");
+			add("pmod");
+			add("fmod");
+		}
+		
+	};
+	
+	public static final Map<String, Class<? extends Controller>> CONTROLLER_MAP = new HashMap<String, Class<? extends Controller>>() {
 
 		private static final long serialVersionUID = -6523666098696536388L;
 		
 		{
 			put("main1 title.ws", Title.class);
+			put("main1 loginform.ws", LoginForm.class);
 			
 			put("create index.html", CreateAccount.class);
 			put("create chooseagerange.ws", CreateAccount.class);
@@ -132,6 +153,7 @@ public final class RequestHandler {
 		
 		request.setAttribute("rsTime", requestTime);
 		request.setAttribute("hostName", Config.getHostName());
+		request.setAttribute("formattedHostName", Config.getFormattedHostName());
 		request.setAttribute("sslEnabled", Config.isSslEnabled());
 		request.setAttribute("gameName", Config.getGameName());
 		request.setAttribute("companyName", Config.getCompanyName());

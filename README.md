@@ -23,11 +23,11 @@ Under <Host name="localhost" appBase="webapps"
 
 add
 
-<Context path="" docBase="runelight-RUNELIGHTVERSIONHERE" debug="0" reloadable="true" />
+<Context path="runelight" docBase="runelight-RUNELIGHTVERSIONHERE" debug="0" reloadable="true" sessionCookieDomain=".<YOUR.DOMAIN>" sessionCookiePath="/" />
 
 ie
 
-<Context path="" docBase="runelight-0.0.1" debug="0" reloadable="true" />
+<Context path="runelight" docBase="runelight-0.0.1" debug="0" reloadable="true" sessionCookieDomain=".runelight.giselle" sessionCookiePath="/" />
 
 
 In Tomcat/conf/context.xml add a new jdbc resource:
@@ -46,13 +46,16 @@ Add some subdomains/domains to your Windows hosts file (in whichever format you 
 127.0.0.1             create.runelight.giselle
 127.0.0.1             news.runelight.giselle
 127.0.0.1             forum.runelight.giselle
+127.0.0.1             password-history.runelight.giselle
+127.0.0.1             password.runelight.giselle
+127.0.0.1             recovery-questions.runelight.giselle
 
 etc, etc...
 		  
 
 Add two environment variables:
 JAVA_HOME=the/path/to/your/java/installation/ (should have been done in order to run Tomcat)
-RS_HOMe=the/path/to/your/RuneLight/repo/
+RUNELIGHT_HOME=the/path/to/your/RuneLight/repo/
 
 Restart all CMD windows.
 

@@ -40,10 +40,6 @@ public abstract class Controller {
 		return false;
 	}
 	
-	public boolean newLoginRequired() {
-		return false;
-	}
-	
 	protected final HttpServletRequest getRequest() {
 		return request;
 	}

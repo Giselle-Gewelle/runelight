@@ -15,6 +15,7 @@ public final class Config {
 	private static boolean sslEnabled;
 	private static String gameName;
 	private static String companyName;
+	private static String formattedHostName;
 	
 	public static void init() {
 		Properties properties = new Properties();
@@ -35,6 +36,7 @@ public final class Config {
 			sslEnabled = Boolean.valueOf(properties.getProperty("sslEnabled"));
 			gameName = properties.getProperty("gameName");
 			companyName = properties.getProperty("companyName");
+			formattedHostName = properties.getProperty("formattedHostName");
 		} catch(Exception e) {
 			LOG.error("Exception occured while attempting to open the properties file input stream.", e);
 		} finally {
@@ -64,6 +66,10 @@ public final class Config {
 	
 	public static String getCompanyName() {
 		return companyName;
+	}
+	
+	public static String getFormattedHostName() {
+		return formattedHostName;
 	}
 	
 }

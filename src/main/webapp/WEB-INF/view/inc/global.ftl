@@ -13,3 +13,5 @@
 	
 	<#return "${protocol}://${mod?replace('_', '-')}.${hostName}/${dest}" />
 </#function>
+
+<#macro a mod dest secure=false><a href="${url(mod, dest, secure)}"><#nested /></a></#macro>

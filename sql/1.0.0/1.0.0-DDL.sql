@@ -22,7 +22,30 @@ CREATE TABLE `account_users` (
 	`creationDate`	DATETIME		NOT NULL, 
 	`creationIP`	VARCHAR(128)	NOT NULL,
 	
+	`staff`			BIT				NOT NULL DEFAULT 0, 
+	`pmod`			BIT				NOT NULL DEFAULT 0, 
+	`fmod`			BIT				NOT NULL DEFAULT 0,
+	
 	PRIMARY KEY (`accountId`)
+) ENGINE=InnoDB;
+
+
+DROP TABLE IF EXISTS `account_sessions`;
+CREATE TABLE `account_sessions` (
+	`sessionId`		BIGINT(20)		UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE, 
+	`accountId`		INT(10)			UNSIGNED NOT NULL, 
+	`hash`			CHAR(128)		NOT NULL, 
+	`secure`		BIT				NOT NULL DEFAULT 1, 
+	`startDate`		DATETIME		NOT NULL, 
+	`endDate`		DATETIME		NOT NULL, 
+	
+	`startMod`		VARCHAR(30)		NOT NULL, 
+	`currentMod`	VARCHAR(30)		NOT NULL, 
+	`startDest`		VARCHAR(128)	NOT NULL, 
+	`currentDest`	VARCHAR(128)	NOT NULL, 
+	
+	PRIMARY KEY (`sessionId`), 
+	FOREIGN KEY `accountId` REFERENCES `account_users` (`accountId`)
 ) ENGINE=InnoDB;
 
 

@@ -29,6 +29,10 @@
 		<@navItem mod="main1" dest="detail.ws" icon="play">Play ${gameName} (Existing user)</@navItem>
 		<@navItem mod="main1" dest="screenshots/screenshots.ws" icon="screenshot">View in-game screenshots</@navItem>
 	</@navBox>
+	
+	<@navBox title="Account Management">
+		<@navItem mod="password_history" dest="passchange.html" secure=true icon="changepass">Change your password</@navItem>
+	</@navBox>
 </div>
 
 <div id="right">

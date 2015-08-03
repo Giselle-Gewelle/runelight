@@ -1,0 +1,59 @@
+@charset "UTF-8";
+
+table {
+	margin: 0 auto;
+	
+	td {
+		vertical-align: middle;
+		padding: 2px;
+		text-align: center;
+		
+		label {
+			font-weight: normal;
+			display: inline;
+		}
+	}
+	
+	input[type="submit"] {
+		border: 3pt outset #6A5A42;
+		color: #FFFFFF;
+		background: #4D422E url('../../img/layout/brownBg.png') repeat;
+	}
+}
+
+#boxContainer {
+	display: block;
+	width: 458px;
+	margin: 1em auto 0;
+	
+	div {
+		display: inline-block;
+	}
+	
+	.box {
+		width: 216px;
+		border: 3pt outset #6A5A42;
+		color: #FFFFFF;
+		background: #4D422E url('../../img/layout/brownBg.png') repeat;
+		text-align: center;
+		padding: 4px;
+		box-sizing: border-box;
+		
+		h3 {
+			font-size: 13px;
+			font-weight: bold;
+			display: block;
+		}
+	}
+	
+	.box:first-child {
+		float: left;
+	}
+	.box:last-child {
+		float: right;
+	}
+}
+
+.clear {
+	height: 1em;
+}
