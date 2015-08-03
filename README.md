@@ -49,6 +49,7 @@ Add some subdomains/domains to your Windows hosts file (in whichever format you 
 127.0.0.1             password-history.runelight.giselle
 127.0.0.1             password.runelight.giselle
 127.0.0.1             recovery-questions.runelight.giselle
+127.0.0.1             staff.runelight.giselle
 
 etc, etc...
 		  

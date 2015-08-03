@@ -26,6 +26,8 @@ import org.runelight.controller.impl.account.sessions.LoginForm;
 import org.runelight.controller.impl.account.sessions.LogoutAttempt;
 import org.runelight.controller.impl.main1.Title;
 import org.runelight.controller.impl.media.News;
+import org.runelight.controller.impl.staff.Accounts;
+import org.runelight.controller.impl.staff.StaffPage;
 import org.runelight.db.RSDataSource;
 import org.runelight.util.ModUtil;
 
@@ -74,6 +76,10 @@ public final class RequestHandler {
 			
 			put("sessions login.ws", LoginAttempt.class);
 			put("sessions logout.ws", LogoutAttempt.class);
+			
+			put("staff index.ws", StaffPage.class);
+			put("staff accounts/list.ws", Accounts.class);
+			put("staff notallowed.ws", GenericPage.class);
 		}
 		
 	};
@@ -173,7 +179,10 @@ public final class RequestHandler {
 		
 		try {
 			controller.setup(request, response, requestType, requestIP, requestTime, con, mod, dest);
-			controller.init();
+			
+			if(!controller.isRedirecting()) {
+				controller.init();
+			}
 			
 			if(!controller.isRedirecting()) {
 				char s = File.separatorChar;

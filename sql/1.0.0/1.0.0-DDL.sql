@@ -98,6 +98,55 @@ CREATE TABLE `media_news` (
 DELIMITER $$
 
 
+-- Staff Center
+
+
+DROP PROCEDURE IF EXISTS `staff_getAccountList` $$ 
+CREATE PROCEDURE `staff_getAccountList` (
+	IN `in_page`			SMALLINT(5), 
+	IN `in_limit`			TINYINT(3), 
+	IN `in_usernameSearch`	VARCHAR(12),
+	OUT `out_realPage`		SMALLINT(5),
+	OUT `out_pageCount`		SMALLINT(5)
+)
+BEGIN
+	DECLARE `accountCount` 	INT(10);
+	DECLARE `start`			INT(10);
+	
+	IF (`in_usernameSearch` IS NOT NULL) THEN 
+		SELECT COUNT(`accountId`) INTO `accountCount` 
+		FROM `account_users` 
+		WHERE `username` LIKE `in_usernameSearch`;
+	ELSE 
+		SELECT COUNT(`accountId`) INTO `accountCount` 
+		FROM `account_users`;
+	END IF;
+	
+	SET `out_pageCount` = CEIL(`accountCount` / `in_limit`);
+	
+	IF (`in_page` > `out_pageCount`) THEN 
+		SET `out_realPage` = `out_pageCount`;
+	ELSE 
+		SET `out_realPage` = `in_page`;
+	END IF;
+	
+	SET `start` = (`out_realPage` * `in_limit`) - `in_limit`;
+	
+	IF (`in_usernameSearch` IS NOT NULL) THEN 
+		SELECT `accountId`, `username`, `creationDate`, `creationIP`, `currentIP`, `staff`, `pmod`, `fmod` 
+		FROM `account_users` 
+		WHERE `username` LIKE `in_usernameSearch`
+		ORDER BY `creationDate` DESC 
+		LIMIT `start`,`in_limit`;
+	ELSE
+		SELECT `accountId`, `username`, `creationDate`, `creationIP`, `currentIP`, `staff`, `pmod`, `fmod` 
+		FROM `account_users` 
+		ORDER BY `creationDate` DESC 
+		LIMIT `start`,`in_limit`;
+	END IF;
+END $$
+
+
 -- Account Management
 
 

@@ -45,7 +45,7 @@ public final class LoginSession {
 		}
 		
 		String endDate = sessionCheck.getEndDate();
-		if(!sessionCheck.isSecure()) {
+		if(viewController.holdSecureSession() || !sessionCheck.isSecure()) {
 			Calendar newEndCal = Calendar.getInstance();
 			newEndCal.add(Calendar.MINUTE, IDLE_TIME);
 			endDate = DateUtil.SQL_DATETIME_FORMAT.format(newEndCal.getTime());

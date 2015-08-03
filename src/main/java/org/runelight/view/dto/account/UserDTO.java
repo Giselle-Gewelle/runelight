@@ -9,6 +9,11 @@ public final class UserDTO {
 	private String formattedUsername;
 	private Password password;
 	private String currentIP;
+	private String creationDate;
+	private String creationIP;
+	private boolean staff;
+	private boolean fmod;
+	private boolean pmod;
 	
 	public UserDTO() {
 		this.password = null;
@@ -48,6 +53,46 @@ public final class UserDTO {
 	}
 	public void setCurrentIP(String currentIP) {
 		this.currentIP = currentIP;
+	}
+
+	public String getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(String creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public String getCreationIP() {
+		return creationIP;
+	}
+
+	public void setCreationIP(String creationIP) {
+		this.creationIP = creationIP;
+	}
+
+	public boolean isStaff() {
+		return staff;
+	}
+
+	public void setStaff(boolean staff) {
+		this.staff = staff;
+	}
+
+	public boolean isFmod() {
+		return fmod;
+	}
+
+	public void setFmod(boolean fmod) {
+		this.fmod = fmod;
+	}
+
+	public boolean isPmod() {
+		return pmod;
+	}
+
+	public void setPmod(boolean pmod) {
+		this.pmod = pmod;
 	}
 	
 }

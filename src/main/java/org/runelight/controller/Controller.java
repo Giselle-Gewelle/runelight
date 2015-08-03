@@ -81,6 +81,10 @@ public abstract class Controller {
 		return false;
 	}
 	
+	public boolean holdSecureSession() {
+		return true;
+	}
+	
 	public boolean loginRequired() {
 		return false;
 	}

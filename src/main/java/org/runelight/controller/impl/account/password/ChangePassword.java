@@ -36,6 +36,11 @@ public final class ChangePassword extends Controller {
 	}
 	
 	@Override
+	public boolean holdSecureSession() {
+		return false;
+	}
+	
+	@Override
 	public boolean loginRequired() {
 		return true;
 	}
