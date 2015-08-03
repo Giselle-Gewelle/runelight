@@ -1,0 +1,15 @@
+@charset "UTF-8";
+
+table {
+	margin: 2em auto 1em;
+	
+	td {
+		padding: 2px;
+		
+		label {
+			font-weight: normal;
+			width: 150px;
+			display: block;
+		}
+	}
+}

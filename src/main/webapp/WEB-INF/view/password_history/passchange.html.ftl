@@ -1,4 +1,5 @@
 <#assign showSessionBar=true />
+<#assign cssImports = [ "account/changepass" ] />
 <#include "../inc/header.ftl" />
 
 <div class="titleFrame">
@@ -14,7 +15,31 @@
 	<p>Please note that passwords must be between <strong>5 and 20</strong> characters in length. We recommend that you use a mixture of numbers and letters in your password to make it 
 		harder for someone to guess.</p>
 	
-	<!-- TODO form here :) -->
+	<form action="${url('password_history', 'password.ws', true)}" method="post" autocomplete="off">
+		<table>
+			<tbody>
+				<tr>
+					<td><label for="current">Current Password:</label></td>
+					<td><input type="password" id="current" name="current" maxlength="20" value="" /> 
+				</tr>
+				
+				<tr>
+					<td><label for="password1">New Password:</label></td>
+					<td><input type="password" id="password1" name="password1" maxlength="20" value="" /></td>
+				</tr>
+				
+				<tr>
+					<td><label for="password2">Confirm New Password:</label></td>
+					<td><input type="password" id="password2" name="password2" maxlength="20" value="" /></td>
+				</tr>
+				
+				<tr>
+					<td>&nbsp;</td>
+					<td><input type="submit" name="submit" value="Submit" /></td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
 </div>
 
 <#include "../inc/footer.ftl" />

@@ -63,6 +63,21 @@ CREATE TABLE `account_loginAttempts` (
 ) ENGINE=InnoDB;
 
 
+DROP TABLE IF EXISTS `account_passwordChanges`;
+CREATE TABLE `account_passwordChanges` (
+	`accountId`		INT(10)			UNSIGNED NOT NULL, 
+	`date`			DATETIME		NOT NULL, 
+	`ip`			VARCHAR(128)	NOT NULL, 
+	`oldHash`		CHAR(128)		NOT NULL,
+	`newHash`		CHAR(128)		NOT NULL, 
+	`oldSalt`		VARCHAR(50)		NOT NULL, 
+	`newSalt`		VARCHAR(50)		NOT NULL, 
+	
+	PRIMARY KEY (`accountId`, `date`), 
+	FOREIGN KEY (`accountId`) REFERENCES `account_users` (`accountId`)
+) ENGINE=InnoDB;
+
+
 DROP TABLE IF EXISTS `media_news`;
 CREATE TABLE `media_news` (
 	`id`			MEDIUMINT(8)	UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
@@ -81,6 +96,44 @@ CREATE TABLE `media_news` (
 
 
 DELIMITER $$
+
+
+-- Account Management
+
+
+DROP PROCEDURE IF EXISTS `account_changePassword` $$ 
+CREATE PROCEDURE `account_changePassord` (
+	IN `in_accountId`		INT(10),
+	IN `in_ip`				VARCHAR(128),
+	IN `in_date`			DATETIME,
+	IN `in_passwordHash`	CHAR(128),
+	IN `in_passwordSalt`	VARCHAR(50),
+	IN `in_oldHash`			CHAR(128),
+	IN `in_oldSalt`			VARCHAR(50),
+	OUT `out_returnCode`	BIT 
+) 
+BEGIN 
+	UPDATE `account_users` 
+	SET `passwordHash` = `in_passwordHash`, 
+		`passwordSalt` = `in_passwordSalt` 
+	WHERE `accountId` = `in_accountId` 
+	LIMIT 1;
+	
+	IF (ROW_COUNT() > 0) THEN
+		SET `out_returnCode` = 1;
+		
+		INSERT INTO `account_passwordChanges` (
+			`accountId`, `date`, `ip`, `newHash`, `oldHash`, `newSalt`, `oldSalt`
+		) VALUES (
+			`in_accountId`, `in_date`, `in_ip`, `in_passwordHash`, `in_oldHash`, `in_passwordSalt`, `in_oldSalt` 
+		);
+	ELSE 
+		SET `out_returnCode` = 0;
+	END IF;
+END $$
+
+
+-- Login Sessions
 
 
 DROP PROCEDURE IF EXISTS `account_getLoginSessionDetails` $$ 
@@ -204,6 +257,9 @@ BEGIN
 END $$
 
 
+-- Account Creation
+
+
 DROP PROCEDURE IF EXISTS `account_creationFloodCheck` $$ 
 CREATE PROCEDURE `account_creationFloodCheck` (
 	IN `in_smallDate`		DATETIME, 
@@ -273,6 +329,8 @@ BEGIN
 	SELECT ROW_COUNT() INTO `out_returnCode`;
 END $$
 
+
+-- News Viewing
 
 
 DROP PROCEDURE IF EXISTS `media_getTitleNews` $$
