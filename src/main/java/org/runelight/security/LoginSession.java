@@ -6,6 +6,11 @@ import org.runelight.view.dto.account.UserDTO;
 
 public final class LoginSession {
 	
+	/**
+	 * The length of time a login session will wait before becoming inactive, in MINUTES.
+	 */
+	public static final int IDLE_TIME = 60;
+	
 	private Connection dbConnection;
 	private UserDTO user;
 	private boolean loggedIn;

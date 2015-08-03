@@ -26,6 +26,9 @@ CREATE TABLE `account_users` (
 	`pmod`			BIT				NOT NULL DEFAULT 0, 
 	`fmod`			BIT				NOT NULL DEFAULT 0,
 	
+	`lastLoginDate`	DATETIME		NULL, 
+	`lastLoginIP`	VARCHAR(128)	NULL, 
+	
 	PRIMARY KEY (`accountId`)
 ) ENGINE=InnoDB;
 
@@ -34,8 +37,8 @@ DROP TABLE IF EXISTS `account_sessions`;
 CREATE TABLE `account_sessions` (
 	`sessionId`		BIGINT(20)		UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE, 
 	`accountId`		INT(10)			UNSIGNED NOT NULL, 
+	`ip`			VARCHAR(128)	NOT NULL, 
 	`hash`			CHAR(128)		NOT NULL, 
-	`secure`		BIT				NOT NULL DEFAULT 1, 
 	`startDate`		DATETIME		NOT NULL, 
 	`endDate`		DATETIME		NOT NULL, 
 	
@@ -67,6 +70,43 @@ CREATE TABLE `media_news` (
 
 
 DELIMITER $$
+
+
+DROP PROCEDURE IF EXISTS `account_submitLoginSession` $$ 
+CREATE PROCEDURE `account_submitLoginSession` (
+	IN `in_accountId`	INT(10),
+	IN `in_ip`			VARCHAR(128),
+	IN `in_sessionHash`	CHAR(128),
+	IN `in_date`		DATETIME, 
+	IN `in_endDate`		DATETIME, 
+	IN `in_mod`			VARCHAR(30),
+	IN `in_dest`		VARCHAR(128)
+) 
+BEGIN 
+	INSERT INTO `account_sessions` (
+		`accountId`, `ip`, `hash`, `startDate`, `endDate`, `startMod`, `currentMod`, `startDest`, `currentDest`
+	) VALUES (
+		`in_accountId`, `in_ip`, `in_sessionHash`, `in_date`, `in_endDate`, `in_mod`, `in_mod`, `in_dest`, `in_dest`
+	);
+	
+	UPDATE `account_users` 
+	SET `lastLoginDate` = `in_date`, 
+		`lastLoginIP` = `in_ip` 
+	WHERE `accountId` = `in_accountId` 
+	LIMIT 1;
+END $$
+
+
+DROP PROCEDURE IF EXISTS `account_getUserForUsername` $$ 
+CREATE PROCEDURE `account_getUserForUsername` (
+	`in_username`	VARCHAR(12)
+) 
+BEGIN 
+	SELECT `accountId`, `passwordHash`, `passwordSalt` 
+	FROM `account_users` 
+	WHERE `username` = `in_username` 
+	LIMIT 1;
+END $$
 
 
 DROP PROCEDURE IF EXISTS `account_creationFloodCheck` $$ 

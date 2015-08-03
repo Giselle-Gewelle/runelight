@@ -18,6 +18,8 @@ public abstract class Controller {
 	private String mod;
 	private String dest;
 	
+	private boolean redirecting;
+	
 	public void setup(HttpServletRequest request, HttpServletResponse response, HttpRequestType requestType, String requestIP, long requestTime, 
 			Connection dbConnection, String mod, String dest) {
 		this.request = request;
@@ -28,9 +30,14 @@ public abstract class Controller {
 		this.dbConnection = dbConnection;
 		this.mod = mod;
 		this.dest = dest;
+		this.redirecting = false;
 	}
 	
 	public abstract void init();
+	
+	protected final void setRedirecting(boolean redirecting) {
+		this.redirecting = redirecting;
+	}
 	
 	public boolean isSecure() {
 		return false;
@@ -70,6 +77,10 @@ public abstract class Controller {
 	
 	protected final String getDest() {
 		return dest;
+	}
+	
+	public final boolean isRedirecting() {
+		return redirecting;
 	}
 	
 }

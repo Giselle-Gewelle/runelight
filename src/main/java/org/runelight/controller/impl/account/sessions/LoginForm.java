@@ -1,5 +1,7 @@
 package org.runelight.controller.impl.account.sessions;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
@@ -20,8 +22,8 @@ public final class LoginForm extends Controller {
 		String toDest = request.getParameter("dest");
 		
 		if(toMod == null || toDest == null) {
-			toMod = "main1";
-			toDest = "title.ws";
+			sendHome();
+			return;
 		}
 		
 		String toQuery = "";
@@ -31,25 +33,32 @@ public final class LoginForm extends Controller {
 		}
 		
 		if(!RequestHandler.CONTROLLER_MAP.containsKey(toMod + " " + toDest)) {
-			toMod = "main1";
-			toDest = "title.ws";
+			sendHome();
+			return;
 		}
 		
 		if(toDest.equals("login.ws") || toDest.equals("loginform.ws") || toDest.equals("logout.ws")) {
-			toMod = "main1";
-			toDest = "title.ws";
+			sendHome();
+			return;
 		}
 		
 		String toSubdomain = ModUtil.modToSubdomain(toMod);
 		String toFullDest = (RequestHandler.SECURE_MODS.contains(toMod) && Config.isSslEnabled() ? "https" : "http") + "://" + toSubdomain + "." + Config.getHostName() + "/" + toDest + toQuery;
-
-		LOG.info("mod = " + toMod + ", dest = " + toDest + ", query = " + toQuery);
-		LOG.info("fullDest = " + toFullDest);
 		
 		request.setAttribute("toMod", toMod);
 		request.setAttribute("toDest", toDest);
 		request.setAttribute("toSubdomain", toSubdomain);
 		request.setAttribute("toFullDest", toFullDest);
+	}
+	
+	private void sendHome() {
+		setRedirecting(true);
+		
+		try {
+			getResponse().sendRedirect("http://www." + Config.getHostName() + "/title.ws");
+		} catch(IOException e) {
+			LOG.error("IOException while attempting to send the user back to the main page from an invalid loginform mod/dest.", e);
+		}
 	}
 	
 	@Override

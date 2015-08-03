@@ -20,7 +20,9 @@ import org.runelight.Config;
 import org.runelight.controller.Controller;
 import org.runelight.controller.impl.GenericPage;
 import org.runelight.controller.impl.account.CreateAccount;
+import org.runelight.controller.impl.account.sessions.LoginAttempt;
 import org.runelight.controller.impl.account.sessions.LoginForm;
+import org.runelight.controller.impl.account.sessions.LogoutAttempt;
 import org.runelight.controller.impl.main1.Title;
 import org.runelight.controller.impl.media.News;
 import org.runelight.db.RSDataSource;
@@ -43,6 +45,7 @@ public final class RequestHandler {
 			add("ticketing");
 			add("pmod");
 			add("fmod");
+			add("staff");
 		}
 		
 	};
@@ -64,6 +67,9 @@ public final class RequestHandler {
 			
 			put("news newsitem.ws", News.class);
 			put("news list.ws", News.class);
+			
+			put("sessions login.ws", LoginAttempt.class);
+			put("sessions logout.ws", LogoutAttempt.class);
 		}
 		
 	};
@@ -108,17 +114,19 @@ public final class RequestHandler {
 			dest = dest.substring(stringToTruncate.length());
 		}
 		
-		if(!CONTROLLER_MAP.containsKey(mod + " " + dest)) {
-			LOG.info("Controller not found: " + mod + ":" + dest);
+		String mapMod = (dest.equals("login.ws") || dest.equals("logout.ws") ? "sessions" : mod);
+		
+		if(!CONTROLLER_MAP.containsKey(mapMod + " " + dest)) {
+			LOG.info("Controller not found: " + mapMod + ":" + dest);
 			sendError(response, 404);
 			return;
 		}
 		
-		LOG.info("View request received for " + mod + ":" + dest + " by " + requestIP + " at " + requestTime);
+		LOG.info("View request received for " + mapMod + ":" + dest + " by " + requestIP + " at " + requestTime);
 
 		Controller controller = null;
 		try {
-			Class<? extends Controller> controllerClass = CONTROLLER_MAP.get(mod + " " + dest);
+			Class<? extends Controller> controllerClass = CONTROLLER_MAP.get(mapMod + " " + dest);
 			controller = controllerClass.newInstance();
 			
 			if(Config.isSslEnabled()) {
@@ -130,7 +138,7 @@ public final class RequestHandler {
 				}
 			}
 		} catch(Exception e) {
-			LOG.error("Controller is null: " + mod + ":" + dest, e);
+			LOG.error("Controller is null: " + mapMod + ":" + dest, e);
 			sendError(response, 404);
 			return;
 		}
@@ -163,11 +171,13 @@ public final class RequestHandler {
 			controller.setup(request, response, requestType, requestIP, requestTime, con, mod, dest);
 			controller.init();
 			
-			char s = File.separatorChar;
-			String location = new StringBuilder().append(s).append("WEB-INF").append(s).append("view").append(s).append(mod).append(s).append(dest).append(".ftl").toString();
-			RequestDispatcher dispatcher = request.getRequestDispatcher(location);
-			if(dispatcher != null && !response.isCommitted()) {
-				dispatcher.forward(request, response);
+			if(!controller.isRedirecting()) {
+				char s = File.separatorChar;
+				String location = new StringBuilder().append(s).append("WEB-INF").append(s).append("view").append(s).append(mapMod).append(s).append(dest).append(".ftl").toString();
+				RequestDispatcher dispatcher = request.getRequestDispatcher(location);
+				if(dispatcher != null && !response.isCommitted()) {
+					dispatcher.forward(request, response);
+				}
 			}
 		} catch(Exception e) {
 			LOG.error("Exception occured while attempting to load the controller for a view request.", e);

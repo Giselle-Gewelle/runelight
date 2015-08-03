@@ -319,6 +319,8 @@ public final class CreateAccount extends Controller {
 	 * Sends a redirect back to the client for the account creation index.
 	 */
 	private void sendHome() {
+		setRedirecting(true);
+		
 		try {
 			getResponse().sendRedirect((Config.isSslEnabled() ? "https" : "http") + "://create." + Config.getHostName() + "/index.html");
 		} catch(IOException e) {
