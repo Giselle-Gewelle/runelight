@@ -78,6 +78,7 @@ public final class RequestHandler {
 			
 			put("staff index.ws", StaffPage.class);
 			put("staff accounts/list.ws", Accounts.class);
+			put("staff accounts/details.ws", Accounts.class);
 			put("staff notallowed.ws", GenericPage.class);
 		}
 		

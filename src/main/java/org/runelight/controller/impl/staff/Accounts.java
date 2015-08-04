@@ -23,7 +23,14 @@ public final class Accounts extends StaffPage {
 			case "accounts/list.ws":
 				setupAccountList();
 				break;
+			case "accounts/details.ws":
+				setupAccountDetails();
+				break;
 		}
+	}
+	
+	private void setupAccountDetails() {
+		
 	}
 	
 	private void setupAccountList() {

@@ -12,10 +12,15 @@
 	<div class="top"></div>
 	
 	<div class="content">
-		<!--
-		Username search here
-		+ button/link for IP search (which can be far more extensive)
-		-->
+		<h4>Search</h4>
+		
+		<form name="searchForm" action="${url('staff', 'accounts/list.ws')}" method="post">
+			<label for="usernameSearch">Username:</label>
+			<input type="text" name="usernameSearch" id="usernameSearch" maxlength="12" value="<#if accountList??>${accountList.usernameSearch?html}</#if>" /> 
+			<input type="submit" name="submit" value="Go" />
+		</form>
+		
+		<hr />
 		
 		<#if accountList??>
 			<#macro nav name>
@@ -43,51 +48,39 @@
 				</#if>
 			</#macro>
 			
-			<div>
-				<h4>Search</h4>
-				
-				<form name="searchForm" action="${url('staff', 'accounts/list.ws')}" method="post">
-					<label for="usernameSearch">Username:</label>
-					<input type="text" name="usernameSearch" id="usernameSearch" maxlength="12" value="${accountList.usernameSearch?html}" /> 
-					<input type="submit" name="submit" value="Go" />
-				</form>
-				
-				<hr />
-				
-				<div class="center">
-					<@nav name="topForm" />
-				</div>
-				
-				<table id="accountList">
-					<thead>
-						<tr>
-							<td>Username</td>
-							<td>Creation Date</td>
-							<td>Creation IP</td>
-							<td>Latest IP</td>
-							<td>Actions</td>
-						</tr>
-					</thead>
-					
-					<tbody>
-						<#list accountList.accountList as account>
-							<tr>
-								<td>${account.formattedUsername}</td>
-								<td>${account.creationDate}</td>
-								<td>${account.creationIP}</td>
-								<td>${account.currentIP}</td>
-								<td><@a mod="staff" dest="accounts/view.ws?id=${account.accountId}">View</@a></td>
-							</tr>
-						</#list>
-					</tbody>
-				</table>
-				
-				<div class="center">
-					<@nav name="bottomForm" />
-				</div>
-				
-				<br />
+			<div class="center">
+				<@nav name="topForm" />
 			</div>
+			
+			<table id="accountList">
+				<thead>
+					<tr>
+						<td>Username</td>
+						<td>Creation Date</td>
+						<td>Creation IP</td>
+						<td>Latest IP</td>
+						<td>Actions</td>
+					</tr>
+				</thead>
+				
+				<tbody>
+					<#list accountList.accountList as account>
+						<tr>
+							<td>${account.formattedUsername}</td>
+							<td>${account.creationDate}</td>
+							<td>${account.creationIP}</td>
+							<td>${account.currentIP}</td>
+							<td><@a mod="staff" dest="accounts/details.ws?id=${account.accountId}">Details</@a></td>
+						</tr>
+					</#list>
+				</tbody>
+			</table>
+			
+			<div class="center">
+				<@nav name="bottomForm" />
+			</div>
+			
+			<br />
 		<#else>
 			<p class="center"><strong>No user accounts were found with the specified username.</strong></p>
 		</#if>
