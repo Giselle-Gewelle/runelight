@@ -24,7 +24,7 @@ public final class CreateAccount extends Controller {
 	
 	private static final int MAX_ATTEMPTS_PER_HALF_HOUR = 3;
 	
-	private static final Map<String, String> AGE_RANGE_MAP = new LinkedHashMap<String, String>() {
+	public static final Map<String, String> AGE_RANGE_MAP = new LinkedHashMap<String, String>() {
 
 		private static final long serialVersionUID = 1L;
 		

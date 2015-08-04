@@ -94,6 +94,24 @@ strong {
 				width: 100%;
 				background-color: #7B4F17;
 			}
+			
+			.contentBox {
+				margin: 0 0 1em;
+				border: 1px solid #7B4F17;
+				
+				.header {
+					background-color: #C9AD7A;
+					padding: 5px;
+					font-weight: bold;
+					font-size: 15px;
+					border-bottom: 1px solid #7B4F17;
+				}
+				
+				.body {
+					background-color: #D8CDA0;
+					padding: 5px;
+				}
+			}
 		}
 			
 		a {
@@ -130,4 +148,8 @@ strong {
 }
 .orange {
 	color: #FFBB22;
+}
+
+table.full {
+	width: 100%;
 }

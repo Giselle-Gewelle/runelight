@@ -100,7 +100,7 @@
 							<td>${account.creationDate}</td>
 							<td>${account.creationIP}</td>
 							<td>${account.currentIP}</td>
-							<td><@a mod="staff" dest="accounts/details.ws?id=${account.accountId}">Details</@a></td>
+							<td><@a mod="staff" dest="accounts/details.ws?accountId=${account.accountId}">Details</@a></td>
 						</tr>
 					</#list>
 				</tbody>

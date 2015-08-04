@@ -1,5 +1,6 @@
 package org.runelight.db.dao.staff;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,11 +13,54 @@ import org.runelight.controller.impl.staff.Accounts;
 import org.runelight.util.DateUtil;
 import org.runelight.util.StringUtil;
 import org.runelight.view.dto.account.UserDTO;
+import org.runelight.view.dto.staff.AccountDetailsDTO;
 import org.runelight.view.dto.staff.AccountListDTO;
+import org.runelight.view.dto.staff.accountDetails.SessionDetailsDTO;
 
-public final class AccountsDAO {
+public final class StaffAccountsDAO {
 	
-	private static final Logger LOG = Logger.getLogger(AccountsDAO.class);
+	private static final Logger LOG = Logger.getLogger(StaffAccountsDAO.class);
+	
+	public static AccountDetailsDTO getAccountDetails(Connection con, int accountId) {
+		try {
+			String sql = "CALL `staff_getAccountDetails`(?);";
+			CallableStatement stmt = con.prepareCall(sql);
+			stmt.setInt("in_id", accountId);
+			stmt.execute();
+			
+			ResultSet results = stmt.getResultSet();
+			if(results == null || !results.next()) {
+				return null;
+			}
+			
+			sql = "CALL `staff_getAccountRecentSessions`(?);";
+			stmt = con.prepareCall(sql);
+			stmt.setInt("in_id", accountId);
+			stmt.execute();
+			
+			ResultSet secondaryResults = stmt.getResultSet();
+			
+			List<SessionDetailsDTO> sessionList = new LinkedList<>();
+			
+			if(secondaryResults != null) {
+				while(secondaryResults.next()) {
+					sessionList.add(new SessionDetailsDTO(secondaryResults.getString("ip"), secondaryResults.getTimestamp("startDate"), secondaryResults.getTimestamp("endDate"), 
+							secondaryResults.getString("startMod"), secondaryResults.getString("currentMod"), secondaryResults.getString("startDest"), secondaryResults.getString("currentDest"),
+							secondaryResults.getBoolean("secure")));
+				}
+			}
+			
+			return new AccountDetailsDTO(
+				results.getInt("accountId"), results.getString("username"), results.getString("ageRange"), results.getString("countryCode"), 
+				results.getTimestamp("creationDate"), results.getString("creationIP"), results.getTimestamp("lastLoginDate"), results.getString("currentIP"), 
+				results.getBoolean("staff"), results.getBoolean("fmod"), results.getBoolean("pmod"), 
+				(sessionList.size() < 1 ? null : sessionList)
+			);
+		} catch(SQLException e) {
+			LOG.error("SQLException occurred while attempting to load user account details for [" + accountId + "].", e);
+			return null;
+		}
+	}
 	
 	public static AccountListDTO getAccountList(Connection con, int page, String usernameSearch, String ipSearch, String sort, String sortDir) {
 		try {

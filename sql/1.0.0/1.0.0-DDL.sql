@@ -101,6 +101,31 @@ DELIMITER $$
 -- Staff Center
 
 
+DROP PROCEDURE IF EXISTS `staff_getAccountRecentSessions` $$ 
+CREATE PROCEDURE `staff_getAccountRecentSessions` (
+	IN `in_id`		INT(10)
+) 
+BEGIN 
+	SELECT `ip`, `startDate`, `endDate`, `secure`, `startMod`, `currentMod`, `startDest`, `currentDest` 
+	FROM `account_sessions` 
+	WHERE `accountId` = `in_id` 
+	ORDER BY `startDate` DESC 
+	LIMIT 10;
+END $$
+
+
+DROP PROCEDURE IF EXISTS `staff_getAccountDetails` $$
+CREATE PROCEDURE `staff_getAccountDetails` (
+	IN `in_id`		INT(10)
+)
+BEGIN 
+	SELECT `accountId`, `username`, `ageRange`, `countryCode`, `creationDate`, `creationIP`, `lastLoginDate`, `currentIP`, `staff`, `pmod`, `fmod` 
+	FROM `account_users` 
+	WHERE `accountId` = `in_id` 
+	LIMIT 1;
+END $$
+
+
 -- Account Management
 
 

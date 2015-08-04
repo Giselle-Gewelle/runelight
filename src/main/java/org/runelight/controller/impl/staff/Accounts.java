@@ -5,8 +5,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.runelight.db.dao.staff.AccountsDAO;
+import org.runelight.db.dao.staff.StaffAccountsDAO;
 import org.runelight.util.URLUtil;
+import org.runelight.view.dto.staff.AccountDetailsDTO;
 import org.runelight.view.dto.staff.AccountListDTO;
 
 public final class Accounts extends StaffPage {
@@ -47,7 +48,15 @@ public final class Accounts extends StaffPage {
 	}
 	
 	private void setupAccountDetails() {
+		int accountId = URLUtil.getIntParam(getRequest(), "accountId");
+		if(accountId < 1) {
+			return;
+		}
 		
+		AccountDetailsDTO details = StaffAccountsDAO.getAccountDetails(getDbConnection(), accountId);
+		if(details != null) {
+			getRequest().setAttribute("account", details);
+		}
 	}
 	
 	private void setupAccountList() {
@@ -108,7 +117,7 @@ public final class Accounts extends StaffPage {
 			sortDir = DEFAULT_SORT_DIR;
 		}
 		
-		AccountListDTO accountListDTO = AccountsDAO.getAccountList(getDbConnection(), page, usernameSearch, ipSearch, sort, sortDir);
+		AccountListDTO accountListDTO = StaffAccountsDAO.getAccountList(getDbConnection(), page, usernameSearch, ipSearch, sort, sortDir);
 		if(accountListDTO != null) {
 			getRequest().setAttribute("accountList", accountListDTO);
 		}
