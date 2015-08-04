@@ -17,10 +17,6 @@
 	}
 }
 
-#basicDetails {
-	width: 100%;
-}
-
 tr.lower {
 	td {
 		padding-top: 10px;
@@ -83,4 +79,14 @@ label {
 	font-weight: bold;
 	cursor: pointer;
 	font-size: 14px;
+}
+
+#userDetails {
+	#basicDetails {
+		width: 100%;
+	}
+	
+	hr {
+		margin: 0.5em 0 !important;
+	}
 }

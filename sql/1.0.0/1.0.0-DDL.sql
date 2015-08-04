@@ -110,7 +110,7 @@ BEGIN
 	FROM `account_sessions` 
 	WHERE `accountId` = `in_id` 
 	ORDER BY `startDate` DESC 
-	LIMIT 10;
+	LIMIT 5;
 END $$
 
 

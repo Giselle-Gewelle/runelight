@@ -7,12 +7,12 @@
 	<@a mod="staff" dest="index.ws" secure=true>Staff Center</@a> - <@a mod="staff" dest="accounts/list.ws" secure=true>Account List</@a>
 </div>
 
-<div class="scroll">
+<div id="userDetails" class="scroll">
 	<div class="top"></div>
 	
 	<div class="content">
 		<#if account??>
-			<h4>${account.accountId} - ${account.formattedUsername} (${account.username})</h4>
+			<h4>#${account.accountId} - ${account.formattedUsername} (${account.username})</h4>
 			
 			<br />
 			
@@ -79,49 +79,7 @@
 			
 			<div class="contentBox">
 				<div class="header">
-					Recent Sessions
-				</div>
-				
-				<div class="body">
-					<#if account.sessionList??>
-						<table class="full">
-							<thead>
-								<tr>
-									<td>IP</td>
-									<td>Secure</td>
-									<td>Start Date</td>
-									<td>End Date</td>
-									<td>Start Mod</td>
-									<td>Start Dest</td>
-									<td>latest Mod</td>
-									<td>Latest Dest</td>
-								</tr>
-							</thead>
-							
-							<tbody>
-								<#list account.sessionList as session>
-									<tr>
-										<td>${session.ip}</td>
-										<td>${session.secure}</td>
-										<td>${session.startDate}</td>
-										<td>${session.endDate}</td>
-										<td>${session.startMod}</td>
-										<td>${session.startDest}</td>
-										<td>${session.currentMod}</td>
-										<td>${session.currentDest}</td>
-									</tr>
-								</#list>
-							</tbody>
-						</table>
-					<#else>
-						There are no recent sessions to display for this user.
-					</#if>
-				</div>
-			</div>
-			
-			<div class="contentBox">
-				<div class="header">
-					Recent Login Attempts
+					Recent Password Changes
 				</div>
 				
 				<div class="body">
@@ -131,7 +89,47 @@
 			
 			<div class="contentBox">
 				<div class="header">
-					Recent Password Changes
+					Recent Login Sessions
+				</div>
+				
+				<div class="body">
+					<#if account.sessionList??>
+						<table class="full">
+							<thead>
+								<tr>
+									<td>IP</td>
+									<td>Start Date</td>
+									<td>End Date</td>
+									<td>Start Location</td>
+									<td>Latest Location</td>
+								</tr>
+							</thead>
+							
+							<tbody>
+								<#list account.sessionList as session>
+									<tr>
+										<td>${session.ip}</td>
+										<td>${session.startDate}</td>
+										<td>${session.endDate}</td>
+										<td>${session.startMod} | ${session.startDest}</td>
+										<td>${session.currentMod} | ${session.currentDest}</td>
+									</tr>
+								</#list>
+							</tbody>
+						</table>
+						
+						<hr />
+						
+						<a href="">View Full List</a>
+					<#else>
+						There are no recent sessions to display for this user.
+					</#if>
+				</div>
+			</div>
+			
+			<div class="contentBox">
+				<div class="header">
+					Recent Login Attempts
 				</div>
 				
 				<div class="body">
