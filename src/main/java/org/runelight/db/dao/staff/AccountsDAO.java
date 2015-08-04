@@ -1,10 +1,9 @@
 package org.runelight.db.dao.staff;
 
-import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,19 +18,58 @@ public final class AccountsDAO {
 	
 	private static final Logger LOG = Logger.getLogger(AccountsDAO.class);
 	
-	public static AccountListDTO getAccountList(Connection con, int page, String usernameSearch, String ipSearch) {
+	public static AccountListDTO getAccountList(Connection con, int page, String usernameSearch, String ipSearch, String sort, String sortDir) {
 		try {
-			String sql = "CALL `staff_getAccountList`(?, ?, ?, ?, ?, ?);";
-			CallableStatement stmt = con.prepareCall(sql);
-			stmt.setInt("in_page", page);
-			stmt.setInt("in_limit", Accounts.ACCOUNTS_PER_PAGE);
-			stmt.setString("in_usernameSearch", usernameSearch);
-			stmt.setString("in_ipSearch", ipSearch);
-			stmt.registerOutParameter("out_realPage", Types.SMALLINT);
-			stmt.registerOutParameter("out_pageCount", Types.SMALLINT);
+			/*
+			 * Inline because of the special sorting parameters.
+			 */
+			
+			String sql = 
+			"SELECT COUNT(`accountId`) AS `accountCount` " + 
+			"FROM `account_users` " + 
+			"WHERE ((? = '') OR (`username` LIKE ?)) " + 
+				"AND ((? = '') OR (`creationIP` LIKE ?) OR (`currentIP` LIKE ?));";
+			
+			PreparedStatement stmt = con.prepareStatement(sql);
+			stmt.setString(1, usernameSearch);
+			stmt.setString(2, usernameSearch);
+			stmt.setString(3, ipSearch);
+			stmt.setString(4, ipSearch);
+			stmt.setString(5, ipSearch);
 			stmt.execute();
 			
 			ResultSet results = stmt.getResultSet();
+			if(results == null || !results.next()) {
+				return null;
+			}
+			
+			
+			int accountCount = results.getInt("accountCount");
+			int pageCount = (int) Math.ceil((double) accountCount / (double) Accounts.ACCOUNTS_PER_PAGE);
+			
+			if(page > pageCount) {
+				page = pageCount;
+			}
+			
+			int start = (page * Accounts.ACCOUNTS_PER_PAGE) - Accounts.ACCOUNTS_PER_PAGE;
+			
+			sql = 
+			"SELECT `accountId`, `username`, `creationDate`, `creationIP`, `currentIP`, `staff`, `pmod`, `fmod` " + 
+			"FROM `account_users` " + 
+			"WHERE ((? = '') OR (`username` LIKE ?)) " + 
+				"AND ((? = '') OR (`creationIP` LIKE ?) OR (`currentIP` LIKE ?)) " +
+			"ORDER BY `" + sort + "` " + sortDir + " " + 
+			"LIMIT " + start + "," + Accounts.ACCOUNTS_PER_PAGE + ";";
+			
+			stmt = con.prepareStatement(sql);
+			stmt.setString(1, usernameSearch);
+			stmt.setString(2, usernameSearch);
+			stmt.setString(3, ipSearch);
+			stmt.setString(4, ipSearch);
+			stmt.setString(5, ipSearch);
+			stmt.execute();
+			
+			results = stmt.getResultSet();
 			if(results == null) {
 				return null;
 			}
@@ -56,10 +94,10 @@ public final class AccountsDAO {
 				return null;
 			}
 			
-			return new AccountListDTO(stmt.getInt("out_realPage"), stmt.getInt("out_pageCount"), 
+			return new AccountListDTO(page, pageCount, 
 					usernameSearch.replace("%", ""), 
 					ipSearch.replace("%", ""),
-					accountList);
+					accountList, sort, sortDir);
 		} catch(SQLException e) {
 			LOG.error("SQLException occurred while attempting to fetch the administrative account list.", e);
 			return null;

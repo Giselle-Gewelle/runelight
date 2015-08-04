@@ -37,10 +37,12 @@
 		<hr />
 		
 		<#if accountList??>
+			<#macro pageUrl page=accountList.currentPage usernameSearch=accountList.usernameSearch ipSearch=accountList.ipSearch sort=accountList.sort sortDir=accountList.sortDir>${url('staff', 'accounts/list.ws?page=${page}&amp;usernameSearch=${usernameSearch}&amp;ipSearch=${ipSearch}&amp;sort=${sort}&amp;sortDir=${sortDir}', true)}</#macro>
+			
 			<#macro nav name>
 				<#if (accountList.currentPage > 1)>
-					<a href="${url('staff', 'accounts/list.ws?page=1&amp;usernameSearch=${accountList.usernameSearch?html}&amp;ipSearch=${accountList.ipSearch}')}"><img class="arrow" title="First" alt="First" src="${url('main1', 'img/media/news/first.png')}" /></a>
-					&nbsp;<a href="${url('staff', 'accounts/list.ws?page=${(accountList.currentPage - 1)}&amp;usernameSearch=${accountList.usernameSearch?html}&amp;ipSearch=${accountList.ipSearch}')}')}"><img class="arrow" title="Prev" alt="Prev" src="${url('main1', 'img/media/news/prev.png')}" /></a>
+					<a href="<@pageUrl page=1 />"><img class="arrow" title="First" alt="First" src="${url('main1', 'img/media/news/first.png')}" /></a>
+					&nbsp;<a href="<@pageUrl page=(accountList.currentPage - 1) />"><img class="arrow" title="Prev" alt="Prev" src="${url('main1', 'img/media/news/prev.png')}" /></a>
 				<#else>
 					<img class="doubleArrow" alt="" src="${url('main1', 'img/layout/blank.png')}" />
 					&nbsp;
@@ -50,12 +52,14 @@
 					<input type="hidden" name="pageCount" value="${accountList.pageCount}" />
 					<input type="hidden" name="currentPage" value="${accountList.currentPage}" />
 					<input type="hidden" name="usernameSearch" value="${accountList.usernameSearch?html}" />
+					<input type="hidden" name="sort" value="${accountList.sort}" />
+					<input type="hidden" name="sortDir" value="${accountList.sortDir}" />
 					Page <input type="text" name="page" size="3" value="${accountList.currentPage}" onchange="updatePage('${name}')" /> of ${accountList.pageCount}
 				</form>
 				&nbsp;
 				<#if (accountList.currentPage < accountList.pageCount)>
-					<a href="${url('staff', 'accounts/list.ws?page=${(accountList.currentPage + 1)}&amp;usernameSearch=${accountList.usernameSearch?html}&amp;ipSearch=${accountList.ipSearch}')}')}"><img class="arrow" title="Next" alt="Next" src="${url('main1', 'img/media/news/next.png')}" /></a>
-					&nbsp;<a href="${url('staff', 'accounts/list.ws?page=${accountList.pageCount}&amp;usernameSearch=${accountList.usernameSearch?html}&amp;ipSearch=${accountList.ipSearch}')}')}"><img class="arrow" title="Last" alt="Last" src="${url('main1', 'img/media/news/last.png')}" /></a>
+					<a href="<@pageUrl page=(accountList.currentPage + 1) />"><img class="arrow" title="Next" alt="Next" src="${url('main1', 'img/media/news/next.png')}" /></a>
+					&nbsp;<a href="<@pageUrl page=accountList.pageCount />"><img class="arrow" title="Last" alt="Last" src="${url('main1', 'img/media/news/last.png')}" /></a>
 				<#else>
 					&nbsp;
 					<img class="doubleArrow" alt="" src="${url('main1', 'img/layout/blank.png')}" />
@@ -66,13 +70,25 @@
 				<@nav name="topForm" />
 			</div>
 			
+			<#macro sortableHeader value name>
+				<td class="sort" onclick="window.location='<@pageUrl sort="${value}" sortDir=(accountList.sort == value)?then((accountList.sortDir == "ASC")?then("DESC", "ASC"), "DESC") />';">
+					${name}<#if accountList.sort == value>
+						<#if accountList.sortDir == "DESC">
+							( v )
+						<#else>
+							( ^ )
+						</#if>
+					</#if>
+				</td>
+			</#macro>
+			
 			<table id="accountList">
 				<thead>
 					<tr>
-						<td>Username</td>
-						<td>Creation Date</td>
-						<td>Creation IP</td>
-						<td>Latest IP</td>
+						<@sortableHeader value="username" name="Username" />
+						<@sortableHeader value="creationDate" name="Creation Date" />
+						<@sortableHeader value="creationIP" name="Creation IP" />
+						<@sortableHeader value="currentIP" name="Latest IP" />
 						<td>Actions</td>
 					</tr>
 				</thead>

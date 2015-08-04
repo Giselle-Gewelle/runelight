@@ -11,13 +11,17 @@ public final class AccountListDTO {
 	private final String usernameSearch;
 	private final String ipSearch;
 	private final List<UserDTO> accountList;
+	private final String sort;
+	private final String sortDir;
 	
-	public AccountListDTO(int currentPage, int pageCount, String usernameSearch, String ipSearch, List<UserDTO> accountList) {
+	public AccountListDTO(int currentPage, int pageCount, String usernameSearch, String ipSearch, List<UserDTO> accountList, String sort, String sortDir) {
 		this.currentPage = currentPage;
 		this.pageCount = pageCount;
 		this.ipSearch = ipSearch;
 		this.usernameSearch = usernameSearch;
 		this.accountList = accountList;
+		this.sort = sort;
+		this.sortDir = sortDir;
 	}
 	
 	public int getCurrentPage() {
@@ -34,6 +38,12 @@ public final class AccountListDTO {
 	}
 	public List<UserDTO> getAccountList() {
 		return accountList;
+	}
+	public String getSort() {
+		return sort;
+	}
+	public String getSortDir() {
+		return sortDir;
 	}
 	
 }
