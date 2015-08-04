@@ -15,9 +15,23 @@
 		<h4>Search</h4>
 		
 		<form name="searchForm" action="${url('staff', 'accounts/list.ws')}" method="post">
-			<label for="usernameSearch">Username:</label>
-			<input type="text" name="usernameSearch" id="usernameSearch" maxlength="12" value="<#if accountList??>${accountList.usernameSearch?html}</#if>" /> 
-			<input type="submit" name="submit" value="Go" />
+			<div class="searchField">
+				<label for="usernameSearch">Username:</label><br />
+				<input type="text" name="usernameSearch" id="usernameSearch" maxlength="12" value="<#if accountList??>${accountList.usernameSearch?html}</#if>" /> 
+			</div>
+			
+			<div class="searchField">
+				<label for="ipSearch">IP:</label><br />
+				<input type="text" name="ipSearch" id="ipSearch" maxlength="50" value="<#if accountList??>${accountList.ipSearch?html}</#if>" /> 
+			</div>
+			
+			<div class="searchField">
+				<input type="submit" name="submit" value="Search" />
+			</div>
+			
+			<div class="searchField">
+				<input type="submit" name="submit" value="Reset" onclick="window.location='${url("staff", "accounts/list.ws", true)}'; return false;" />
+			</div>
 		</form>
 		
 		<hr />
@@ -25,8 +39,8 @@
 		<#if accountList??>
 			<#macro nav name>
 				<#if (accountList.currentPage > 1)>
-					<a href="${url('staff', 'accounts/list.ws?page=1&amp;usernameSearch=${accountList.usernameSearch?html}')}"><img class="arrow" title="First" alt="First" src="${url('main1', 'img/media/news/first.png')}" /></a>
-					&nbsp;<a href="${url('staff', 'accounts/list.ws?page=${(accountList.currentPage - 1)}&amp;usernameSearch=${accountList.usernameSearch?html}')}"><img class="arrow" title="Prev" alt="Prev" src="${url('main1', 'img/media/news/prev.png')}" /></a>
+					<a href="${url('staff', 'accounts/list.ws?page=1&amp;usernameSearch=${accountList.usernameSearch?html}&amp;ipSearch=${accountList.ipSearch}')}"><img class="arrow" title="First" alt="First" src="${url('main1', 'img/media/news/first.png')}" /></a>
+					&nbsp;<a href="${url('staff', 'accounts/list.ws?page=${(accountList.currentPage - 1)}&amp;usernameSearch=${accountList.usernameSearch?html}&amp;ipSearch=${accountList.ipSearch}')}')}"><img class="arrow" title="Prev" alt="Prev" src="${url('main1', 'img/media/news/prev.png')}" /></a>
 				<#else>
 					<img class="doubleArrow" alt="" src="${url('main1', 'img/layout/blank.png')}" />
 					&nbsp;
@@ -40,8 +54,8 @@
 				</form>
 				&nbsp;
 				<#if (accountList.currentPage < accountList.pageCount)>
-					<a href="${url('staff', 'accounts/list.ws?page=${(accountList.currentPage + 1)}&amp;usernameSearch=${accountList.usernameSearch?html}')}"><img class="arrow" title="Next" alt="Next" src="${url('main1', 'img/media/news/next.png')}" /></a>
-					&nbsp;<a href="${url('staff', 'accounts/list.ws?page=${accountList.pageCount}&amp;usernameSearch=${accountList.usernameSearch?html}')}"><img class="arrow" title="Last" alt="Last" src="${url('main1', 'img/media/news/last.png')}" /></a>
+					<a href="${url('staff', 'accounts/list.ws?page=${(accountList.currentPage + 1)}&amp;usernameSearch=${accountList.usernameSearch?html}&amp;ipSearch=${accountList.ipSearch}')}')}"><img class="arrow" title="Next" alt="Next" src="${url('main1', 'img/media/news/next.png')}" /></a>
+					&nbsp;<a href="${url('staff', 'accounts/list.ws?page=${accountList.pageCount}&amp;usernameSearch=${accountList.usernameSearch?html}&amp;ipSearch=${accountList.ipSearch}')}')}"><img class="arrow" title="Last" alt="Last" src="${url('main1', 'img/media/news/last.png')}" /></a>
 				<#else>
 					&nbsp;
 					<img class="doubleArrow" alt="" src="${url('main1', 'img/layout/blank.png')}" />
@@ -82,7 +96,7 @@
 			
 			<br />
 		<#else>
-			<p class="center"><strong>No user accounts were found with the specified username.</strong></p>
+			<p class="center"><strong>No user accounts were found with the specified parameters.</strong></p>
 		</#if>
 	</div>
 	

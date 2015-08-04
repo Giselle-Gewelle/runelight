@@ -51,7 +51,7 @@
 			</plugin>
 		</plugins>
 		
-		<!--<finalName>RuneLight</finalName>-->
+		<finalName>RuneLight</finalName>
 		<pluginManagement>
 			<plugins>
 				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
@@ -91,7 +91,7 @@
 
 	<groupId>org.runelight</groupId>
 	<artifactId>runelight</artifactId>
-	<version>0.0.1</version>
+	<version>0.1.0</version>
 	<packaging>war</packaging>
 
 	<name>RuneLight</name>

@@ -19,13 +19,14 @@ public final class AccountsDAO {
 	
 	private static final Logger LOG = Logger.getLogger(AccountsDAO.class);
 	
-	public static AccountListDTO getAccountList(Connection con, int page, String usernameSearch) {
+	public static AccountListDTO getAccountList(Connection con, int page, String usernameSearch, String ipSearch) {
 		try {
-			String sql = "CALL `staff_getAccountList`(?, ?, ?, ?, ?);";
+			String sql = "CALL `staff_getAccountList`(?, ?, ?, ?, ?, ?);";
 			CallableStatement stmt = con.prepareCall(sql);
 			stmt.setInt("in_page", page);
 			stmt.setInt("in_limit", Accounts.ACCOUNTS_PER_PAGE);
 			stmt.setString("in_usernameSearch", usernameSearch);
+			stmt.setString("in_ipSearch", ipSearch);
 			stmt.registerOutParameter("out_realPage", Types.SMALLINT);
 			stmt.registerOutParameter("out_pageCount", Types.SMALLINT);
 			stmt.execute();
@@ -55,7 +56,10 @@ public final class AccountsDAO {
 				return null;
 			}
 			
-			return new AccountListDTO(stmt.getInt("out_realPage"), stmt.getInt("out_pageCount"), usernameSearch == null ? "" : usernameSearch.replace("%", ""), accountList);
+			return new AccountListDTO(stmt.getInt("out_realPage"), stmt.getInt("out_pageCount"), 
+					usernameSearch.replace("%", ""), 
+					ipSearch.replace("%", ""),
+					accountList);
 		} catch(SQLException e) {
 			LOG.error("SQLException occurred while attempting to fetch the administrative account list.", e);
 			return null;

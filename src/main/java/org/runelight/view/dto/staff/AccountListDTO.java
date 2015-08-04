@@ -9,11 +9,13 @@ public final class AccountListDTO {
 	private final int currentPage;
 	private final int pageCount;
 	private final String usernameSearch;
+	private final String ipSearch;
 	private final List<UserDTO> accountList;
 	
-	public AccountListDTO(int currentPage, int pageCount, String usernameSearch, List<UserDTO> accountList) {
+	public AccountListDTO(int currentPage, int pageCount, String usernameSearch, String ipSearch, List<UserDTO> accountList) {
 		this.currentPage = currentPage;
 		this.pageCount = pageCount;
+		this.ipSearch = ipSearch;
 		this.usernameSearch = usernameSearch;
 		this.accountList = accountList;
 	}
@@ -23,6 +25,9 @@ public final class AccountListDTO {
 	}
 	public int getPageCount() {
 		return pageCount;
+	}
+	public String getIpSearch() {
+		return ipSearch;
 	}
 	public String getUsernameSearch() {
 		return usernameSearch;

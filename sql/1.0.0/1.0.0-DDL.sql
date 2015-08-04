@@ -106,6 +106,7 @@ CREATE PROCEDURE `staff_getAccountList` (
 	IN `in_page`			SMALLINT(5), 
 	IN `in_limit`			TINYINT(3), 
 	IN `in_usernameSearch`	VARCHAR(12),
+	IN `in_ipSearch`		VARCHAR(50),
 	OUT `out_realPage`		SMALLINT(5),
 	OUT `out_pageCount`		SMALLINT(5)
 )
@@ -113,14 +114,10 @@ BEGIN
 	DECLARE `accountCount` 	INT(10);
 	DECLARE `start`			INT(10);
 	
-	IF (`in_usernameSearch` IS NOT NULL) THEN 
-		SELECT COUNT(`accountId`) INTO `accountCount` 
-		FROM `account_users` 
-		WHERE `username` LIKE `in_usernameSearch`;
-	ELSE 
-		SELECT COUNT(`accountId`) INTO `accountCount` 
-		FROM `account_users`;
-	END IF;
+	SELECT COUNT(`accountId`) INTO `accountCount` 
+	FROM `account_users` 
+	WHERE ((`in_usernameSearch` = '') OR (`username` LIKE `in_usernameSearch`)) 
+		AND ((`in_ipSearch` = '') OR (`creationIP` LIKE `in_ipSearch`) OR (`currentIP` LIKE `in_ipSearch`));
 	
 	SET `out_pageCount` = CEIL(`accountCount` / `in_limit`);
 	
@@ -132,18 +129,12 @@ BEGIN
 	
 	SET `start` = (`out_realPage` * `in_limit`) - `in_limit`;
 	
-	IF (`in_usernameSearch` IS NOT NULL) THEN 
-		SELECT `accountId`, `username`, `creationDate`, `creationIP`, `currentIP`, `staff`, `pmod`, `fmod` 
-		FROM `account_users` 
-		WHERE `username` LIKE `in_usernameSearch`
-		ORDER BY `creationDate` DESC 
-		LIMIT `start`,`in_limit`;
-	ELSE
-		SELECT `accountId`, `username`, `creationDate`, `creationIP`, `currentIP`, `staff`, `pmod`, `fmod` 
-		FROM `account_users` 
-		ORDER BY `creationDate` DESC 
-		LIMIT `start`,`in_limit`;
-	END IF;
+	SELECT `accountId`, `username`, `creationDate`, `creationIP`, `currentIP`, `staff`, `pmod`, `fmod` 
+	FROM `account_users` 
+	WHERE ((`in_usernameSearch` = '') OR (`username` LIKE `in_usernameSearch`)) 
+		AND ((`in_ipSearch` = '') OR (`creationIP` LIKE `in_ipSearch`) OR (`currentIP` LIKE `in_ipSearch`))
+	ORDER BY `creationDate` DESC 
+	LIMIT `start`,`in_limit`;
 END $$
 
 

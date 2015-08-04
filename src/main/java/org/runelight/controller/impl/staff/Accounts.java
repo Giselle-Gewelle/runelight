@@ -52,11 +52,36 @@ public final class Accounts extends StaffPage {
 			}
 		}
 		
-		if(usernameSearch != null) {
+		if(usernameSearch == null) {
+			usernameSearch = "";
+		}
+		
+		if(!usernameSearch.equals("")) {
 			usernameSearch = "%" + usernameSearch + "%";
 		}
 		
-		AccountListDTO accountListDTO = AccountsDAO.getAccountList(getDbConnection(), page, usernameSearch);
+		String ipSearch = getRequest().getParameter("ipSearch");
+		if(ipSearch != null) {
+			if(ipSearch.length() < 1 || ipSearch.length() > 50) {
+				ipSearch = null;
+			} else {
+				Pattern pattern = Pattern.compile("^[0-9\\.]{1,50}$");
+				Matcher matcher = pattern.matcher(ipSearch);
+				if(!matcher.find()) {
+					ipSearch = null;
+				}
+			}
+		}
+		
+		if(ipSearch == null) {
+			ipSearch = "";
+		}
+		
+		if(!ipSearch.equals("")) {
+			ipSearch = "%" + ipSearch + "%";
+		}
+		
+		AccountListDTO accountListDTO = AccountsDAO.getAccountList(getDbConnection(), page, usernameSearch, ipSearch);
 		if(accountListDTO != null) {
 			getRequest().setAttribute("accountList", accountListDTO);
 		}

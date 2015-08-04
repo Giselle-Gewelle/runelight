@@ -51,6 +51,13 @@
 	}
 }
 
+form[name="searchForm"] {
+	.searchField {
+		display: inline-block;
+		margin-right: 5px;
+	}
+}
+
 h4 {
 	font-weight: bold;
 	display: block;
