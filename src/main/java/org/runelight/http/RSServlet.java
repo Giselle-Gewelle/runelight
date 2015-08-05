@@ -1,5 +1,6 @@
 package org.runelight.http;
 
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -8,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.runelight.Config;
 import org.runelight.db.RSDataSource;
 
+@MultipartConfig
 public final class RSServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 2464603724605833400L;

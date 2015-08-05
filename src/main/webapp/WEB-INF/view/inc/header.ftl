@@ -23,7 +23,11 @@
 		<link rel="shortcut icon" type="image/x-icon" href="${url('main1', 'favicon.ico')}" />
 	</head>
 	
-	<body>
+	<body<#if angular??> ${angular}</#if>>
+		<#if prepend??>
+			<@prepend />
+		</#if>
+		
 		<div id="content">
 			<#if showSessionBar??>
 				<div class="frame">

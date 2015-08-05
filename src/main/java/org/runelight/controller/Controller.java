@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.runelight.http.HttpRequestType;
 import org.runelight.security.LoginSession;
 import org.runelight.util.URLUtil;
@@ -23,6 +24,8 @@ public abstract class Controller {
 	private Connection dbConnection;
 	private String mod;
 	private String dest;
+	
+	private JSONObject jsonData;
 	
 	private LoginSession loginSession;
 	
@@ -69,9 +72,15 @@ public abstract class Controller {
 		request.setAttribute("currentMod", mod);
 		request.setAttribute("currentDest", dest);
 		request.setAttribute("currentQuery", queryString);
+		
+		this.jsonData = null;
 	}
 	
 	public abstract void init();
+	
+	protected final void setJsonData(JSONObject jsonData) {
+		this.jsonData = jsonData;
+	}
 	
 	protected final void setRedirecting(boolean redirecting) {
 		this.redirecting = redirecting;
@@ -127,6 +136,10 @@ public abstract class Controller {
 	
 	public final boolean isRedirecting() {
 		return redirecting;
+	}
+	
+	public final JSONObject getJsonData() {
+		return jsonData;
 	}
 	
 }

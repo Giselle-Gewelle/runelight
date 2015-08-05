@@ -91,7 +91,7 @@
 
 	<groupId>org.runelight</groupId>
 	<artifactId>runelight</artifactId>
-	<version>0.1.2</version>
+	<version>0.1.4</version>
 	<packaging>war</packaging>
 
 	<name>RuneLight</name>
@@ -136,6 +136,12 @@
 		    <groupId>com.github.warmuuh</groupId>
 		    <artifactId>libsass-maven-plugin</artifactId>
 		    <version>0.1.5-libsass_3.2.4</version>
+		</dependency>
+		
+		<dependency>
+    		<groupId>org.json</groupId>
+    		<artifactId>json</artifactId>
+    		<version>20141113</version>
 		</dependency>
 		
 		

@@ -89,7 +89,7 @@ CREATE TABLE `media_news` (
 	`description`	VARCHAR(1024)	NOT NULL, 
 	`body`			TEXT			NOT NULL,
 	
-	PRIMARY KEY(`id`),
+	PRIMARY KEY (`id`),
 	FOREIGN KEY (`authorId`) REFERENCES `account_users` (`accountId`)
 ) ENGINE=InnoDB;
 

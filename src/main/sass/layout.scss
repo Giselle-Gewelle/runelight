@@ -82,12 +82,28 @@ thead td {
 			padding: 25px 10px;
 			color: #000000;
 			
-			input[type="text"], input[type="password"], textarea {
+			h2 {
+				font-weight: bold;
+				display: block;
+				font-size: 22px;
+				margin: 0.5em 0;
+			}
+			
+			input[type="text"], input[type="password"], textarea, select {
 				border: 1px solid #7B4F17;
 				background-color: #D8CDA0;
 				color: #000000;
 				outline: none !important;
 				padding: 2px;
+			}
+			input[type="submit"], input[type="reset"] {
+				border: 2px solid #7B4F17;
+				background-color: #D8CDA0;
+				font-weight: bold;
+				outline: none !important;
+				cursor: pointer;
+				border-radius: 5px;
+				padding: 4px 10px;
 			}
 			
 			hr {

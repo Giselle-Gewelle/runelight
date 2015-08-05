@@ -10,6 +10,8 @@
 	<div class="top"></div>
 	
 	<div class="content">
+		<h2>Staff Center</h2>
+		
 		<div id="staffArea">
 			<a href="${url('staff', 'accounts/list.ws', true)}" class="box">
 				<span class="bg"></span>

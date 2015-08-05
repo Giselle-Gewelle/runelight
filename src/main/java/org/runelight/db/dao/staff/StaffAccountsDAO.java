@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.runelight.controller.impl.staff.Accounts;
+import org.runelight.controller.impl.staff.StaffAccounts;
 import org.runelight.util.DateUtil;
 import org.runelight.util.StringUtil;
 import org.runelight.view.dto.account.UserDTO;
@@ -120,13 +120,13 @@ public final class StaffAccountsDAO {
 			
 			
 			int accountCount = results.getInt("accountCount");
-			int pageCount = (int) Math.ceil((double) accountCount / (double) Accounts.ACCOUNTS_PER_PAGE);
+			int pageCount = (int) Math.ceil((double) accountCount / (double) StaffAccounts.ACCOUNTS_PER_PAGE);
 			
 			if(page > pageCount) {
 				page = pageCount;
 			}
 			
-			int start = (page * Accounts.ACCOUNTS_PER_PAGE) - Accounts.ACCOUNTS_PER_PAGE;
+			int start = (page * StaffAccounts.ACCOUNTS_PER_PAGE) - StaffAccounts.ACCOUNTS_PER_PAGE;
 			
 			sql = 
 			"SELECT `accountId`, `username`, `creationDate`, `creationIP`, `currentIP`, `staff`, `pmod`, `fmod` " + 
@@ -134,7 +134,7 @@ public final class StaffAccountsDAO {
 			"WHERE ((? = '') OR (`username` LIKE ?)) " + 
 				"AND ((? = '') OR (`creationIP` LIKE ?) OR (`currentIP` LIKE ?)) " +
 			"ORDER BY `" + sort + "` " + sortDir + " " + 
-			"LIMIT " + start + "," + Accounts.ACCOUNTS_PER_PAGE + ";";
+			"LIMIT " + start + "," + StaffAccounts.ACCOUNTS_PER_PAGE + ";";
 			
 			stmt = con.prepareStatement(sql);
 			stmt.setString(1, usernameSearch);

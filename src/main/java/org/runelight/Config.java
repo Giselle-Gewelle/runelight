@@ -11,6 +11,8 @@ public final class Config {
 	
 	private static final Logger LOG = Logger.getLogger(Config.class);
 	
+	private static boolean initialized = false;
+	
 	private static String hostName;
 	private static boolean sslEnabled;
 	private static String gameName;
@@ -18,6 +20,12 @@ public final class Config {
 	private static String formattedHostName;
 	
 	public static void init() {
+		if(initialized) {
+			return;
+		}
+		
+		initialized = true;
+		
 		Properties properties = new Properties();
 		File propertiesFile = new File(System.getenv("TOMCAT_HOME") + File.separatorChar + "conf" + File.separatorChar + "runelight.properties");
 		

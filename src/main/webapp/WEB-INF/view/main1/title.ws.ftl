@@ -57,7 +57,7 @@
 								<div>${newsItem.title}</div>
 							</div>
 							
-							<img src="${url('main1', 'img/media/news/icons/${newsItem.iconName}.png')}" alt="[icon]" />
+							<img src="${url('main1', 'image.res?name=newsIcons/${newsItem.iconName}')}" alt="[icon]" />
 							
 							<div class="description">
 								${newsItem.description}

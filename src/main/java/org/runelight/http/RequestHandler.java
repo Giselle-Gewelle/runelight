@@ -25,7 +25,8 @@ import org.runelight.controller.impl.account.sessions.LoginForm;
 import org.runelight.controller.impl.account.sessions.LogoutAttempt;
 import org.runelight.controller.impl.main1.Title;
 import org.runelight.controller.impl.media.News;
-import org.runelight.controller.impl.staff.Accounts;
+import org.runelight.controller.impl.staff.StaffAccounts;
+import org.runelight.controller.impl.staff.StaffNews;
 import org.runelight.controller.impl.staff.StaffPage;
 import org.runelight.db.RSDataSource;
 import org.runelight.util.ModUtil;
@@ -77,9 +78,16 @@ public final class RequestHandler {
 			put("sessions logout.ws", LogoutAttempt.class);
 			
 			put("staff index.ws", StaffPage.class);
-			put("staff accounts/list.ws", Accounts.class);
-			put("staff accounts/details.ws", Accounts.class);
 			put("staff notallowed.ws", GenericPage.class);
+			
+			put("staff accounts/list.ws", StaffAccounts.class);
+			put("staff accounts/details.ws", StaffAccounts.class);
+			
+			put("staff news/article.ws", StaffNews.class);
+			put("staff news/delete.ws", StaffNews.class);
+			put("staff news/getIcons.ws", StaffNews.class);
+			put("staff news/uploadIcon.ws", StaffNews.class);
+			
 		}
 		
 	};
@@ -169,14 +177,6 @@ public final class RequestHandler {
 			return;
 		}
 		
-		request.setAttribute("rsTime", requestTime);
-		request.setAttribute("hostName", Config.getHostName());
-		request.setAttribute("formattedHostName", Config.getFormattedHostName());
-		request.setAttribute("sslEnabled", Config.isSslEnabled());
-		request.setAttribute("gameName", Config.getGameName());
-		request.setAttribute("companyName", Config.getCompanyName());
-		request.setAttribute("securePage", controller.isSecure());
-		
 		try {
 			controller.setup(request, response, requestType, requestIP, requestTime, con, mod, dest);
 			
@@ -185,11 +185,23 @@ public final class RequestHandler {
 			}
 			
 			if(!controller.isRedirecting()) {
-				char s = '/';
-				String location = new StringBuilder().append(s).append("WEB-INF").append(s).append("view").append(s).append(mapMod).append(s).append(dest).append(".ftl").toString();
-				RequestDispatcher dispatcher = request.getRequestDispatcher(location);
-				if(dispatcher != null && !response.isCommitted()) {
-					dispatcher.forward(request, response);
+				if(controller.getJsonData() != null) {
+					response.getWriter().write(controller.getJsonData().toString());
+				} else {
+					request.setAttribute("rsTime", requestTime);
+					request.setAttribute("hostName", Config.getHostName());
+					request.setAttribute("formattedHostName", Config.getFormattedHostName());
+					request.setAttribute("sslEnabled", Config.isSslEnabled());
+					request.setAttribute("gameName", Config.getGameName());
+					request.setAttribute("companyName", Config.getCompanyName());
+					request.setAttribute("securePage", controller.isSecure());
+					
+					char s = '/';
+					String location = new StringBuilder().append(s).append("WEB-INF").append(s).append("view").append(s).append(mapMod).append(s).append(dest).append(".ftl").toString();
+					RequestDispatcher dispatcher = request.getRequestDispatcher(location);
+					if(dispatcher != null && !response.isCommitted()) {
+						dispatcher.forward(request, response);
+					}
 				}
 			}
 		} catch(Exception e) {

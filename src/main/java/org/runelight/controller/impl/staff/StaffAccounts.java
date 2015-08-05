@@ -10,7 +10,7 @@ import org.runelight.util.URLUtil;
 import org.runelight.view.dto.staff.AccountDetailsDTO;
 import org.runelight.view.dto.staff.AccountListDTO;
 
-public final class Accounts extends StaffPage {
+public final class StaffAccounts extends StaffPage {
 	
 	public static final int ACCOUNTS_PER_PAGE = 20;
 	private static final String 
