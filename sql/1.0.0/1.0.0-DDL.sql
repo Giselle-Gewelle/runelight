@@ -101,6 +101,19 @@ DELIMITER $$
 -- Staff Center
 
 
+DROP PROCEDURE IF EXISTS `staff_getAccountRecentPasswordChanges` $$ 
+CREATE PROCEDURE `staff_getAccountRecentPasswordChanges` (
+	IN `in_id`		INT(10)
+) 
+BEGIN 
+	SELECT `ip`, `date` 
+	FROM `account_passwordChanges` 
+	WHERE `accountId` = `in_id` 
+	ORDER BY `date` DESC 
+	LIMIT 5;
+END $$
+
+
 DROP PROCEDURE IF EXISTS `staff_getAccountRecentSessions` $$ 
 CREATE PROCEDURE `staff_getAccountRecentSessions` (
 	IN `in_id`		INT(10)
@@ -110,6 +123,19 @@ BEGIN
 	FROM `account_sessions` 
 	WHERE `accountId` = `in_id` 
 	ORDER BY `startDate` DESC 
+	LIMIT 5;
+END $$
+
+
+DROP PROCEDURE IF EXISTS `staff_getAccountRecentLoginAttempts` $$ 
+CREATE PROCEDURE `staff_getAccountRecentLoginAttempts` (
+	IN `in_username`	VARCHAR(12)
+) 
+BEGIN 
+	SELECT `ip`, `date`  
+	FROM `account_loginAttempts` 
+	WHERE `username` = `in_username` 
+	ORDER BY `date` DESC 
 	LIMIT 5;
 END $$
 

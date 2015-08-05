@@ -7,6 +7,7 @@ import org.runelight.controller.impl.account.CreateAccount;
 import org.runelight.util.CountryUtil;
 import org.runelight.util.DateUtil;
 import org.runelight.util.StringUtil;
+import org.runelight.view.dto.staff.accountDetails.IPDateDTO;
 import org.runelight.view.dto.staff.accountDetails.SessionDetailsDTO;
 
 public final class AccountDetailsDTO {
@@ -23,10 +24,12 @@ public final class AccountDetailsDTO {
 	private final boolean staff;
 	private final boolean fmod;
 	private final boolean pmod;
+	private final List<IPDateDTO> passwordChangeList;
 	private final List<SessionDetailsDTO> sessionList;
+	private final List<IPDateDTO> loginAttemptList;
 	
 	public AccountDetailsDTO(int accountId, String username, String ageRange, String countryCode, Date creationDate, String creationIP, Date lastLoginDate, String currentIP, 
-			boolean staff, boolean fmod, boolean pmod, List<SessionDetailsDTO> sessionList) {
+			boolean staff, boolean fmod, boolean pmod, List<IPDateDTO> passwordChangeList, List<SessionDetailsDTO> sessionList, List<IPDateDTO> loginAttemptList) {
 		this.accountId = accountId;
 		this.username = username;
 		this.formattedUsername = StringUtil.formatUsername(username);
@@ -45,7 +48,9 @@ public final class AccountDetailsDTO {
 		this.staff = staff;
 		this.fmod = fmod;
 		this.pmod = pmod;
+		this.passwordChangeList = passwordChangeList;
 		this.sessionList = sessionList;
+		this.loginAttemptList = loginAttemptList;
 	}
 	
 	public List<SessionDetailsDTO> getSessionList() {
@@ -98,6 +103,14 @@ public final class AccountDetailsDTO {
 
 	public boolean isPmod() {
 		return pmod;
+	}
+
+	public List<IPDateDTO> getPasswordChangeList() {
+		return passwordChangeList;
+	}
+
+	public List<IPDateDTO> getLoginAttemptList() {
+		return loginAttemptList;
 	}
 	
 }

@@ -15,6 +15,7 @@ import org.runelight.util.StringUtil;
 import org.runelight.view.dto.account.UserDTO;
 import org.runelight.view.dto.staff.AccountDetailsDTO;
 import org.runelight.view.dto.staff.AccountListDTO;
+import org.runelight.view.dto.staff.accountDetails.IPDateDTO;
 import org.runelight.view.dto.staff.accountDetails.SessionDetailsDTO;
 
 public final class StaffAccountsDAO {
@@ -32,15 +33,30 @@ public final class StaffAccountsDAO {
 			if(results == null || !results.next()) {
 				return null;
 			}
+
+			List<IPDateDTO> passwordChangeList = new LinkedList<>();
+			List<SessionDetailsDTO> sessionList = new LinkedList<>();
+			List<IPDateDTO> loginAttemptList = new LinkedList<>();
 			
-			sql = "CALL `staff_getAccountRecentSessions`(?);";
+			sql = "CALL `staff_getAccountRecentPasswordChanges`(?);";
 			stmt = con.prepareCall(sql);
 			stmt.setInt("in_id", accountId);
 			stmt.execute();
 			
 			ResultSet secondaryResults = stmt.getResultSet();
 			
-			List<SessionDetailsDTO> sessionList = new LinkedList<>();
+			if(secondaryResults != null) {
+				while(secondaryResults.next()) {
+					passwordChangeList.add(new IPDateDTO(secondaryResults.getString("ip"), secondaryResults.getTimestamp("date")));
+				}
+			}
+			
+			sql = "CALL `staff_getAccountRecentSessions`(?);";
+			stmt = con.prepareCall(sql);
+			stmt.setInt("in_id", accountId);
+			stmt.execute();
+			
+			secondaryResults = stmt.getResultSet();
 			
 			if(secondaryResults != null) {
 				while(secondaryResults.next()) {
@@ -50,11 +66,26 @@ public final class StaffAccountsDAO {
 				}
 			}
 			
+			sql = "CALL `staff_getAccountRecentLoginAttempts`(?);";
+			stmt = con.prepareCall(sql);
+			stmt.setString("in_username", results.getString("username"));
+			stmt.execute();
+			
+			secondaryResults = stmt.getResultSet();
+			
+			if(secondaryResults != null) {
+				while(secondaryResults.next()) {
+					loginAttemptList.add(new IPDateDTO(secondaryResults.getString("ip"), secondaryResults.getTimestamp("date")));
+				}
+			}
+			
 			return new AccountDetailsDTO(
 				results.getInt("accountId"), results.getString("username"), results.getString("ageRange"), results.getString("countryCode"), 
 				results.getTimestamp("creationDate"), results.getString("creationIP"), results.getTimestamp("lastLoginDate"), results.getString("currentIP"), 
 				results.getBoolean("staff"), results.getBoolean("fmod"), results.getBoolean("pmod"), 
-				(sessionList.size() < 1 ? null : sessionList)
+				(passwordChangeList.size() < 1 ? null : passwordChangeList), 
+				(sessionList.size() < 1 ? null : sessionList), 
+				(loginAttemptList.size() < 1 ? null : loginAttemptList)
 			);
 		} catch(SQLException e) {
 			LOG.error("SQLException occurred while attempting to load user account details for [" + accountId + "].", e);

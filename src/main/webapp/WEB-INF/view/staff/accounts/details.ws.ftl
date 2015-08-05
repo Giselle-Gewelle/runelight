@@ -83,7 +83,31 @@
 				</div>
 				
 				<div class="body">
-					
+					<#if account.passwordChangeList??>
+						<table class="full">
+							<thead>
+								<tr>
+									<td>IP</td>
+									<td>Date</td>
+								</tr>
+							</thead>
+							
+							<tbody>
+								<#list account.passwordChangeList as item>
+									<tr>
+										<td>${item.ip}</td>
+										<td>${item.date}</td>
+									</tr>
+								</#list>
+							</tbody>
+						</table>
+						
+						<#--<hr />
+						
+						<a href="">View Full List</a>-->
+					<#else>
+						There are no recent password changes to display for this user.
+					</#if>
 				</div>
 			</div>
 			
@@ -118,9 +142,9 @@
 							</tbody>
 						</table>
 						
-						<hr />
+						<#--<hr />
 						
-						<a href="">View Full List</a>
+						<a href="">View Full List</a>-->
 					<#else>
 						There are no recent sessions to display for this user.
 					</#if>
@@ -133,7 +157,31 @@
 				</div>
 				
 				<div class="body">
-					
+					<#if account.loginAttemptList??>
+						<table class="full">
+							<thead>
+								<tr>
+									<td>IP</td>
+									<td>Date</td>
+								</tr>
+							</thead>
+							
+							<tbody>
+								<#list account.loginAttemptList as item>
+									<tr>
+										<td>${item.ip}</td>
+										<td>${item.date}</td>
+									</tr>
+								</#list>
+							</tbody>
+						</table>
+						
+						<#--<hr />
+						
+						<a href="">View Full List</a>-->
+					<#else>
+						There are no recent login attempts to display for this user.
+					</#if>
 				</div>
 			</div>
 		<#else>
