@@ -24,7 +24,7 @@
 			<div ng-show="ctrl.canUpload">
 				<strong>Upload a New Icon</strong>
 				
-				<br /><br />
+				<p>Only images in PNG format will be accepted. Any image uploaded will be automatically resized to 50x50 pixels.</p>
 				
 				<input type="file" id="iconFile" name="iconFile" file-model="myFile" />
 				
