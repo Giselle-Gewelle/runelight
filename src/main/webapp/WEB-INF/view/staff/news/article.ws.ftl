@@ -1,6 +1,6 @@
 <#assign showSessionBar=true />
 <#assign cssImports = [ "staff/news" ] />
-<#assign jsImports = [ "lib/angular.min", "staff/news" ] />
+<#assign jsImports = [ "lib/jquery-2.1.4.min", "lib/angular.min", "staff/news" ] />
 
 <#assign angular = 'ng-app="NewsApp" ng-controller="NewsCtrl as ctrl"' />
 
@@ -13,7 +13,7 @@
 		</div>
 		
 		<div class="content">
-			<p ng-hide="ctrl.hasIcons()">There are no uploaded icons to display, please upload one to continue.</p>
+			<p ng-hide="ctrl.hasIcons()">There are no icons to display.</p>
 			
 			<div ng-show="ctrl.hasIcons()">
 				<span ng-repeat="icon in ctrl.iconList" ng-click="ctrl.selectIcon(icon)"><img ng-src="${url('main1', 'image.res?name=newsIcons/{{ icon }}', true)}" alt="{{ icon }}" /></span>
@@ -21,11 +21,21 @@
 			
 			<hr />
 			
-			<strong>Upload</strong><br /><br />
-			
-				<input type="file" id="iconFile" name="iconFile" ng-model="ctrl.fileInput" />
+			<div ng-show="ctrl.canUpload">
+				<strong>Upload a New Icon</strong>
+				
 				<br /><br />
+				
+				<input type="file" id="iconFile" name="iconFile" file-model="myFile" />
+				
+				<br />
+				
 				<button ng-click="ctrl.uploadIcon()">Submit</button>
+			</div>
+			
+			<hr id="uploadHr" />
+			
+			<div id="uploadError"></div>
 		</div>
 	</div>
 </#macro>
@@ -83,9 +93,10 @@
 			<div class="formSection">
 				<strong>Icon:</strong><br />
 				<img ng-show="ctrl.isIconSelected()" ng-src="${url('main1', 'image.res?name=newsIcons/{{ ctrl.selectedIcon }}', true)}" alt="{{ icon }}" />
+				<input type="hidden" name="icon" value="{{ ctrl.selectedIcon }}" />
 				<span ng-hide="ctrl.isIconSelected()">None Selected</span>
 				<br />
-				<div ng-click="ctrl.openIconPopup()">Select</div>
+				<div id="selectIconLink" ng-click="ctrl.openIconPopup()">Select</div>
 			</div>
 			
 			<input type="submit" name="submit" value="Submit" />

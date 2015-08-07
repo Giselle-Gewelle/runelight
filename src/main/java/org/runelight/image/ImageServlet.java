@@ -1,4 +1,4 @@
-package org.runelight.upload;
+package org.runelight.image;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,11 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.runelight.Config;
 
-public final class UploadServlet extends HttpServlet {
+public final class ImageServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 8395194421970786250L;
 	
-	private static final Logger LOG = Logger.getLogger(UploadServlet.class);
+	private static final Logger LOG = Logger.getLogger(ImageServlet.class);
 	
 	@Override
 	public void init() {

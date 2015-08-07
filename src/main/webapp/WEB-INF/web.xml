@@ -63,11 +63,11 @@
 		<url-pattern>*.html</url-pattern>
 	</servlet-mapping>
 	<servlet>
-		<servlet-name>Upload-Servlet</servlet-name>
-		<servlet-class>org.runelight.upload.UploadServlet</servlet-class>
+		<servlet-name>Image-Servlet</servlet-name>
+		<servlet-class>org.runelight.image.ImageServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>Upload-Servlet</servlet-name>
+		<servlet-name>Image-Servlet</servlet-name>
 		<url-pattern>/image.res</url-pattern>
 	</servlet-mapping>
 	<filter>

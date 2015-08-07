@@ -1,14 +1,14 @@
 @charset "UTF-8";
+	
+label {
+	font-weight: bold;
+}
 
 form {
 	padding-bottom: 1em;
 	
 	.formSection {
 		margin-bottom: 10px;
-		
-		label {
-			font-weight: bold;
-		}
 		
 		input, select, textarea {
 			display: block;
@@ -80,4 +80,21 @@ form {
 			background-color: #7B4F17;
 		}
 	}
+}
+
+#iconUploadTable td {
+	padding-right: 10px;
+}
+
+#uploadError {
+	font-weight: bold;
+	display: none;
+}
+#uploadHr {
+	display: none;
+}
+#selectIconLink {
+	color: #7B4F17;
+	font-weight: bold;
+	cursor: pointer;
 }
