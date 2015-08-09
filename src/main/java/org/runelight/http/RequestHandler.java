@@ -19,7 +19,8 @@ import org.runelight.Config;
 import org.runelight.controller.Controller;
 import org.runelight.controller.impl.GenericPage;
 import org.runelight.controller.impl.account.CreateAccount;
-import org.runelight.controller.impl.account.password.ChangePassword;
+import org.runelight.controller.impl.account.management.ChangePassword;
+import org.runelight.controller.impl.account.management.Ticketing;
 import org.runelight.controller.impl.account.sessions.LoginAttempt;
 import org.runelight.controller.impl.account.sessions.LoginForm;
 import org.runelight.controller.impl.account.sessions.LogoutAttempt;
@@ -63,6 +64,7 @@ public final class RequestHandler {
 			put("main1 loginform.ws", LoginForm.class);
 			put("main1 detail.ws", GenericPage.class);
 			
+			
 			put("create index.html", CreateAccount.class);
 			put("create chooseagerange.ws", CreateAccount.class);
 			put("create chooseusername.ws", CreateAccount.class);
@@ -72,12 +74,17 @@ public final class RequestHandler {
 			
 			put("password_history passchange.html", ChangePassword.class);
 			put("password_history password.ws", ChangePassword.class);
+			
+			put("ticketing inbox.ws", Ticketing.class);
 
+			
 			put("news newsitem.ws", News.class);
 			put("news list.ws", News.class);
 			
+			
 			put("sessions login.ws", LoginAttempt.class);
 			put("sessions logout.ws", LogoutAttempt.class);
+			
 			
 			put("staff index.ws", StaffPage.class);
 			put("staff notallowed.ws", GenericPage.class);

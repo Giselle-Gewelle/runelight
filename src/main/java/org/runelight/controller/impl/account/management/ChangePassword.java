@@ -1,4 +1,4 @@
-package org.runelight.controller.impl.account.password;
+package org.runelight.controller.impl.account.management;
 
 import java.io.IOException;
 import java.util.regex.Matcher;

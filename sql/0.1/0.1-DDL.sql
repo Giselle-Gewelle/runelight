@@ -492,7 +492,8 @@ BEGIN
 	
 	SELECT COUNT(`id`) INTO `newsCount` 
 	FROM `media_news` 
-	WHERE (`in_cat` = 0) OR (`category` = `in_cat`);
+	WHERE ((`in_cat` = 0) OR (`category` = `in_cat`)) 
+		AND `deleted` = 0;
 	
 	SET `out_pageCount` = CEIL(`newsCount` / `in_limit`);
 	
@@ -506,7 +507,7 @@ BEGIN
 	
 	SELECT `id`, `category`, `title`, `date` 
 	FROM `media_news` 
-	WHERE (`in_cat` = 0) OR (`category` = `in_cat`) 
+	WHERE ((`in_cat` = 0) OR (`category` = `in_cat`)) 
 		AND `deleted` = 0 
 	ORDER BY `date` DESC 
 	LIMIT `start`,`in_limit`;
