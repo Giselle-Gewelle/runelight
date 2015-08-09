@@ -86,14 +86,26 @@ public abstract class Controller {
 		this.redirecting = redirecting;
 	}
 	
+	/**
+	 * Whether or not this page must be access through HTTPS (if SSL is enabled in the configuration file).
+	 * @return True if it is secure, false if not.
+	 */
 	public boolean isSecure() {
 		return false;
 	}
 	
+	/**
+	 * Whether or not to update/refresh a secure (HTTPS) login session.
+	 * @return True if the session should be refreshed, false if it should expire after the given time runs out.
+	 */
 	public boolean holdSecureSession() {
 		return true;
 	}
 	
+	/**
+	 * Whether or not the user must be logged in to view the current page.
+	 * @return True if they must be logged in, false if not.
+	 */
 	public boolean loginRequired() {
 		return false;
 	}

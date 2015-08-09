@@ -224,7 +224,7 @@ END $$
 
 
 DROP PROCEDURE IF EXISTS `account_changePassword` $$ 
-CREATE PROCEDURE `account_changePassord` (
+CREATE PROCEDURE `account_changePassword` (
 	IN `in_accountId`		INT(10),
 	IN `in_ip`				VARCHAR(128),
 	IN `in_date`			DATETIME,
@@ -252,6 +252,18 @@ BEGIN
 	ELSE 
 		SET `out_returnCode` = 0;
 	END IF;
+END $$
+
+
+DROP PROCEDURE IF EXISTS `account_getPasswordForAccountId` $$ 
+CREATE PROCEDURE `account_getPasswordForAccountId` (
+	`in_accountId`	INT(10)
+) 
+BEGIN 
+	SELECT `passwordHash`, `passwordSalt` 
+	FROM `account_users` 
+	WHERE `accountId` = `in_accountId` 
+	LIMIT 1;
 END $$
 
 
