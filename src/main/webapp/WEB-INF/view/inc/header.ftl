@@ -7,6 +7,12 @@
 		
 		<link rel="stylesheet" type="text/css" href="${url('main1', 'css/layout.css?rt=${rsTime}', securePage??)}" />
 		
+		<#if script??>
+			<script type="text/javascript">
+				<@script />
+			</script>
+		</#if>
+		
 		<#if cssImports??>
 			<#list cssImports as cssImport>
 				<link rel="stylesheet" type="text/css" href="${url('main1', 'css/${cssImport}.css?rt=${rsTime}', securePage??)}" />

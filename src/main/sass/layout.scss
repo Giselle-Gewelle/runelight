@@ -26,6 +26,9 @@ strong {
 thead td {
 	font-weight: bold;
 }
+hr + p {
+	margin-top: 0 !important;
+}
 
 #content {
 	width: 765px;
@@ -96,7 +99,7 @@ thead td {
 				outline: none !important;
 				padding: 2px;
 			}
-			input[type="submit"], input[type="reset"] {
+			button, input[type="submit"], input[type="reset"] {
 				border: 2px solid #7B4F17;
 				background-color: #D8CDA0;
 				font-weight: bold;

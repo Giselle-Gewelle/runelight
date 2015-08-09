@@ -22,17 +22,89 @@
 		
 		this.showIconPopup = false;
 		this.iconList = null;
-		this.selectedIcon = "";
 		this.fileInput = "";
 		this.canUpload = true;
+		this.errorMsg = "";
+		
+		this.formValues = {
+			title: initialTitle,
+			category: initialCategory,
+			description: initialDescription,
+			article: initialArticle,
+			icon: initialIcon
+		};
+		
+		this.maxCharacters = {
+			title: 50,
+			description: 1024,
+			article: 65535
+		};
+		this.remainingCharacters = {
+			title: 0,
+			description: 0,
+			article: 0
+		};
+		
+		this.validate = function() {
+			this.errorMsg = "";
+			$("#title").removeClass("error");
+			$("#category").removeClass("error");
+			$("#description").removeClass("error");
+			$("#article").removeClass("error");
+			
+			var f = this.formValues;
+			if(f.title.length < 1 || f.title.length > 50) {
+				this.errorMsg = "Titles must be between 1 and 50 characters in length.";
+				this.setFieldError("title");
+				return;
+			}
+			
+			if(f.category == "") {
+				this.errorMsg = "Please select a news category.";
+				this.setFieldError("category");
+				return;
+			}
+			
+			if(f.description.length < 1 || f.description.length > 1024) {
+				this.errorMsg = "Descriptions must be between 1 and 1,024 characters in length.";
+				this.setFieldError("description");
+				return;
+			}
+			
+			if(f.article.length < 1 || f.article.length > 1024) {
+				this.errorMsg = "Articles must be between 1 and 65,535 characters in length.";
+				this.setFieldError("article");
+				return;
+			}
+			
+			if(f.icon.length < 1) {
+				this.errorMsg = "Please select a news icon.";
+				return;
+			}
+			
+			$("#newsArticleForm").submit();
+		};
+		
+		this.setFieldError = function(fieldId) {
+			$("#" + fieldId).addClass("error");
+			$("#" + fieldId).select();
+		};
+		
+		this.showErrorMsg = function() {
+			return (this.errorMsg !== "");
+		};
+		
+		this.updateInput = function(name) {
+			this.remainingCharacters[name] = (this.maxCharacters[name] - this.formValues[name].length);
+		};
 		
 		this.selectIcon = function(icon) {
-			this.selectedIcon = icon;
+			this.formValues.icon = icon;
 			this.showIconPopup = false;
 		};
 		
 		this.isIconSelected = function() {
-			return (this.selectedIcon !== "");
+			return (this.formValues.icon !== "");
 		};
 		
 		this.hasIcons = function() {
@@ -77,7 +149,7 @@
 	            transformRequest: angular.identity
 	        }).success(function(response) {
 	        	if(response.successful) {
-	        		thisObj.selectedIcon = response.newFileName;
+	        		thisObj.formValues.icon = response.newFileName;
 	        		thisObj.showIconPopup = false;
 	        		thisObj.canUpload = true;
 	        	} else {
@@ -87,6 +159,10 @@
 	        	}
 	        });
 		};
+		
+		this.updateInput("title");
+		this.updateInput("description");
+		this.updateInput("article");
 		
 	}]);
 	

@@ -51,6 +51,14 @@
 			</div>
 			
 			<div class="clear"></div>
+			
+			<#if loginSession.loggedIn>
+				<#if loginSession.user.staff>
+					<hr />
+					
+					<p><@a mod="staff" dest="news/article.ws?id=${newsItem.id}" secure=true>Edit Article</@a> - <@a mod="staff" dest="news/delete.ws?id=${newsItem.id}" secure=true>Delete Article</@a></p>
+				</#if>
+			</#if>
 		<#else>
 			<p id="articleNotFound">News Item Not Found</p>
 		</#if>

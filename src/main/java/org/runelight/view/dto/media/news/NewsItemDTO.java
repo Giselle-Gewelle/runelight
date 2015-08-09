@@ -27,13 +27,15 @@ public final class NewsItemDTO {
 		return dto;
 	}
 	
-	public static NewsItemDTO createNewsItemDTO(int id, String title, Date date, int category, String body, int nextId, int prevId) {
+	public static NewsItemDTO createNewsItemDTO(int id, String title, Date date, int category, String description, String body, String iconName, int nextId, int prevId) {
 		NewsItemDTO dto = new NewsItemDTO();
 		dto.id = id;
 		dto.title = title;
 		dto.date = DateUtil.LONG_NEWS_FORMAT.format(date);
 		dto.category = NewsCategory.forId(category);
+		dto.description = description;
 		dto.body = body;
+		dto.iconName = iconName;
 		dto.nextId = nextId;
 		dto.prevId = prevId;
 		

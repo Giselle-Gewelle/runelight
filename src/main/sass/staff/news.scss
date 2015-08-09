@@ -29,7 +29,17 @@ form {
 		textarea[name="article"] {
 			height: 200px;
 		}
+		
+		input.error, textarea.error, select.error {
+			border: 1px solid #CC0000;
+			box-shadow: inset 0 0 10px #990000;
+		}
 	}
+}
+	
+#formError {
+	color: #990000;
+	font-weight: bold;
 }
 
 #iconPopupOverlay {

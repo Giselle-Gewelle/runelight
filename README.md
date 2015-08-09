@@ -23,11 +23,11 @@ Under <Host name="localhost" appBase="webapps"
 
 add
 
-<Context path="runelight" docBase="runelight-RUNELIGHTVERSIONHERE" debug="0" reloadable="true" sessionCookieDomain=".<YOUR.DOMAIN>" sessionCookiePath="/" />
+<Context path="runelight" docBase="RuneLight" debug="0" reloadable="true" sessionCookieDomain=".<YOUR.DOMAIN>" sessionCookiePath="/" />
 
 ie
 
-<Context path="runelight" docBase="runelight-0.0.1" debug="0" reloadable="true" sessionCookieDomain=".runelight.giselle" sessionCookiePath="/" />
+<Context path="runelight" docBase="RuneLight" debug="0" reloadable="true" sessionCookieDomain=".runelight.giselle" sessionCookiePath="/" />
 
 
 In Tomcat/conf/context.xml add a new jdbc resource:

@@ -66,7 +66,8 @@ public final class NewsDAO {
 			if(prevId < 1) prevId = -1;
 			
 			return NewsItemDTO.createNewsItemDTO(
-				result.getInt("id"), result.getString("title"), result.getTimestamp("date"), result.getInt("category"), result.getString("body"), nextId, prevId
+				result.getInt("id"), result.getString("title"), result.getTimestamp("date"), result.getInt("category"), 
+				result.getString("description"), result.getString("body"), result.getString("iconName"), nextId, prevId
 			);
 		} catch(SQLException e) {
 			LOG.error("SQLException occurred while attempting to fetch a news item with the id " + id);

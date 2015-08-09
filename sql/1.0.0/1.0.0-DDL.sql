@@ -101,6 +101,53 @@ DELIMITER $$
 -- Staff Center
 
 
+DROP PROCEDURE IF EXISTS `staff_submitNewsArticle` $$ 
+CREATE PROCEDURE `staff_submitNewsArticle` (
+	IN `in_updateId`		MEDIUMINT(8), 
+	IN `in_authorId`		INT(10),
+	IN `in_date`			DATETIME, 
+	IN `in_title`			VARCHAR(50),
+	IN `in_category`		TINYINT(2),
+	IN `in_desc`			VARCHAR(1024),
+	IN `in_article`			TEXT, 
+	IN `in_icon`			VARCHAR(50),
+	OUT `out_returnCode`	BIT, 
+	OUT `out_id`			MEDIUMINT(8)
+) 
+BEGIN 
+	IF (`in_updateId` > 0) THEN 
+		UPDATE `media_news` 
+		SET `title` = `in_title`, 
+			`category` = `in_category`, 
+			`iconName` = `in_icon`, 
+			`description` = `in_desc`, 
+			`body` = `in_article` 
+		WHERE `id` = `in_updateId` 
+		LIMIT 1;
+		
+		IF (ROW_COUNT() > 0) THEN 
+			SET `out_returnCode` = 1;
+			SET `out_id` = `in_updateId`;
+		ELSE 
+			SET `out_returnCode` = 0;
+		END IF;
+	ELSE 
+		INSERT INTO `media_news` (
+			`authorId`, `date`, `category`, `iconName`, `title`, `description`, `body` 
+		) VALUES (
+			`in_authorId`, `in_date`, `in_category`, `in_icon`, `in_title`, `in_desc`, `in_article`
+		);
+		
+		IF (ROW_COUNT() > 0) THEN 
+			SET `out_returnCode` = 1;
+			SET `out_id` = LAST_INSERT_ID();
+		ELSE 
+			SET `out_returnCode` = 0;
+		END IF;
+	END IF;
+END $$
+
+
 DROP PROCEDURE IF EXISTS `staff_getAccountRecentPasswordChanges` $$ 
 CREATE PROCEDURE `staff_getAccountRecentPasswordChanges` (
 	IN `in_id`		INT(10)
@@ -458,7 +505,7 @@ BEGIN
 		ORDER BY `date` DESC 
 		LIMIT 1;
 		
-		SELECT `id`, `title`, `date`, `category`, `body` 
+		SELECT `id`, `title`, `date`, `category`, `description`, `body`, `iconName` 
 		FROM `media_news` 
 		WHERE `id` = `in_articleId` 
 		LIMIT 1;

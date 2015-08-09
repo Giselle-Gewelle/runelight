@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.util.Date;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
@@ -15,12 +16,18 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.runelight.controller.impl.media.News.NewsCategory;
+import org.runelight.db.dao.media.NewsDAO;
 import org.runelight.db.dao.staff.StaffNewsDAO;
+import org.runelight.http.HttpRequestType;
 import org.runelight.util.URLUtil;
+import org.runelight.view.dto.media.news.NewsItemDTO;
 
 public final class StaffNews extends StaffPage {
 
 	private static final Logger LOG = Logger.getLogger(StaffNews.class);
+	
+	private int editId = 0;
+	private int redirectId = 0;
 	
 	@Override
 	public void init() {
@@ -32,17 +39,29 @@ public final class StaffNews extends StaffPage {
 		
 		switch(getDest()) {
 			case "news/article.ws":
-				//getIcons(false);
 				getRequest().setAttribute("categoryList", NewsCategory.values());
 				
-				int articleId = URLUtil.getIntParam(getRequest(), "id");
-				if(articleId > 1 && articleId < Short.MAX_VALUE) {
+				int editId = URLUtil.getIntParam(getRequest(), "id");
+				if(editId > 1 && editId < Short.MAX_VALUE) {
 					// edit article page
-					getRequest().setAttribute("editId", 0);
+					NewsItemDTO newsItem = NewsDAO.getNewsItem(getDbConnection(), editId);
+					if(newsItem != null) {
+						getRequest().setAttribute("editArticle", newsItem);
+						this.editId = editId;
+					}
+				}
+				
+				if(getRequestType().equals(HttpRequestType.POST)) {
+					boolean validSubmission = validateSubmission();
+					if(!validSubmission) {
+						getRequest().setAttribute("submissionFailed", true);
+					} else {
+						getRequest().setAttribute("redirectId", redirectId);
+					}
 				}
 				break;
 			case "news/getIcons.ws":
-				getIcons(true);
+				getIcons();
 				break;
 			case "news/uploadIcon.ws":
 				JSONObject json = new JSONObject();
@@ -62,6 +81,77 @@ public final class StaffNews extends StaffPage {
 				setJsonData(json);
 				break;
 		}
+	}
+	
+	private boolean validateSubmission() {
+		HttpServletRequest r = getRequest();
+		
+		String title = r.getParameter("title");
+		String category = r.getParameter("category");
+		String description = r.getParameter("description");
+		String article = r.getParameter("article");
+		String iconName = r.getParameter("icon");
+		
+		if(title == null || category == null || description == null || article == null || iconName == null) {
+			return false;
+		}
+		
+		title = title.trim();
+		category = category.trim();
+		description = description.trim();
+		article = article.trim();
+		iconName = iconName.trim();
+		
+		if(title.equals("") || category.equals("") || description.equals("") || article.equals("") || iconName.equals("")) {
+			return false;
+		}
+		
+		if(title.length() < 1 || title.length() > 50) {
+			return false;
+		}
+		if(description.length() < 1 || description.length() > 1024) {
+			return false;
+		}
+		if(article.length() < 1 || article.length() > 65535) {
+			return false;
+		}
+		
+		try {
+			if(NewsCategory.forId(Integer.parseInt(category)) == null) {
+				return false;
+			}
+		} catch(NumberFormatException e) {
+			return false;
+		}
+		
+		LOG.info("past here");
+
+		boolean iconFound = false;
+		
+		try {
+			File iconDir = new File(System.getenv("TOMCAT_HOME") + File.separatorChar + "uploads" + File.separatorChar + "newsIcons");
+			File[] files = iconDir.listFiles();
+			
+			for(File file : files) {
+				if(iconName.equals(file.getName().replace(".png", ""))) {
+					iconFound = true;
+				}
+			}
+		} catch(Exception e) {
+			return false;
+		}
+		
+		if(!iconFound) {
+			return false;
+		}
+		
+		int returnCode = StaffNewsDAO.submitArticle(getDbConnection(), this.editId, getLoginSession().getUser().getAccountId(), title, Integer.parseInt(category), description, article, iconName);
+		if(returnCode < 1) {
+			return false;
+		}
+		
+		this.redirectId = returnCode;
+		return true;
 	}
 	
 	private String uploadIcon() {
@@ -117,7 +207,7 @@ public final class StaffNews extends StaffPage {
 		}
 	}
 	
-	private void getIcons(boolean setData) {
+	private void getIcons() {
 		File uploadDir = new File(System.getenv("TOMCAT_HOME") + File.separatorChar + "uploads");
 		if(!uploadDir.exists()) {
 			uploadDir.mkdir();
@@ -130,37 +220,24 @@ public final class StaffNews extends StaffPage {
 		
 		File[] files = iconDir.listFiles();
 		
-		if(setData) {
-			JSONObject json = new JSONObject();
-			
-			if(files == null || files.length < 1) {
-				json.put("iconCount", 0);
-				setJsonData(json);
-				return;
-			}
-			
-			json.put("iconCount", files.length);
-			
-			JSONArray nameArray = new JSONArray();
-			
-			for(File file : files) {
-				nameArray.put(file.getName().replace(".png", ""));
-			}
-			
-			json.put("iconList", nameArray);
+		JSONObject json = new JSONObject();
+		
+		if(files == null || files.length < 1) {
+			json.put("iconCount", 0);
 			setJsonData(json);
-		} else {
-			if(files == null || files.length < 1) {
-				return;
-			}
-			
-			String[] fileNames = new String[files.length];
-			for(int i = 0; i < files.length; i++) {
-				fileNames[i] = files[i].getName().replace(".png", "");
-			}
-			
-			getRequest().setAttribute("iconFiles", fileNames);
+			return;
 		}
+		
+		json.put("iconCount", files.length);
+		
+		JSONArray nameArray = new JSONArray();
+		
+		for(File file : files) {
+			nameArray.put(file.getName().replace(".png", ""));
+		}
+		
+		json.put("iconList", nameArray);
+		setJsonData(json);
 	}
 	
 }
