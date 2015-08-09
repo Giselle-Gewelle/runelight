@@ -61,6 +61,7 @@ public final class RequestHandler {
 		{
 			put("main1 title.ws", Title.class);
 			put("main1 loginform.ws", LoginForm.class);
+			put("main1 detail.ws", GenericPage.class);
 			
 			put("create index.html", CreateAccount.class);
 			put("create chooseagerange.ws", CreateAccount.class);

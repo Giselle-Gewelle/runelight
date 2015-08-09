@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.runelight.controller.Controller;
 import org.runelight.db.dao.account.AccountManagementDAO;
-import org.runelight.db.dao.account.LoginSessionDAO;
 import org.runelight.http.HttpRequestType;
 import org.runelight.security.Password;
 import org.runelight.util.URLUtil;

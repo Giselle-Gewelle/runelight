@@ -27,7 +27,7 @@
 	<@navBox title=gameName>
 		<@navItem mod="create" dest="index.html" secure=true icon="create">Create a free account (New user)</@navItem>
 		<@navItem mod="main1" dest="detail.ws" icon="play">Play ${gameName} (Existing user)</@navItem>
-		<@navItem mod="main1" dest="screenshots/screenshots.ws" icon="screenshot">View in-game screenshots</@navItem>
+		<#--<@navItem mod="main1" dest="screenshots/screenshots.ws" icon="screenshot">View in-game screenshots</@navItem>-->
 	</@navBox>
 	
 	<@navBox title="Account Management">
