@@ -88,6 +88,7 @@ CREATE TABLE `media_news` (
 	`title`			VARCHAR(50)		NOT NULL, 
 	`description`	VARCHAR(1024)	NOT NULL, 
 	`body`			TEXT			NOT NULL,
+	`deleted`		BIT				NOT NULL DEFAULT 0,
 	
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`authorId`) REFERENCES `account_users` (`accountId`)
@@ -99,6 +100,25 @@ DELIMITER $$
 
 
 -- Staff Center
+
+
+DROP PROCEDURE IF EXISTS `staff_deleteNewsArticle` $$ 
+CREATE PROCEDURE `staff_deleteNewsArticle` (
+	IN `in_articleId`		MEDIUMINT(8),
+	OUT `out_returnCode`	BIT 
+) 
+BEGIN 
+	UPDATE `media_news` 
+	SET `deleted` = 1 
+	WHERE `id` = `in_articleId` 
+	LIMIT 1;
+	
+	IF (ROW_COUNT() < 1) THEN 
+		SET `out_returnCode` = 0;
+	ELSE 
+		SET `out_returnCode` = 1;
+	END IF;
+END $$
 
 
 DROP PROCEDURE IF EXISTS `staff_submitNewsArticle` $$ 
@@ -123,6 +143,7 @@ BEGIN
 			`description` = `in_desc`, 
 			`body` = `in_article` 
 		WHERE `id` = `in_updateId` 
+			AND `deleted` = 0 
 		LIMIT 1;
 		
 		IF (ROW_COUNT() > 0) THEN 
@@ -439,6 +460,7 @@ CREATE PROCEDURE `media_getTitleNews` ()
 BEGIN 
 	SELECT `id`, `date`, `title`, `iconName`, `description` 
 	FROM `media_news` 
+	WHERE `deleted` = 0 
 	ORDER BY `date` DESC 
 	LIMIT 5;
 END $$
@@ -473,6 +495,7 @@ BEGIN
 	SELECT `id`, `category`, `title`, `date` 
 	FROM `media_news` 
 	WHERE (`in_cat` = 0) OR (`category` = `in_cat`) 
+		AND `deleted` = 0 
 	ORDER BY `date` DESC 
 	LIMIT `start`,`in_limit`;
 END $$
@@ -496,18 +519,21 @@ BEGIN
 		SELECT `id` INTO `out_prevId` 
 		FROM `media_news` 
 		WHERE `date` > `articleDate` 
+			AND `deleted` = 0 
 		ORDER BY `date` ASC 
 		LIMIT 1;
 		
 		SELECT `id` INTO `out_nextId` 
 		FROM `media_news` 
 		WHERE `date` < `articleDate` 
+			AND `deleted` = 0 
 		ORDER BY `date` DESC 
 		LIMIT 1;
 		
 		SELECT `id`, `title`, `date`, `category`, `description`, `body`, `iconName` 
 		FROM `media_news` 
 		WHERE `id` = `in_articleId` 
+			AND `deleted` = 0 
 		LIMIT 1;
 	END IF;
 END $$

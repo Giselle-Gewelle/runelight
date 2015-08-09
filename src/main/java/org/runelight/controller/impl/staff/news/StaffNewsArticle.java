@@ -1,4 +1,4 @@
-package org.runelight.controller.impl.staff;
+package org.runelight.controller.impl.staff.news;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -12,19 +12,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
-import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.runelight.controller.impl.media.News.NewsCategory;
+import org.runelight.controller.impl.staff.StaffPage;
 import org.runelight.db.dao.media.NewsDAO;
 import org.runelight.db.dao.staff.StaffNewsDAO;
 import org.runelight.http.HttpRequestType;
 import org.runelight.util.URLUtil;
 import org.runelight.view.dto.media.news.NewsItemDTO;
 
-public final class StaffNews extends StaffPage {
-
-	private static final Logger LOG = Logger.getLogger(StaffNews.class);
+public final class StaffNewsArticle extends StaffPage {
 	
 	private int editId = 0;
 	private int redirectId = 0;
@@ -123,8 +121,6 @@ public final class StaffNews extends StaffPage {
 		} catch(NumberFormatException e) {
 			return false;
 		}
-		
-		LOG.info("past here");
 
 		boolean iconFound = false;
 		

@@ -13,6 +13,21 @@ public final class StaffNewsDAO {
 	
 	private static final Logger LOG = Logger.getLogger(StaffNewsDAO.class);
 	
+	public static boolean deleteArticle(Connection con, int articleId) {
+		try {
+			String sql = "CALL `staff_deleteNewsArticle`(?, ?);";
+			CallableStatement stmt = con.prepareCall(sql);
+			stmt.setInt("in_articleId", articleId);
+			stmt.registerOutParameter("out_returnCode", Types.BIT);
+			stmt.execute();
+			
+			return (stmt.getByte("out_returnCode") == 1);
+		} catch(SQLException e) {
+			LOG.error("SQLException occurred while attempting to delete the news article [" + articleId + "].", e);
+			return false;
+		}
+	}
+	
 	public static int submitArticle(Connection con, int updateId, int authorId, String title, int category, String description, String article, String iconName) {
 		try {
 			String sql = "CALL `staff_submitNewsArticle`(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
@@ -31,13 +46,11 @@ public final class StaffNewsDAO {
 			
 			int returnCode = stmt.getByte("out_returnCode");
 			if(returnCode == 0) {
-				LOG.info("fail1");
 				return -1;
 			}
 			
 			int articleId = stmt.getInt("out_id");
 			if(articleId < 1) {
-				LOG.info("fail2");
 				return -1;
 			}
 			

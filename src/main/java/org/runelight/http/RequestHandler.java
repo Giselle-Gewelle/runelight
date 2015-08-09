@@ -26,8 +26,9 @@ import org.runelight.controller.impl.account.sessions.LogoutAttempt;
 import org.runelight.controller.impl.main1.Title;
 import org.runelight.controller.impl.media.News;
 import org.runelight.controller.impl.staff.StaffAccounts;
-import org.runelight.controller.impl.staff.StaffNews;
 import org.runelight.controller.impl.staff.StaffPage;
+import org.runelight.controller.impl.staff.news.StaffNewsArticle;
+import org.runelight.controller.impl.staff.news.StaffNewsDelete;
 import org.runelight.db.RSDataSource;
 import org.runelight.util.ModUtil;
 
@@ -83,10 +84,11 @@ public final class RequestHandler {
 			put("staff accounts/list.ws", StaffAccounts.class);
 			put("staff accounts/details.ws", StaffAccounts.class);
 			
-			put("staff news/article.ws", StaffNews.class);
-			put("staff news/delete.ws", StaffNews.class);
-			put("staff news/getIcons.ws", StaffNews.class);
-			put("staff news/uploadIcon.ws", StaffNews.class);
+			put("staff news/article.ws", StaffNewsArticle.class);
+			put("staff news/delete.ws", StaffNewsArticle.class);
+			put("staff news/getIcons.ws", StaffNewsArticle.class);
+			put("staff news/uploadIcon.ws", StaffNewsArticle.class);
+			put("staff news/delete.ws", StaffNewsDelete.class);
 			
 		}
 		
