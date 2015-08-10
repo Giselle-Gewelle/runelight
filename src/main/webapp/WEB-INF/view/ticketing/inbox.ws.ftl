@@ -32,7 +32,9 @@
 			
 			<span class="dateDetails">
 				${message.date}
-				<img src="${url('main1', 'img/account/ticketing/${message.read?string("broken_", "")}seal_${sealType}.png', true)}" alt="${message.read?string('Read', 'Not Read')}" />
+				<img src="${url('main1', 'img/account/ticketing/${message.read?string("broken_", "")}seal_${sealType}.png', true)}" 
+					alt="${message.read?string('Read', 'Not Read')}"
+					title="${message.read?string('Read', 'Not Read')}" />
 			</span>
 		</div>
 	</#list>

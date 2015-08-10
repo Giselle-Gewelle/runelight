@@ -5,10 +5,12 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.runelight.util.DateUtil;
 import org.runelight.view.dto.account.UserSessionDTO;
 import org.runelight.view.dto.account.ticketing.MessageQueueDTO;
 import org.runelight.view.dto.account.ticketing.MessageViewDTO;
@@ -31,9 +33,10 @@ public final class TicketingDAO {
 	
 	public ThreadDTO getThread(UserSessionDTO user, int lastMessageId) {
 		try {
-			CallableStatement stmt = con.prepareCall("CALL `account_ticketingGetThread`(?, ?, ?, ?, ?, ?, ?);");
+			CallableStatement stmt = con.prepareCall("CALL `account_ticketingGetThread`(?, ?, ?, ?, ?, ?, ?, ?);");
 			stmt.setInt("in_id", lastMessageId);
 			stmt.setString("in_username", user.getUsername());
+			stmt.setString("in_date", DateUtil.SQL_DATETIME_FORMAT.format(new Date()));
 			stmt.registerOutParameter("out_topicId", Types.INTEGER);
 			stmt.registerOutParameter("out_messageNum", Types.SMALLINT);
 			stmt.registerOutParameter("out_mainTitle", Types.VARCHAR);

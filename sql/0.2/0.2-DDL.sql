@@ -40,6 +40,7 @@ DROP PROCEDURE IF EXISTS `account_ticketingGetThread` $$
 CREATE PROCEDURE `account_ticketingGetThread` (
 	IN `in_id`				BIGINT(20),
 	IN `in_username`		VARCHAR(12), 
+	IN `in_date`			DATETIME, 
 	OUT `out_topicId`		INT(10),
 	OUT `out_messageNum`	SMALLINT(5),
 	OUT `out_mainTitle`		VARCHAR(50), 
@@ -64,6 +65,15 @@ BEGIN
 		WHERE `topicId` = `out_topicId` 
 			AND `messageNum` <= `out_messageNum` 
 		ORDER BY `date` ASC;
+		
+		-- Set post to READ.
+		IF (`in_username` != `out_authorName`) THEN 
+			UPDATE `account_ticketingMessages` 
+			SET `readOn` = `in_date` 
+			WHERE `topicId` = `out_topicId` 
+				AND `messageNum` = `out_messageNum` 
+			LIMIT 1;
+		END IF;
 	END IF;
 END $$
 
