@@ -33,7 +33,71 @@ CREATE TABLE `account_ticketingMessages` (
 
 
 
-DELIMITER $$
+DELIMITER $$ 
+
+
+DROP PROCEDURE IF EXISTS `account_ticketingDeleteMessage` $$ 
+CREATE PROCEDURE `account_ticketingDeleteMessage` (
+	IN `in_id`				BIGINT(20),
+	IN `in_username`		VARCHAR(12),
+	OUT `out_successful`	BIT
+) 
+BEGIN 
+	DECLARE `author`	 VARCHAR(12) DEFAULT NULL;
+	DECLARE `receiver`	 VARCHAR(12) DEFAULT NULL;
+	
+	SELECT `authorName`, `receiverName` INTO `author`, `receiver` 
+	FROM `account_ticketingMessages` 
+	WHERE `id` = `in_id` 
+		AND (`authorName` = `in_username` OR `receiverName` = `in_username`) 
+		AND (
+			(`authorName` = `in_username` AND `authorDelete` = 0) 
+			OR 
+			(`receiverName` = `in_username` AND `receiverDelete` = 0)
+		) 
+	LIMIT 1;
+	
+	IF (`author` IS NOT NULL) THEN 
+		IF (`author` = `in_username`) THEN 
+			UPDATE `account_ticketingMessages` 
+			SET `authorDelete` = 1 
+			WHERE `id` = `in_id` 
+			LIMIT 1;
+		ELSEIF (`receiver` = `in_username`) THEN 
+			UPDATE `account_ticketingMessages` 
+			SET `receiverDelete` = 1 
+			WHERE `id` = `in_id` 
+			LIMIT 1;
+		END IF; 
+		
+		IF (ROW_COUNT() < 1) THEN 
+			SET `out_successful` = 0;
+		END IF;
+	ELSE 
+		SET `out_successful` = 0;
+	END IF;
+END $$
+
+
+DROP PROCEDURE IF EXISTS `account_ticketingCheckMessageId` $$
+CREATE PROCEDURE `account_ticketingCheckMessageId` (
+	IN `in_id`			BIGINT(20),
+	IN `in_username`	VARCHAR(12),
+	OUT `out_exists`	BIT,
+	OUT `out_authorId`	VARCHAR(12)
+) 
+BEGIN 
+	SELECT COUNT(`id`) INTO `out_exists` 
+	FROM `account_ticketingMessages` 
+	WHERE `id` = `in_id` 
+		AND (`authorName` = `in_username` OR `receiverName` = `in_username`) 
+		AND (
+			(`authorName` = `in_username` AND `authorDelete` = 0) 
+			OR 
+			(`receiverName` = `in_username` AND `receiverDelete` = 0)
+		) 
+	LIMIT 1;
+END $$
 
 
 DROP PROCEDURE IF EXISTS `account_ticketingGetThread` $$

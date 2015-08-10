@@ -10,25 +10,45 @@ import org.runelight.view.dto.account.ticketing.ThreadDTO;
 
 public final class Ticketing extends Controller {
 
+	private static final String 
+		ERROR_NOT_FOUND = "Unable to load dialogue.";
+	
 	private TicketingDAO mainDao;
 	
 	@Override
 	public void init() {
-		mainDao = new TicketingDAO(getDbConnection());
+		mainDao = new TicketingDAO(getDbConnection(), getLoginSession().getUser());
 		
 		if(getRequest().getParameterMap().size() == 1) {
-			int viewId = URLUtil.getIntParam(getRequest(), "viewId");
+			int viewId = URLUtil.getIntParam(getRequest(), "viewid");
 			if(viewId > 0) {
 				if(prepareThread(viewId)) return;
+			}
+			
+			//reply here
+			
+			int deleteId = URLUtil.getIntParam(getRequest(), "deleteid");
+			if(deleteId > 0) {
+				if(prepareDelete(deleteId)) return;
 			}
 		}
 		
 		prepareInbox();
 	}
 	
+	private boolean prepareDelete(int messageId) {
+		if(!mainDao.messageExists(messageId)) {
+			setError(ERROR_NOT_FOUND);
+			return false;
+		}
+		
+		return true;
+	}
+	
 	private boolean prepareThread(int lastMessageId) {
-		ThreadDTO thread = mainDao.getThread(getLoginSession().getUser(), lastMessageId);
+		ThreadDTO thread = mainDao.getThread(lastMessageId);
 		if(thread == null) {
+			setError(ERROR_NOT_FOUND);
 			return false;
 		}
 		
@@ -36,10 +56,14 @@ public final class Ticketing extends Controller {
 		return true;
 	}
 	
+	private void setError(String errorMsg) {
+		getRequest().setAttribute("error", errorMsg);
+	}
+	
 	private void prepareInbox() {
-		List<MessageQueueDTO> receivedMessages = mainDao.getMessages(getLoginSession().getUser(), TicketingDAO.TYPE_RECEIVED);
-		List<MessageQueueDTO> readMessages = mainDao.getMessages(getLoginSession().getUser(), TicketingDAO.TYPE_READ);
-		List<MessageQueueDTO> sentMessages = mainDao.getMessages(getLoginSession().getUser(), TicketingDAO.TYPE_SENT);
+		List<MessageQueueDTO> receivedMessages = mainDao.getMessages(TicketingDAO.TYPE_RECEIVED);
+		List<MessageQueueDTO> readMessages = mainDao.getMessages(TicketingDAO.TYPE_READ);
+		List<MessageQueueDTO> sentMessages = mainDao.getMessages(TicketingDAO.TYPE_SENT);
 		
 		if(receivedMessages != null) {
 			getRequest().setAttribute("receivedList", receivedMessages);

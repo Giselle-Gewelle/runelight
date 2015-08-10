@@ -25,13 +25,45 @@ public final class TicketingDAO {
 		TYPE_READ = 1,
 		TYPE_SENT = 2;
 	
-	private Connection con;
+	private final Connection con;
+	private final UserSessionDTO user;
 	
-	public TicketingDAO(Connection con) {
+	public TicketingDAO(Connection con, UserSessionDTO user) {
 		this.con = con;
+		this.user = user;
 	}
 	
-	public ThreadDTO getThread(UserSessionDTO user, int lastMessageId) {
+	public boolean deleteMessage(int messageId) {
+		try {
+			CallableStatement stmt = con.prepareCall("CALL `account_ticketingDeleteMessage`(?, ?, ?);");
+			stmt.setInt("in_id", messageId);
+			stmt.setString("in_username", user.getUsername());
+			stmt.registerOutParameter("out_successful", Types.BIT);
+			stmt.execute();
+			
+			return stmt.getBoolean("out_successful");
+		} catch(SQLException e) {
+			LOG.error("SQLException occurred while attempting to delete the message [" + messageId + "], requested by [" + user.getFormattedUsername() + "].", e);
+			return false;
+		}
+	}
+	
+	public boolean messageExists(int messageId) {
+		try {
+			CallableStatement stmt = con.prepareCall("CALL `account_ticketingCheckMessageId`(?, ?, ?);");
+			stmt.setInt("in_id", messageId);
+			stmt.setString("in_username", user.getUsername());
+			stmt.registerOutParameter("out_exists", Types.BIT);
+			stmt.execute();
+			
+			return stmt.getBoolean("out_exists");
+		} catch(SQLException e) {
+			LOG.error("SQLException occurred while attempting to check if the message [" + messageId + "] exists, requested by [" + user.getFormattedUsername() + "].", e);
+			return false;
+		}
+	}
+	
+	public ThreadDTO getThread(int lastMessageId) {
 		try {
 			CallableStatement stmt = con.prepareCall("CALL `account_ticketingGetThread`(?, ?, ?, ?, ?, ?, ?, ?);");
 			stmt.setInt("in_id", lastMessageId);
@@ -69,12 +101,12 @@ public final class TicketingDAO {
 				topicId, lastMessageId, stmt.getString("out_mainTitle"), stmt.getBoolean("out_canReply"), stmt.getString("out_authorName"), user.getUsername(), messageList
 			);
 		} catch(SQLException e) {
-			LOG.error("SQLException occurred while attempting to fetch the messages before [" + lastMessageId + "], made by [" + user.getFormattedUsername() + "].", e);
+			LOG.error("SQLException occurred while attempting to fetch the messages before [" + lastMessageId + "], requested by [" + user.getFormattedUsername() + "].", e);
 			return null;
 		}
 	}
 	
-	public List<MessageQueueDTO> getMessages(UserSessionDTO user, int type) {
+	public List<MessageQueueDTO> getMessages(int type) {
 		try {
 			CallableStatement stmt = con.prepareCall("CALL `account_ticketingGetMessageQueue`(?, ?);");
 			stmt.setString("in_username", user.getUsername());
