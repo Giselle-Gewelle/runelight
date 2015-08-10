@@ -10,6 +10,7 @@ public final class DateUtil {
 		SQL_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd"),
 		SQL_DATETIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),
 		SHORT_TIME_FORMAT = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss"),
-		LONG_TIME_FORMAT = new SimpleDateFormat("d MMMM yyyy HH:mm:ss");
+		LONG_TIME_FORMAT = new SimpleDateFormat("d MMMM yyyy HH:mm:ss"),
+		MSG_CENTER_FORMAT = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
 	
 }

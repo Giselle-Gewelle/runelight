@@ -1,0 +1,132 @@
+@charset "UTF-8";
+
+#header {
+	margin: 0 auto;
+	padding: 4px;
+	width: 653px;
+	height: 72px;
+	background: transparent url('../../img/account/ticketing/header_ticketing.png') no-repeat center top;
+	
+	.titleFrame {
+		width: 204px;
+		margin: 0 auto;
+	}
+}
+
+.section {
+	border: 1px solid #8A744A;
+	margin: 0 auto 10px;
+	padding: 1px;
+	
+	.header {
+		width: 761px;
+		height: 38px;
+		display: block;
+	}
+	.noMessages {
+		margin-top: 1px;
+		padding: 7px 0;
+		background: #45372A;
+		text-align: center;
+		color: #888888;
+		font-style: italic;
+	}
+	.item {
+		margin-top: 1px;
+		display: -webkit-box;
+		display: -moz-box;
+		display: -ms-flexbox;
+		display: -webkit-flex;
+		display: flex;
+		font-size: 0px !important;
+		
+		span {
+			background: #45372A;
+			text-align: center;
+			display: inline-block;
+			align-items: stretch;
+			-webkit-align-items: stretch;
+		}
+		
+		.title, .messages, .date {
+			margin-right: 1px;
+			font-size: 13px !important;
+			padding: 7px 0;
+		}
+		.title {
+			width: 326px;
+		}
+		.messages {
+			width: 53px;
+		}
+		.date {
+			width: 220px;
+		}
+		.actions {
+			width: 159px;
+			
+			img {
+				margin: 2px 6px 0;
+			}
+		}
+	}
+}
+
+.message {
+	border: 1px solid #8A744A;
+	margin: 20px auto 0px auto;
+	padding: 1px;
+	font-size: 0px !important;
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	
+	.userDetails, .messageDetails, .dateDetails {
+		display: inline-block;
+		font-size: 13px !important;
+		align-items: stretch;
+		-webkit-align-items: stretch;
+	}
+	
+	.userDetails, .messageDetails {
+		margin-right: 1px;
+	}
+	.userDetails, .dateDetails {
+		background-color: #8A744A;
+		color: #382418;
+		width: 89px;
+	}
+	.userDetails {
+		padding: 5px;
+		text-align: center;
+		
+		img {
+			display: block;
+			margin: 10px auto 0;
+			width: 50px;
+			height: 50px;
+		}
+	}
+	.messageDetails {
+		background-color: #45372A;
+		color: #FFFFFF;
+		
+		span {
+			display: block;
+			padding: 10px;
+			width: 531px;
+			word-wrap: break-word;
+		}
+	}
+	.dateDetails {
+		text-align: right;
+		padding: 5px 10px;
+		
+		img {
+			display: block;
+			margin: 5px auto;
+		}
+	}
+}
