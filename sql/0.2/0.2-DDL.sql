@@ -52,12 +52,7 @@ BEGIN
 	SELECT `authorName`, `receiverName` INTO `author`, `receiver` 
 	FROM `account_ticketingMessages` 
 	WHERE `id` = `in_id` 
-		AND (`authorName` = `in_username` OR `receiverName` = `in_username`) 
-		AND (
-			(`authorName` = `in_username` AND `authorDelete` = 0) 
-			OR 
-			(`receiverName` = `in_username` AND `receiverDelete` = 0)
-		) 
+		AND (`authorName` = `in_username` OR `receiverName` = `in_username`)  
 	LIMIT 1;
 	
 	IF (`author` IS NOT NULL) THEN 
@@ -75,6 +70,8 @@ BEGIN
 		
 		IF (ROW_COUNT() < 1) THEN 
 			SET `out_successful` = 0;
+		ELSE 
+			SET `out_successful` = 1;
 		END IF;
 	ELSE 
 		SET `out_successful` = 0;

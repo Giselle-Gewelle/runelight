@@ -1,18 +1,26 @@
 package org.runelight.controller.impl.account.management;
 
+import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.Logger;
 import org.runelight.controller.Controller;
 import org.runelight.db.dao.account.TicketingDAO;
+import org.runelight.http.HttpRequestType;
 import org.runelight.util.URLUtil;
 import org.runelight.view.dto.account.ticketing.MessageQueueDTO;
 import org.runelight.view.dto.account.ticketing.ThreadDTO;
 
 public final class Ticketing extends Controller {
 
+	private static final Logger LOG = Logger.getLogger(Ticketing.class);
+	
 	private static final String 
 		ERROR_NOT_FOUND = "Unable to load dialogue.",
-		ERROR_UNAUTHORIZED = "You are not authorized to access this ticket.";
+		ERROR_UNAUTHORIZED = "You are not authorized to access this ticket.",
+		ERROR_GENERIC = "An error has occurred.";
 	
 	private TicketingDAO mainDao;
 	
@@ -20,23 +28,83 @@ public final class Ticketing extends Controller {
 	public void init() {
 		mainDao = new TicketingDAO(getDbConnection(), getLoginSession().getUser());
 		
-		if(getRequest().getParameterMap().size() == 1) {
+		if(getRequest().getParameterMap().size() == 1 || getRequestType().equals(HttpRequestType.POST)) {
 			int viewId = URLUtil.getIntParam(getRequest(), "viewid");
 			if(viewId > 0) {
-				if(prepareThread(viewId)) return;
+				prepareThread(viewId); 
+				return;
 			}
 			
 			//reply here
 			
 			int deleteId = URLUtil.getIntParam(getRequest(), "deleteid");
 			if(deleteId > 0) {
-				if(prepareDelete(deleteId)) return;
+				prepareDelete(deleteId);
+				return;
 			}
 		}
 		
 		prepareInbox();
 	}
 	
+	private void prepareDelete(int messageId) {
+		if(!checkMessage(messageId)) {
+			return;
+		}
+		
+		HttpServletRequest request = getRequest();
+		
+		request.setAttribute("deleteId", messageId);
+		
+		if(getRequestType().equals(HttpRequestType.POST)) {
+			if(request.getParameter("no") != null) {
+				setRedirecting(true);
+				
+				try {
+					getResponse().sendRedirect(URLUtil.getUrl("ticketing", "inbox.ws", true));
+				} catch(IOException e) {
+					LOG.error("IOException occurred while attempting to redirect the user from a cancelled ticket deletion.", e);
+				}
+				
+				return;
+			}
+			
+			if(request.getParameter("yes") != null) {
+				if(mainDao.deleteMessage(messageId)) {
+					setRedirecting(true);
+					
+					try {
+						getResponse().sendRedirect(URLUtil.getUrl("ticketing", "inbox.ws", true));
+					} catch(IOException e) {
+						LOG.error("IOException occurred while attempting to redirect the user to their inbox after a successful ticket deletion.", e);
+					}
+				} else {
+					setError(ERROR_GENERIC);
+				}
+			}
+		}
+	}
+	
+	private void prepareThread(int messageId) {
+		if(!checkMessage(messageId)) {
+			return;
+		}
+		
+		ThreadDTO thread = mainDao.getThread(messageId);
+		if(thread == null) {
+			setError(ERROR_NOT_FOUND);
+			return;
+		}
+		
+		getRequest().setAttribute("thread", thread);
+	}
+	
+	/**
+	 * Checks to see if a message exists, and is viewable by the user. 
+	 * If the message is not found or can not be viewed, an error message is set that will be sent back to the view.
+	 * @param messageId The ID of the message to look for.
+	 * @return True if the message was found and can be viewed, false if it can not be viewed.
+	 */
 	private boolean checkMessage(int messageId) {
 		int messageReturnCode = mainDao.messageExists(messageId);
 		switch(messageReturnCode) {
@@ -50,29 +118,6 @@ public final class Ticketing extends Controller {
 			case TicketingDAO.MESSAGE_FOUND:
 				return true;
 		}
-	}
-	
-	private boolean prepareDelete(int messageId) {
-		if(!checkMessage(messageId)) {
-			return false;
-		}
-		
-		return true;
-	}
-	
-	private boolean prepareThread(int messageId) {
-		if(!checkMessage(messageId)) {
-			return false;
-		}
-		
-		ThreadDTO thread = mainDao.getThread(messageId);
-		if(thread == null) {
-			setError(ERROR_NOT_FOUND);
-			return false;
-		}
-		
-		getRequest().setAttribute("thread", thread);
-		return true;
 	}
 	
 	private void setError(String errorMsg) {

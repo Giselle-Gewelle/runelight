@@ -6,6 +6,8 @@
 	<#include "inc/error.ftl" />
 <#elseif thread??>
 	<#include "inc/thread.ftl" />
+<#elseif deleteId??>
+	<#include "inc/delete.ftl" />
 <#else>
 	<div id="header">
 		<div class="titleFrame">
