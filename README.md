@@ -48,16 +48,18 @@ RSPS website project.
   -- Replace `YOUR_MYSQL_USERNAME` and `YOUR_MYSQL_PASSWORD` with their respective values.
 
 6. (IF WINDOWS) Add the subdomain entries into your local Windows hosts file, replacing `your.domain` with your development domain (ie. `runelight.giselle` or `runelight.local`)
-  - 127.0.0.1             your.domain
-  - 127.0.0.1             www.your.domain
-  - 127.0.0.1             create.your.domain
-  - 127.0.0.1             news.your.domain
-  - 127.0.0.1             forum.your.domain
-  - 127.0.0.1             password-history.your.domain
-  - 127.0.0.1             password.your.domain
-  - 127.0.0.1             recovery-questions.your.domain
-  - 127.0.0.1             staff.your.domain
-  - 127.0.0.1             ticketing.your.domain
+  ```
+  127.0.0.1             your.domain
+  127.0.0.1             www.your.domain
+  127.0.0.1             create.your.domain
+  127.0.0.1             news.your.domain
+  127.0.0.1             forum.your.domain
+  127.0.0.1             password-history.your.domain
+  127.0.0.1             password.your.domain
+  127.0.0.1             recovery-questions.your.domain
+  127.0.0.1             staff.your.domain
+  127.0.0.1             ticketing.your.domain
+  ```
 
 7. Add the following environmental variables
   - JAVA_HOME=the/path/to/your/java/installation/
