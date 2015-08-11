@@ -36,7 +36,7 @@ public final class ThreadDTO {
 		return title;
 	}
 
-	public boolean isCanReply() {
+	public boolean getCanReply() {
 		return canReply;
 	}
 

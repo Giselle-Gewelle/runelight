@@ -1,5 +1,6 @@
 <#assign showSessionBar=true />
 <#assign cssImports = [ "account/ticketing" ] />
+<#assign jsImports = [ "lib/jquery-2.1.4.min", "Charlimiter" ] />
 <#include "../inc/header.ftl" />
 
 <#if error??>
@@ -8,6 +9,8 @@
 	<#include "inc/thread.ftl" />
 <#elseif deleteId??>
 	<#include "inc/delete.ftl" />
+<#elseif replyId??>
+	<#include "inc/reply.ftl" />
 <#else>
 	<div id="header">
 		<div class="titleFrame">

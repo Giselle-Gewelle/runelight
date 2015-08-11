@@ -16,7 +16,7 @@ CREATE TABLE `account_ticketingTopics` (
 CREATE TABLE `account_ticketingMessages` (
 	`id`				BIGINT(20)		UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE, 
 	`topicId`			INT(10)			UNSIGNED NOT NULL, 
-	`title`				VARCHAR(50)		NOT NULL,
+	`title`				VARCHAR(54)		NOT NULL,
 	`messageNum`		SMALLINT(5)		UNSIGNED NOT NULL, 
 	`date`				DATETIME		NOT NULL, 
 	`message`			TEXT			NOT NULL, 

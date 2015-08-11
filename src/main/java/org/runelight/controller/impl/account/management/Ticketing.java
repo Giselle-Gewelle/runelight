@@ -31,25 +31,58 @@ public final class Ticketing extends Controller {
 		if(getRequest().getParameterMap().size() == 1 || getRequestType().equals(HttpRequestType.POST)) {
 			int viewId = URLUtil.getIntParam(getRequest(), "viewid");
 			if(viewId > 0) {
-				prepareThread(viewId); 
-				return;
+				if(prepareThread(viewId)) return;
 			}
 			
-			//reply here
+			int replyId = URLUtil.getIntParam(getRequest(), "replyid");
+			if(replyId > 0) {
+				if(prepareReply(replyId)) return;
+			}
 			
 			int deleteId = URLUtil.getIntParam(getRequest(), "deleteid");
 			if(deleteId > 0) {
-				prepareDelete(deleteId);
-				return;
+				if(prepareDelete(deleteId)) return;
 			}
 		}
 		
 		prepareInbox();
 	}
 	
-	private void prepareDelete(int messageId) {
+	private boolean prepareReply(int messageId) {
 		if(!checkMessage(messageId)) {
-			return;
+			return false;
+		}
+		
+		ThreadDTO thread = mainDao.getThread(messageId);
+		if(thread == null) {
+			setError(ERROR_NOT_FOUND);
+			return true;
+		}
+		
+		if(!thread.getCanReply()) {
+			return false;
+		}
+		
+		HttpServletRequest request = getRequest();
+		
+		request.setAttribute("replyId", messageId);
+		
+		String currentTitle = thread.getTitle();
+		if(currentTitle.indexOf("Re: ") != 0) {
+			currentTitle = "Re: " + currentTitle;
+		}
+		request.setAttribute("currentTitle", currentTitle);
+		
+		if(getRequestType().equals(HttpRequestType.POST)) {
+			
+		}
+		
+		return true;
+	}
+	
+	private boolean prepareDelete(int messageId) {
+		if(!checkMessage(messageId)) {
+			return false;
 		}
 		
 		HttpServletRequest request = getRequest();
@@ -66,7 +99,7 @@ public final class Ticketing extends Controller {
 					LOG.error("IOException occurred while attempting to redirect the user from a cancelled ticket deletion.", e);
 				}
 				
-				return;
+				return false;
 			}
 			
 			if(request.getParameter("yes") != null) {
@@ -78,25 +111,32 @@ public final class Ticketing extends Controller {
 					} catch(IOException e) {
 						LOG.error("IOException occurred while attempting to redirect the user to their inbox after a successful ticket deletion.", e);
 					}
+					
+					return false;
 				} else {
 					setError(ERROR_GENERIC);
+					return true;
 				}
 			}
 		}
+		
+		return false;
 	}
 	
-	private void prepareThread(int messageId) {
+	private boolean prepareThread(int messageId) {
 		if(!checkMessage(messageId)) {
-			return;
+			return false;
 		}
 		
 		ThreadDTO thread = mainDao.getThread(messageId);
 		if(thread == null) {
 			setError(ERROR_NOT_FOUND);
-			return;
+			return true;
 		}
 		
 		getRequest().setAttribute("thread", thread);
+		
+		return true;
 	}
 	
 	/**
