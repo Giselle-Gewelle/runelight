@@ -1,6 +1,6 @@
 <div id="header">
 	<div class="titleFrame">
-		<h1>Viewing Message Exchange</h1>
+		<h1>Message</h1>
 		<@a mod="ticketing" dest="inbox.ws" secure=true>Back to Message Center</@a>
 	</div>
 </div>
