@@ -25,15 +25,18 @@ RSPS website project.
     2. Copy the file into TOMCAT_HOME/conf/
 
 4. Add the RuneLight app entry into Tomcat's server.xml
-  - In TOMCAT_HOME/conf/server.xml, find: ```xml
+  - In TOMCAT_HOME/conf/server.xml, find: 
+  ```xml
   <Host name="localhost" appBase="webapps" unpackWARs="true" autoDeploy="true">
   ```
-  - Under it, add: ```xml
+  - Under it, add: 
+  ```xml
   <Context path="runelight" docBase="RuneLight" debug="0" reloadable="true" sessionCookieDomain=".<YOUR.DOMAIN>" sessionCookiePath="/" />
   ```
 
 5. Add the JDBC resource to Tomcat's context.xml
-  - In TOMCAT_HOME/conf/context.xml, add: ```xml
+  - In TOMCAT_HOME/conf/context.xml, add: 
+  ```xml
   <Resource name="jdbc/runelight" auth="Container"
 		  type="javax.sql.DataSource" 
 		  username="YOUR_MYSQL_USERNAME" password="YOUR_MYSQL_PASSWORD"
@@ -41,7 +44,7 @@ RSPS website project.
 		  url="jdbc:mysql://127.0.0.1:3306/runelight" 
 		  maxActive="15" maxIdle="3" />
   ```
-  -- Replace YOUR_MYSQL_USERNAME and YOUR_MYSQL_PASSWORD with their respective values.
+  -- Replace `YOUR_MYSQL_USERNAME` and `YOUR_MYSQL_PASSWORD` with their respective values.
 
 6. (IF WINDOWS) Add the subdomain entries into your local Windows hosts file, replacing "your.domain" with your domain (ie. runelight.giselle or runelight.local)
   - 127.0.0.1             your.domain
