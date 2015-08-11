@@ -31,8 +31,9 @@ RSPS website project.
   ```
   - Under it, add: 
   ```xml
-  <Context path="runelight" docBase="RuneLight" debug="0" reloadable="true" sessionCookieDomain=".<YOUR.DOMAIN>" sessionCookiePath="/" />
+  <Context path="runelight" docBase="RuneLight" debug="0" reloadable="true" sessionCookieDomain=".your.domain" sessionCookiePath="/" />
   ```
+  - Replace `your.domain` with your development domain (ie `runelight.giselle` or `runelight.local`)
 
 5. Add the JDBC resource to Tomcat's context.xml
   - In TOMCAT_HOME/conf/context.xml, add: 
@@ -46,7 +47,7 @@ RSPS website project.
   ```
   -- Replace `YOUR_MYSQL_USERNAME` and `YOUR_MYSQL_PASSWORD` with their respective values.
 
-6. (IF WINDOWS) Add the subdomain entries into your local Windows hosts file, replacing "your.domain" with your domain (ie. runelight.giselle or runelight.local)
+6. (IF WINDOWS) Add the subdomain entries into your local Windows hosts file, replacing `your.domain` with your development domain (ie. `runelight.giselle` or `runelight.local`)
   - 127.0.0.1             your.domain
   - 127.0.0.1             www.your.domain
   - 127.0.0.1             create.your.domain
