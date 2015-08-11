@@ -4,67 +4,66 @@ RSPS website project.
 
 
 
-# Local (Development) Setup
+## Local (Development) Setup
 
-Download and setup Tomcat + MySQL Server:
+1. Download and setup Tomcat + MySQL Server
+  - Default port for Tomcat: 8080
+  - Default port for MySQL: 3306
 
-Set Tomcat to port 80 (if desired) and MySQL to 3306.
+2. Run database scripts
+  - If MySQL is in your PATH, you may use the scripts/sql.sh script to deploy the database scripts
+  - If not, run the following files (IN ORDER):
+    1. sql/0.1/0.1-DDL.sql
+    2. sql/0.1/0.1-DML.sql
+    3. sql/0.2/0.2-DDL.sql
+    4. sql/0.2/0.2-DML.sql
+  - You may want to delete the test database entries from the database and/or DML files before/after installation
 
-Run 1.0.0-DDL.sql and 1.0.0-DML.sql on your new SQL server.
+3. Setup the RuneLight properties file
+  - Locate **runelight.properties**
+    1. Open the file and make any neccessary changes
+    2. Copy the file into TOMCAT_HOME/conf/
 
+4. Add the RuneLight app entry into Tomcat's server.xml
+  - In TOMCAT_HOME/conf/server.xml, find: ```xml
+  <Host name="localhost" appBase="webapps" unpackWARs="true" autoDeploy="true">
+  ```
+  - Under it, add: ```xml
+  <Context path="runelight" docBase="RuneLight" debug="0" reloadable="true" sessionCookieDomain=".<YOUR.DOMAIN>" sessionCookiePath="/" />
+  ```
 
-runelight.properties:
-Copy file into Tomcat/conf/
-
-
-In Tomcat/conf/server.xml:
-Under <Host name="localhost" appBase="webapps"
-            unpackWARs="true" autoDeploy="true">
-
-add
-
-<Context path="runelight" docBase="RuneLight" debug="0" reloadable="true" sessionCookieDomain=".<YOUR.DOMAIN>" sessionCookiePath="/" />
-
-ie
-
-<Context path="runelight" docBase="RuneLight" debug="0" reloadable="true" sessionCookieDomain=".runelight.giselle" sessionCookiePath="/" />
-
-
-In Tomcat/conf/context.xml add a new jdbc resource:
-
-<Resource name="jdbc/runelight" auth="Container"
+5. Add the JDBC resource to Tomcat's context.xml
+  - In TOMCAT_HOME/conf/context.xml, add: ```xml
+  <Resource name="jdbc/runelight" auth="Container"
 		  type="javax.sql.DataSource" 
-		  username="root" password="mysql"
+		  username="YOUR_MYSQL_USERNAME" password="YOUR_MYSQL_PASSWORD"
 		  driverClassName="com.mysql.jdbc.Driver"
 		  url="jdbc:mysql://127.0.0.1:3306/runelight" 
 		  maxActive="15" maxIdle="3" />
+  ```
+  -- Replace YOUR_MYSQL_USERNAME and YOUR_MYSQL_PASSWORD with their respective values.
 
+6. (IF WINDOWS) Add the subdomain entries into your local Windows hosts file, replacing "your.domain" with your domain (ie. runelight.giselle or runelight.local)
+  - 127.0.0.1             your.domain
+  - 127.0.0.1             www.your.domain
+  - 127.0.0.1             create.your.domain
+  - 127.0.0.1             news.your.domain
+  - 127.0.0.1             forum.your.domain
+  - 127.0.0.1             password-history.your.domain
+  - 127.0.0.1             password.your.domain
+  - 127.0.0.1             recovery-questions.your.domain
+  - 127.0.0.1             staff.your.domain
+  - 127.0.0.1             ticketing.your.domain
 
-Add some subdomains/domains to your Windows hosts file (in whichever format you wish, the following is what I use):
-127.0.0.1             runelight.giselle
-127.0.0.1             www.runelight.giselle
-127.0.0.1             create.runelight.giselle
-127.0.0.1             news.runelight.giselle
-127.0.0.1             forum.runelight.giselle
-127.0.0.1             password-history.runelight.giselle
-127.0.0.1             password.runelight.giselle
-127.0.0.1             recovery-questions.runelight.giselle
-127.0.0.1             staff.runelight.giselle
+7. Add the following environmental variables
+  - JAVA_HOME=the/path/to/your/java/installation/
+  - RUNELIGHT_HOME=the/path/to/your/RuneLight/repo/
+  - TOMCAT_HOME=the/path/to/your/tomcat/root/
 
-etc, etc...
-		  
+8. Restart all CMD windows.
 
-Add two environment variables:
-JAVA_HOME=the/path/to/your/java/installation/ (should have been done in order to run Tomcat)
-RUNELIGHT_HOME=the/path/to/your/RuneLight/repo/
+9. Run RUNELIGHT_HOME/scripts/deploy.sh
 
-Restart all CMD windows.
+10. ...
 
-
-Run RuneLight/scripts/deploy.sh
-
-
-...
-
-
-Profit???
+11. Profit???

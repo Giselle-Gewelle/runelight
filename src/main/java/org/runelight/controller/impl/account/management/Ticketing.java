@@ -11,7 +11,8 @@ import org.runelight.view.dto.account.ticketing.ThreadDTO;
 public final class Ticketing extends Controller {
 
 	private static final String 
-		ERROR_NOT_FOUND = "Unable to load dialogue.";
+		ERROR_NOT_FOUND = "Unable to load dialogue.",
+		ERROR_UNAUTHORIZED = "You are not authorized to access this ticket.";
 	
 	private TicketingDAO mainDao;
 	
@@ -36,17 +37,35 @@ public final class Ticketing extends Controller {
 		prepareInbox();
 	}
 	
+	private boolean checkMessage(int messageId) {
+		int messageReturnCode = mainDao.messageExists(messageId);
+		switch(messageReturnCode) {
+			default:
+			case TicketingDAO.MESSAGE_NOT_FOUND:
+				setError(ERROR_NOT_FOUND);
+				return false;
+			case TicketingDAO.MESSAGE_UNAUTHORIZED:
+				setError(ERROR_UNAUTHORIZED);
+				return false;
+			case TicketingDAO.MESSAGE_FOUND:
+				return true;
+		}
+	}
+	
 	private boolean prepareDelete(int messageId) {
-		if(!mainDao.messageExists(messageId)) {
-			setError(ERROR_NOT_FOUND);
+		if(!checkMessage(messageId)) {
 			return false;
 		}
 		
 		return true;
 	}
 	
-	private boolean prepareThread(int lastMessageId) {
-		ThreadDTO thread = mainDao.getThread(lastMessageId);
+	private boolean prepareThread(int messageId) {
+		if(!checkMessage(messageId)) {
+			return false;
+		}
+		
+		ThreadDTO thread = mainDao.getThread(messageId);
 		if(thread == null) {
 			setError(ERROR_NOT_FOUND);
 			return false;

@@ -2,14 +2,17 @@
 USE `runelight`;
 
 
+DROP TABLE IF EXISTS `account_ticketingMessages`;
 DROP TABLE IF EXISTS `account_ticketingTopics`;
+
+
 CREATE TABLE `account_ticketingTopics` (
 	`id`			INT(10)		UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE, 
 	
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS `account_ticketingMessages`;
+
 CREATE TABLE `account_ticketingMessages` (
 	`id`				BIGINT(20)		UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE, 
 	`topicId`			INT(10)			UNSIGNED NOT NULL, 
@@ -81,21 +84,13 @@ END $$
 
 DROP PROCEDURE IF EXISTS `account_ticketingCheckMessageId` $$
 CREATE PROCEDURE `account_ticketingCheckMessageId` (
-	IN `in_id`			BIGINT(20),
-	IN `in_username`	VARCHAR(12),
-	OUT `out_exists`	BIT,
-	OUT `out_authorId`	VARCHAR(12)
+	IN `in_id`				BIGINT(20),
+	IN `in_username`		VARCHAR(12)
 ) 
 BEGIN 
-	SELECT COUNT(`id`) INTO `out_exists` 
+	SELECT `authorName`, `receiverName`, `authorDelete`, `receiverDelete`  
 	FROM `account_ticketingMessages` 
 	WHERE `id` = `in_id` 
-		AND (`authorName` = `in_username` OR `receiverName` = `in_username`) 
-		AND (
-			(`authorName` = `in_username` AND `authorDelete` = 0) 
-			OR 
-			(`receiverName` = `in_username` AND `receiverDelete` = 0)
-		) 
 	LIMIT 1;
 END $$
 

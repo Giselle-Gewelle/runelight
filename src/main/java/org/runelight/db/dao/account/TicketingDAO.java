@@ -23,7 +23,10 @@ public final class TicketingDAO {
 	public static final int 
 		TYPE_RECEIVED = 0,
 		TYPE_READ = 1,
-		TYPE_SENT = 2;
+		TYPE_SENT = 2,
+		MESSAGE_NOT_FOUND = 0,
+		MESSAGE_FOUND = 1,
+		MESSAGE_UNAUTHORIZED = 2;
 	
 	private final Connection con;
 	private final UserSessionDTO user;
@@ -48,18 +51,34 @@ public final class TicketingDAO {
 		}
 	}
 	
-	public boolean messageExists(int messageId) {
+	public int messageExists(int messageId) {
 		try {
-			CallableStatement stmt = con.prepareCall("CALL `account_ticketingCheckMessageId`(?, ?, ?);");
+			CallableStatement stmt = con.prepareCall("CALL `account_ticketingCheckMessageId`(?, ?);");
 			stmt.setInt("in_id", messageId);
 			stmt.setString("in_username", user.getUsername());
-			stmt.registerOutParameter("out_exists", Types.BIT);
 			stmt.execute();
 			
-			return stmt.getBoolean("out_exists");
+			ResultSet result = stmt.getResultSet();
+			if(result == null || !result.next()) {
+				return MESSAGE_NOT_FOUND;
+			}
+			
+			if(result.getString("authorName").equals(user.getUsername())) {
+				if(result.getBoolean("authorDelete")) {
+					return MESSAGE_NOT_FOUND;
+				}
+			} else if(result.getString("receiverName").equals(user.getUsername())) {
+				if(result.getBoolean("receiverDelete")) {
+					return MESSAGE_NOT_FOUND;
+				}
+			} else {
+				return MESSAGE_UNAUTHORIZED;
+			}
+			
+			return MESSAGE_FOUND;
 		} catch(SQLException e) {
 			LOG.error("SQLException occurred while attempting to check if the message [" + messageId + "] exists, requested by [" + user.getFormattedUsername() + "].", e);
-			return false;
+			return MESSAGE_NOT_FOUND;
 		}
 	}
 	
