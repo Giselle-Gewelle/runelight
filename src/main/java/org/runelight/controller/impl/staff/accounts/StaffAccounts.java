@@ -1,10 +1,11 @@
-package org.runelight.controller.impl.staff;
+package org.runelight.controller.impl.staff.accounts;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.runelight.controller.impl.staff.StaffPage;
 import org.runelight.db.dao.staff.StaffAccountsDAO;
 import org.runelight.util.URLUtil;
 import org.runelight.view.dto.staff.AccountDetailsDTO;
@@ -13,9 +14,11 @@ import org.runelight.view.dto.staff.AccountListDTO;
 public final class StaffAccounts extends StaffPage {
 	
 	public static final int ACCOUNTS_PER_PAGE = 20;
+	
 	private static final String 
 		DEFAULT_SORT = "creationDate", 
 		DEFAULT_SORT_DIR = "DESC";
+	
 	private static final List<String> SORTABLE_FIELDS = new ArrayList<String>() {
 		
 		private static final long serialVersionUID = 3010810245564653935L;

@@ -54,10 +54,8 @@
 									<strong>Last Login</strong><br />
 									<#if account.lastLoginDate??>${account.lastLoginDate}<#else>Never</#if>
 								</td>
-							</tr>
-							
-							<tr class="lower">
-								<td colspan="6">
+								
+								<td>
 									<strong>Rights</strong><br />
 									<#if account.staff>
 										Staff
@@ -74,6 +72,16 @@
 							</tr>
 						</tbody>
 					</table>
+				</div>
+			</div>
+			
+			<div class="contentBox">
+				<div class="header">
+					Actions
+				</div>
+				
+				<div class="body">
+					<@a mod="staff" dest="accounts/sendmsg.ws?user=${account.accountId}" secure=true>Send Message</@a>
 				</div>
 			</div>
 			
@@ -185,9 +193,7 @@
 				</div>
 			</div>
 		<#else>
-			<h4>User Not Found</h4>
-			<p>The user account you were looking for was not found.</p>
-			<p><@a mod="staff" dest="accounts/list.ws">Click here to return to the user account list.</@a></p>
+			<#include "error/notfound.ftl" />
 		</#if>
 	</div>
 	

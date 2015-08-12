@@ -90,3 +90,29 @@ label {
 		margin: 0.5em 0 !important;
 	}
 }
+
+#messageForm {
+	.formSection {
+		margin: 0.5em 0 1em;
+	}
+	
+	label {
+		cursor: pointer;
+		margin-bottom: 3px;
+	}
+	
+	input[type="text"], textarea {
+		display: block;
+	}
+	input[type="text"] {
+		width: 300px;
+	}
+	textarea {
+		width: 720px;
+		min-width: 720px;
+		max-width: 720px;
+		height: 200px;
+		min-height: 100px;
+		max-height: 500px;
+	}
+}

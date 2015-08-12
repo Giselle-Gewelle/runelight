@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.runelight.controller.impl.staff.StaffAccounts;
+import org.runelight.controller.impl.staff.accounts.StaffAccounts;
 import org.runelight.util.DateUtil;
 import org.runelight.util.StringUtil;
 import org.runelight.view.dto.account.UserDTO;
