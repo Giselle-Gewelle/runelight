@@ -6,13 +6,15 @@ public final class ThreadDTO {
 	
 	private final int id;
 	private final int mainMessageId;
+	private final int messageCount;
 	private final String title;
 	private final boolean canReply;
 	private final List<MessageViewDTO> messageList;
 	
-	public ThreadDTO(int id, int mainMessageId, String title, boolean replyFlag, String latestPoster, String currentUsername, List<MessageViewDTO> messageList) {
+	public ThreadDTO(int id, int mainMessageId, int messageCount, String title, boolean replyFlag, String latestPoster, String currentUsername, List<MessageViewDTO> messageList) {
 		this.id = id;
 		this.mainMessageId = mainMessageId;
+		this.messageCount = messageCount;
 		this.title = title;
 		
 		if(!replyFlag) {
@@ -46,6 +48,10 @@ public final class ThreadDTO {
 
 	public int getMainMessageId() {
 		return mainMessageId;
+	}
+
+	public int getMessageCount() {
+		return messageCount;
 	}
 	
 }

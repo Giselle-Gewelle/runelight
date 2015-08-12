@@ -12,6 +12,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.runelight.util.DateUtil;
 import org.runelight.view.dto.account.UserSessionDTO;
+import org.runelight.view.dto.account.ticketing.InboxDTO;
 import org.runelight.view.dto.account.ticketing.MessageQueueDTO;
 import org.runelight.view.dto.account.ticketing.MessageViewDTO;
 import org.runelight.view.dto.account.ticketing.ThreadDTO;
@@ -21,9 +22,6 @@ public final class TicketingDAO {
 	private static final Logger LOG = Logger.getLogger(TicketingDAO.class);
 	
 	public static final int 
-		TYPE_RECEIVED = 0,
-		TYPE_READ = 1,
-		TYPE_SENT = 2,
 		MESSAGE_NOT_FOUND = 0,
 		MESSAGE_FOUND = 1,
 		MESSAGE_UNAUTHORIZED = 2;
@@ -34,6 +32,35 @@ public final class TicketingDAO {
 	public TicketingDAO(Connection con, UserSessionDTO user) {
 		this.con = con;
 		this.user = user;
+	}
+	
+	public boolean sendMessage(boolean isReply, int topicId, String title, int messageNum, String message, String receiverName, boolean canReply) {
+		try {
+			CallableStatement stmt = con.prepareCall("CALL `account_ticketingSendMessage`(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+			stmt.setBoolean("in_isReply", isReply);
+			stmt.setInt("in_topicId", topicId);
+			stmt.setString("in_title", title);
+			stmt.setInt("in_messageNum", messageNum);
+			stmt.setString("in_date", DateUtil.SQL_DATETIME_FORMAT.format(new Date()));
+			stmt.setString("in_message", message);
+			stmt.setString("in_author", user.getUsername());
+			stmt.setBoolean("in_authorStaff", user.isStaff());
+			stmt.setString("in_authorIP", user.getIP());
+			stmt.setInt("in_authorId", user.getAccountId());
+			stmt.setString("in_receiver", receiverName);
+			stmt.setBoolean("in_canReply", canReply);
+			stmt.registerOutParameter("out_successful", Types.BIT);
+			stmt.execute();
+			
+			return stmt.getBoolean("out_successful");
+		} catch(SQLException e) {
+			if(isReply) {
+				LOG.error("SQLException occurred while attempting to reply to the topic [" + topicId + "], reply sent by [" + user.getFormattedUsername() + "].", e);
+			} else {
+				LOG.error("SQLException occurred while attempting to send a new ticketing message, sent by [" + user.getFormattedUsername() + "].", e);
+			}
+			return false;
+		}
 	}
 	
 	public boolean deleteMessage(int messageId) {
@@ -117,7 +144,7 @@ public final class TicketingDAO {
 			}
 			
 			return new ThreadDTO(
-				topicId, lastMessageId, stmt.getString("out_mainTitle"), stmt.getBoolean("out_canReply"), stmt.getString("out_authorName"), user.getUsername(), messageList
+				topicId, lastMessageId, stmt.getInt("out_messageNum"), stmt.getString("out_mainTitle"), stmt.getBoolean("out_canReply"), stmt.getString("out_authorName"), user.getUsername(), messageList
 			);
 		} catch(SQLException e) {
 			LOG.error("SQLException occurred while attempting to fetch the messages before [" + lastMessageId + "], requested by [" + user.getFormattedUsername() + "].", e);
@@ -125,11 +152,10 @@ public final class TicketingDAO {
 		}
 	}
 	
-	public List<MessageQueueDTO> getMessages(int type) {
+	public InboxDTO getInbox() {
 		try {
-			CallableStatement stmt = con.prepareCall("CALL `account_ticketingGetMessageQueue`(?, ?);");
+			CallableStatement stmt = con.prepareCall("CALL `account_ticketingGetMessageQueue`(?);");
 			stmt.setString("in_username", user.getUsername());
-			stmt.setInt("in_type", type);
 			stmt.execute();
 			
 			ResultSet results = stmt.getResultSet();
@@ -137,20 +163,30 @@ public final class TicketingDAO {
 				return null;
 			}
 			
-			List<MessageQueueDTO> messageList = new LinkedList<>();
+			List<MessageQueueDTO> receivedMessageList = new LinkedList<>();
+			List<MessageQueueDTO> sentMessageList = new LinkedList<>();
+			List<MessageQueueDTO> readMessageList = new LinkedList<>();
 			while(results.next()) {
-				messageList.add(new MessageQueueDTO(
-					results.getInt("id"), results.getString("title"), results.getTimestamp("date"), results.getInt("messageNum")
-				));
+				if(results.getString("receiverName").equals(user.getUsername()) && !results.getBoolean("receiverDelete")) {
+					if(results.getTimestamp("readOn") == null) {
+						receivedMessageList.add(new MessageQueueDTO(
+							results.getInt("id"), results.getString("title"), results.getTimestamp("date"), results.getInt("messageNum")
+						));
+					} else {
+						readMessageList.add(new MessageQueueDTO(
+							results.getInt("id"), results.getString("title"), results.getTimestamp("date"), results.getInt("messageNum")
+						));
+					}
+				} else if(results.getString("authorName").equals(user.getUsername()) && !results.getBoolean("authorDelete")) {
+					sentMessageList.add(new MessageQueueDTO(
+						results.getInt("id"), results.getString("title"), results.getTimestamp("date"), results.getInt("messageNum")
+					));
+				}
 			}
 			
-			if(messageList.size() < 1) {
-				return null;
-			}
-			
-			return messageList;
+			return new InboxDTO(receivedMessageList, sentMessageList, readMessageList);
 		} catch(SQLException e) {
-			LOG.error("SQLException occurred while attempting to fetch the received messages for the user [" + user.getFormattedUsername() + "].");
+			LOG.error("SQLException occurred while attempting to fetch the inbox for [" + user.getFormattedUsername() + "].");
 			return null;
 		}
 	}

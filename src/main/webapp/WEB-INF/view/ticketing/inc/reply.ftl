@@ -44,7 +44,8 @@
 	<div class="frame center">
 		<#assign errorMessages = [
 			"Please enter a message.",
-			"Sorry, but the message you have sent is too long. Please ensure your message length is ${loginSession.user.staff?string("50000", "1000")} characters or less."
+			"Sorry, but the message you have sent is too long. Please ensure your message length is ${loginSession.user.staff?string('50000', '1000')} characters or less.",
+			"An unknown error has occurred, please try again."
 		] />
 		
 		<form id="replyForm" method="post" action="${url('ticketing', 'inbox.ws', true)}">
@@ -57,9 +58,9 @@
 			</#if>
 			
 			<#if loginSession.user.staff>
-				<input type="hidden" id="formMessageChars" value="50000" />
+				<input type="hidden" id="inputMessageChars" value="50000" />
 				
-				<textarea id="formMessage" name="formMessage" maxlength="50000"></textarea>
+				<textarea id="inputMessage" name="inputMessage" maxlength="50000"></textarea>
 				<div id="formMessageCharlimiter"></div>
 				
 				<input type="checkbox" id="inputCanReply" name="inputCanReply" checked="checked" value="yes" /> 
@@ -67,10 +68,10 @@
 				
 				<br /><br />
 			<#else>
-				<input type="hidden" id="formMessageChars" value="1000" />
+				<input type="hidden" id="inputMessageChars" value="1000" />
 				
-				<textarea id="formMessage" name="formMessage" maxlength="1000"></textarea>
-				<div id="formMessageCharlimiter"></div>
+				<textarea id="inputMessage" name="inputMessage" maxlength="1000"></textarea>
+				<div id="inputMessageCharlimiter"></div>
 				<br />
 			</#if>
 			
@@ -80,5 +81,5 @@
 </#if>
 
 <script type="text/javascript">
-	new Charlimiter("formMessage");
+	new Charlimiter("inputMessage");
 </script>

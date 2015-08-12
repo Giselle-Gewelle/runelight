@@ -39,6 +39,46 @@ CREATE TABLE `account_ticketingMessages` (
 DELIMITER $$ 
 
 
+DROP PROCEDURE IF EXISTS `account_ticketingSendMessage` $$
+CREATE PROCEDURE `account_ticketingSendMessage` (
+	IN `in_isReply`			BIT,
+	IN `in_topicId`			INT(10), 
+	IN `in_title`			VARCHAR(54),
+	IN `in_messageNum`		SMALLINT(5),
+	IN `in_date`			DATETIME, 
+	IN `in_message`			TEXT, 
+	IN `in_author`			VARCHAR(12),
+	IN `in_authorStaff`		BIT,
+	IN `in_authorIP`		VARCHAR(128),
+	IN `in_authorId`		INT(10),
+	IN `in_receiver`		VARCHAR(12),
+	IN `in_canReply`		BIT,
+	OUT `out_successful`	BIT
+) 
+BEGIN 
+	DECLARE `newTopicId` INT(10) UNSIGNED;
+	IF (`in_isReply` = 0) THEN 
+		INSERT INTO `account_ticketingTopics` () VALUES ();
+		
+		SET `newTopicId` = LAST_INSERT_ID();
+	ELSE 
+		SET `newTopicId` = `in_topicId`;
+	END IF;
+	
+	INSERT INTO `account_ticketingMessages` (
+		`topicId`, `title`, `messageNum`, `date`, `message`, `authorName`, `authorStaff`, `authorIP`, `actualAuthorId`, `receiverName`, `canReply` 
+	) VALUES (
+		`newTopicId`, `in_title`, `in_messageNum`, `in_date`, `in_message`, `in_author`, `in_authorStaff`, `in_authorIP`, `in_authorId`, `in_receiver`, `in_canReply`
+	);
+	
+	IF (ROW_COUNT() < 1) THEN
+		SET `out_successful` = 0;
+	ELSE
+		SET `out_successful` = 1;
+	END IF;
+END $$
+
+
 DROP PROCEDURE IF EXISTS `account_ticketingDeleteMessage` $$ 
 CREATE PROCEDURE `account_ticketingDeleteMessage` (
 	IN `in_id`				BIGINT(20),
@@ -104,6 +144,8 @@ CREATE PROCEDURE `account_ticketingGetThread` (
 	OUT `out_authorName`	VARCHAR(12)
 ) 
 BEGIN 
+	DECLARE `lastMessageId` BIGINT(20);
+	
 	SELECT `topicId`, `messageNum`, `title`, `canReply`, `authorName` 
 		INTO `out_topicId`, `out_messageNum`, `out_mainTitle`, `out_canReply`, `out_authorName` 
 	FROM `account_ticketingMessages` 
@@ -116,19 +158,27 @@ BEGIN
 	LIMIT 1;
 	
 	IF (`out_topicId` > 0) THEN 
-		SELECT `id`, `date`, `message`, `authorName`, `authorStaff`, `readOn` 
+		SELECT `id` INTO `lastMessageId` 
 		FROM `account_ticketingMessages` 
 		WHERE `topicId` = `out_topicId` 
-			AND `messageNum` <= `out_messageNum` 
-		ORDER BY `date` ASC;
+		ORDER BY `date` DESC 
+		LIMIT 1;
 		
-		-- Set post to READ.
-		IF (`in_username` != `out_authorName`) THEN 
-			UPDATE `account_ticketingMessages` 
-			SET `readOn` = `in_date` 
+		IF (`in_id` = `lastMessageId`) THEN 
+			SELECT `id`, `date`, `message`, `authorName`, `authorStaff`, `readOn` 
+			FROM `account_ticketingMessages` 
 			WHERE `topicId` = `out_topicId` 
-				AND `messageNum` = `out_messageNum` 
-			LIMIT 1;
+				AND `messageNum` <= `out_messageNum` 
+			ORDER BY `date` ASC;
+			
+			-- Set post to READ.
+			IF (`in_username` != `out_authorName`) THEN 
+				UPDATE `account_ticketingMessages` 
+				SET `readOn` = `in_date` 
+				WHERE `topicId` = `out_topicId` 
+					AND `messageNum` = `out_messageNum` 
+				LIMIT 1;
+			END IF;
 		END IF;
 	END IF;
 END $$
@@ -136,21 +186,16 @@ END $$
 
 DROP PROCEDURE IF EXISTS `account_ticketingGetMessageQueue` $$
 CREATE PROCEDURE `account_ticketingGetMessageQueue` (
-	IN `in_username`	VARCHAR(12), 
-	IN `in_type`		TINYINT(1)
+	IN `in_username`	VARCHAR(12)
 ) 
 BEGIN 
-	SELECT `id`, `title`, `date`, `messageNum` 
+	SELECT `id`, `title`, `date`, `messageNum`, `authorName`, `receiverName`, `authorDelete`, `receiverDelete`, `readOn` 
 	FROM `account_ticketingMessages` 
-	WHERE (
-		(
-			0 = `in_type` AND `receiverName` = `in_username` AND `readOn` IS NULL AND `receiverDelete` = 0
-		) OR (
-			1 = `in_type` AND `receiverName` = `in_username` AND `readOn` IS NOT NULL AND `receiverDelete` = 0 
-		) OR (
-			2 = `in_type` AND `authorName` = `in_username` AND `authorDelete` = 0
-		)
-	) 
+	WHERE `id` IN (
+		SELECT MAX(`id`) 
+		FROM `account_ticketingMessages` 
+		GROUP BY `topicId` 
+	)
 	ORDER BY `date` DESC;
 END $$
 

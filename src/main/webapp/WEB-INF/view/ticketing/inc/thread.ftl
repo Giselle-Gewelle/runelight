@@ -22,7 +22,11 @@
 		</span> 
 		
 		<span class="messageDetails">
-			<span>${replaceNewLines(message.message?html)}</span>
+			<#if message.authorStaff>
+				<span>${replaceNewLines(message.message)}</span>
+			<#else>
+				<span>${replaceNewLines(message.message?html)}</span>
+			</#if>
 		</span>
 		
 		<span class="dateDetails">

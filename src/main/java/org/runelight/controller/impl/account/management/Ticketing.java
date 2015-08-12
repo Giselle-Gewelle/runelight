@@ -1,7 +1,6 @@
 package org.runelight.controller.impl.account.management;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -9,8 +8,10 @@ import org.apache.log4j.Logger;
 import org.runelight.controller.Controller;
 import org.runelight.db.dao.account.TicketingDAO;
 import org.runelight.http.HttpRequestType;
+import org.runelight.util.StringUtil;
 import org.runelight.util.URLUtil;
-import org.runelight.view.dto.account.ticketing.MessageQueueDTO;
+import org.runelight.view.dto.account.ticketing.InboxDTO;
+import org.runelight.view.dto.account.ticketing.MessageViewDTO;
 import org.runelight.view.dto.account.ticketing.ThreadDTO;
 
 public final class Ticketing extends Controller {
@@ -68,13 +69,45 @@ public final class Ticketing extends Controller {
 		request.setAttribute("replyId", messageId);
 		
 		String currentTitle = thread.getTitle();
-		if(currentTitle.indexOf("Re: ") != 0) {
-			currentTitle = "Re: " + currentTitle;
-		}
 		request.setAttribute("currentTitle", currentTitle);
 		
 		if(getRequestType().equals(HttpRequestType.POST)) {
+			String message = request.getParameter("inputMessage");
+			if(message == null) {
+				request.setAttribute("errorCode", 0);
+				return true;
+			}
 			
+			message = message.trim();
+			if(message.equals("")) {
+				request.setAttribute("errorCode", 0);
+				return true;
+			}
+			
+			int charLimit = 1000;
+			if(getLoginSession().getUser().isStaff()) {
+				charLimit = 50000;
+			}
+			
+			if(message.length() > charLimit) {
+				request.setAttribute("errorCode", 1);
+				return true;
+			}
+			
+			boolean canReply = true;
+			if(getLoginSession().getUser().isStaff()) {
+				String canReplyStr = request.getParameter("inputCanReply");
+				if(canReplyStr == null || !canReplyStr.equals("yes")) {
+					canReply = false;
+				}
+			}
+			
+			MessageViewDTO lastMessage = thread.getMessageList().get(thread.getMessageList().size() - 1);
+			if(!mainDao.sendMessage(true, thread.getId(), currentTitle, thread.getMessageCount() + 1, message, StringUtil.deFormatUsername(lastMessage.getAuthorName()), canReply)) {
+				request.setAttribute("errorCode", 2);
+			} else {
+				request.setAttribute("sentTo", lastMessage.getAuthorName());
+			}
 		}
 		
 		return true;
@@ -165,18 +198,16 @@ public final class Ticketing extends Controller {
 	}
 	
 	private void prepareInbox() {
-		List<MessageQueueDTO> receivedMessages = mainDao.getMessages(TicketingDAO.TYPE_RECEIVED);
-		List<MessageQueueDTO> readMessages = mainDao.getMessages(TicketingDAO.TYPE_READ);
-		List<MessageQueueDTO> sentMessages = mainDao.getMessages(TicketingDAO.TYPE_SENT);
+		InboxDTO inbox = mainDao.getInbox();
 		
-		if(receivedMessages != null) {
-			getRequest().setAttribute("receivedList", receivedMessages);
+		if(inbox.getReceivedMessageList() != null) {
+			getRequest().setAttribute("receivedList", inbox.getReceivedMessageList());
 		}
-		if(readMessages != null) {
-			getRequest().setAttribute("readList", readMessages);
+		if(inbox.getReadMessageList() != null) {
+			getRequest().setAttribute("readList", inbox.getReadMessageList());
 		}
-		if(sentMessages != null) {
-			getRequest().setAttribute("sentList", sentMessages);
+		if(inbox.getSentMessageList() != null) {
+			getRequest().setAttribute("sentList", inbox.getSentMessageList());
 		}
 	}
 	
