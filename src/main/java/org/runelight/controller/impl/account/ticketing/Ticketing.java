@@ -1,4 +1,4 @@
-package org.runelight.controller.impl.account.management;
+package org.runelight.controller.impl.account.ticketing;
 
 import java.io.IOException;
 
@@ -103,7 +103,7 @@ public final class Ticketing extends Controller {
 			}
 			
 			MessageViewDTO lastMessage = thread.getMessageList().get(thread.getMessageList().size() - 1);
-			if(!mainDao.sendMessage(true, thread.getId(), currentTitle, thread.getMessageCount() + 1, message, StringUtil.deFormatUsername(lastMessage.getAuthorName()), canReply)) {
+			if(!mainDao.sendMessage(true, thread.getId(), currentTitle, thread.getMessageCount() + 1, message, StringUtil.deFormatUsername(lastMessage.getAuthorName()), canReply, false)) {
 				request.setAttribute("errorCode", 2);
 			} else {
 				request.setAttribute("sentTo", lastMessage.getAuthorName());

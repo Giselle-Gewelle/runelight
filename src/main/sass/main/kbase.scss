@@ -1,0 +1,30 @@
+@charset "UTF-8";
+
+.scroll {
+	font-size: 12px;
+	
+	.location {
+		border-top: 1px solid #382418;
+		border-bottom: 1px solid #382418;
+		margin-top: 10px;
+		padding: 2px 0;
+		
+		span {
+			float: left;
+			font-weight: bold;
+		}
+		
+		ul, li {
+			margin: 0;
+			padding: 0;
+		}
+		
+		ul {
+			margin: 0 0 0 6em;
+			
+			li {
+				list-style-type: none;
+			}
+		}
+	}
+}

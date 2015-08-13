@@ -52,7 +52,7 @@ public final class StaffMessaging extends StaffPage {
 		}
 		
 		TicketingDAO ticketingDAO = new TicketingDAO(getDbConnection(), getLoginSession().getUser());
-		return ticketingDAO.sendMessage(false, 0, title, 1, message, receiver.getUsername(), canReply);
+		return ticketingDAO.sendMessage(false, 0, title, 1, message, receiver.getUsername(), canReply, false);
 	}
 	
 	private AccountDetailsDTO getAccount() {

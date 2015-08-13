@@ -34,9 +34,25 @@ public final class TicketingDAO {
 		this.user = user;
 	}
 	
-	public boolean sendMessage(boolean isReply, int topicId, String title, int messageNum, String message, String receiverName, boolean canReply) {
+	public int getActivity(Date minDate) {
 		try {
-			CallableStatement stmt = con.prepareCall("CALL `account_ticketingSendMessage`(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+			CallableStatement stmt = con.prepareCall("CALL `account_ticketingActivityCheck`(?, ?, ?, ?);");
+			stmt.setString("in_username", user.getUsername());
+			stmt.setString("in_ip", user.getIP());
+			stmt.setString("in_minDate", DateUtil.SQL_DATETIME_FORMAT.format(minDate));
+			stmt.registerOutParameter("out_count", Types.TINYINT);
+			stmt.execute();
+			
+			return stmt.getInt("out_count");
+		} catch(SQLException e) {
+			LOG.error("SQLException occurred while attempting to check the ticketing activity (submissions) for the user [" + user.getFormattedUsername() + "].", e);
+			return -1;
+		}
+	}
+	
+	public boolean sendMessage(boolean isReply, int topicId, String title, int messageNum, String message, String receiverName, boolean canReply, boolean includeTitleInMsg) {
+		try {
+			CallableStatement stmt = con.prepareCall("CALL `account_ticketingSendMessage`(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 			stmt.setBoolean("in_isReply", isReply);
 			stmt.setInt("in_topicId", topicId);
 			stmt.setString("in_title", title);
@@ -49,6 +65,7 @@ public final class TicketingDAO {
 			stmt.setInt("in_authorId", user.getAccountId());
 			stmt.setString("in_receiver", receiverName);
 			stmt.setBoolean("in_canReply", canReply);
+			stmt.setBoolean("in_includeTitleInMsg", includeTitleInMsg);
 			stmt.registerOutParameter("out_successful", Types.BIT);
 			stmt.execute();
 			
