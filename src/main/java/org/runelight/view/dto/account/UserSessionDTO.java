@@ -18,7 +18,11 @@ public final class UserSessionDTO {
 	private final String mod;
 	private final String dest;
 	
-	public UserSessionDTO(int accountId, String username, boolean staff, boolean fmod, boolean pmod, String ip, int sessionId, String sessionHash, boolean secure, String mod, String dest) {
+	private final int unreadMessages;
+	private final int supportQueries;
+	
+	public UserSessionDTO(int accountId, String username, boolean staff, boolean fmod, boolean pmod, String ip, int sessionId, String sessionHash, boolean secure, String mod, String dest, 
+			int unreadMessages, int supportQueries) {
 		this.accountId = accountId;
 		this.username = username;
 		this.formattedUsername = StringUtil.formatUsername(username);
@@ -32,6 +36,9 @@ public final class UserSessionDTO {
 		this.secure = secure;
 		this.mod = mod;
 		this.dest = dest;
+		
+		this.unreadMessages = unreadMessages;
+		this.supportQueries = supportQueries;
 	}
 	
 	public int getAccountId() {
@@ -70,6 +77,14 @@ public final class UserSessionDTO {
 	}
 	public String getDest() {
 		return dest;
+	}
+
+	public int getUnreadMessages() {
+		return unreadMessages;
+	}
+
+	public int getSupportQueries() {
+		return supportQueries;
 	}
 	
 }

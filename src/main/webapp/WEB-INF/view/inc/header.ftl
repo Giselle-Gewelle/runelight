@@ -40,6 +40,12 @@
 					<#if loginSession.loggedIn>
 						<div class="floatRight">
 							<@a mod="main1" dest="title.ws">Main Menu</@a> | 
+							
+							<#if loginSession.user.staff>
+								<@a mod="ticketing" dest="inbox.ws" secure=true>Inbox (${loginSession.user.unreadMessages})</@a> | 
+								<@a mod="staff" dest="account/tickets.ws" secure=true>Support Tickets (${loginSession.user.supportQueries})</@a> | 
+							</#if>
+							
 							<@a mod=currentMod dest="logout.ws" secure=true>Logout</@a>
 						</div>
 						

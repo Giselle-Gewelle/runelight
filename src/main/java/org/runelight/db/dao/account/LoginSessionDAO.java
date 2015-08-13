@@ -36,8 +36,7 @@ public final class LoginSessionDAO {
 		try {
 			String hash = Hashing.generateSessionHash();
 			
-			String sql = "CALL `account_getLoginSessionDetails`(?, ?, ?, ?, ?, ?);";
-			CallableStatement stmt = con.prepareCall(sql);
+			CallableStatement stmt = con.prepareCall("CALL `account_getLoginSessionDetails`(?, ?, ?, ?, ?, ?);");
 			stmt.setInt("in_sessionId", sessionId);
 			stmt.setBoolean("in_secure", secure);
 			stmt.setString("in_newMod", mod);
@@ -51,9 +50,29 @@ public final class LoginSessionDAO {
 				return null;
 			}
 			
+			int unreadMessages = 0;
+			int supportQueries = 0;
+			
+			if(results.getBoolean("staff")) {
+				// Staff Unread Message Count
+				stmt = con.prepareCall("CALL `account_ticketingGetUnreadCount`(?, ?);");
+				stmt.setString("in_username", results.getString("username"));
+				stmt.registerOutParameter("out_count", Types.INTEGER);
+				stmt.execute();
+				
+				unreadMessages = stmt.getInt("out_count");
+				
+				// Unactioned Support Ticket Count
+				stmt = con.prepareCall("CALL `account_ticketingGetOpenTickets`(?);");
+				stmt.registerOutParameter("out_count", Types.INTEGER);
+				stmt.execute();
+				
+				supportQueries = stmt.getInt("out_count");
+			}
+			
 			return new UserSessionDTO(
 				results.getInt("accountId"), results.getString("username"), results.getBoolean("staff"), results.getBoolean("fmod"), results.getBoolean("pmod"), results.getString("currentIP"),
-				sessionId, hash, secure, mod, dest
+				sessionId, hash, secure, mod, dest, unreadMessages, supportQueries
 			);
 		} catch(SQLException e) {
 			LOG.error("SQLException occurred while attempting to fetch detailed login session info for [" + sessionId + "].", e);

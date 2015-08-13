@@ -39,6 +39,32 @@ CREATE TABLE `account_ticketingMessages` (
 DELIMITER $$ 
 
 
+DROP PROCEDURE IF EXISTS `account_ticketingGetOpenTickets` $$
+CREATE PROCEDURE `account_ticketingGetOpenTickets` (
+	OUT `out_count`		INT(10)	
+) 
+BEGIN 
+	SELECT COUNT(`id`) INTO `out_count` 
+	FROM `account_ticketingMessages` 
+	WHERE `receiverName` IS NULL 
+		AND `receiverDelete` = 0;
+END $$
+
+
+DROP PROCEDURE IF EXISTS `account_ticketingGetUnreadCount` $$
+CREATE PROCEDURE `account_ticketingGetUnreadCount` (
+	IN `in_username`	VARCHAR(12),
+	OUT `out_count`		INT(10)	
+) 
+BEGIN 
+	SELECT COUNT(`id`) INTO `out_count` 
+	FROM `account_ticketingMessages` 
+	WHERE `receiverName` = `in_username` 
+		AND `readOn` IS NULL 
+		AND `receiverDelete` = 0;
+END $$
+
+
 DROP PROCEDURE IF EXISTS `account_ticketingSendMessage` $$
 CREATE PROCEDURE `account_ticketingSendMessage` (
 	IN `in_isReply`			BIT,
@@ -205,7 +231,7 @@ DELIMITER ;
 
 
 
--- 0.1 Fixes
+-- 0.1 Fixes/Changes
 
 DELIMITER $$
 
