@@ -53,7 +53,7 @@ public final class LoginSessionDAO {
 			
 			return new UserSessionDTO(
 				results.getInt("accountId"), results.getString("username"), results.getBoolean("staff"), results.getBoolean("fmod"), results.getBoolean("pmod"), results.getString("currentIP"),
-				sessionId, hash, secure, mod, dest
+				sessionId, hash, secure, mod, dest, 0, 0
 			);
 		} catch(SQLException e) {
 			LOG.error("SQLException occurred while attempting to fetch detailed login session info for [" + sessionId + "].", e);

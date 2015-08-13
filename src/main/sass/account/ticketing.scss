@@ -55,6 +55,10 @@
 		}
 		.title {
 			width: 326px;
+			
+			strong {
+				font-weight: normal !important;
+			}
 		}
 		.messages {
 			width: 53px;
@@ -113,7 +117,7 @@
 		background-color: #45372A;
 		color: #FFFFFF;
 		
-		span {
+		span.inner {
 			display: block;
 			padding: 10px;
 			width: 531px;
@@ -162,5 +166,13 @@
 	label {
 		display: inline-block;
 		margin-top: 1em;
+	}
+}
+
+#threadTitle {
+	text-align: center;
+	
+	strong {
+		font-weight: normal !important;
 	}
 }

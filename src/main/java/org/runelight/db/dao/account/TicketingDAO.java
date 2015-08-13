@@ -111,7 +111,7 @@ public final class TicketingDAO {
 				if(result.getBoolean("authorDelete")) {
 					return MESSAGE_NOT_FOUND;
 				}
-			} else if(result.getString("receiverName").equals(user.getUsername())) {
+			} else if(result.getString("receiverName") != null && result.getString("receiverName").equals(user.getUsername())) {
 				if(result.getBoolean("receiverDelete")) {
 					return MESSAGE_NOT_FOUND;
 				}
@@ -152,7 +152,8 @@ public final class TicketingDAO {
 			List<MessageViewDTO> messageList = new LinkedList<>();
 			while(results.next()) {
 				messageList.add(new MessageViewDTO(
-					results.getInt("id"), results.getTimestamp("date"), results.getString("message"), results.getString("authorName"), results.getBoolean("authorStaff"), results.getTimestamp("readOn")
+					results.getInt("id"), results.getString("title"), results.getTimestamp("date"), results.getString("message"), results.getString("authorName"), 
+					results.getBoolean("authorStaff"), results.getTimestamp("readOn"), results.getBoolean("includeTitleInMsg")
 				));
 			}
 			
@@ -184,7 +185,7 @@ public final class TicketingDAO {
 			List<MessageQueueDTO> sentMessageList = new LinkedList<>();
 			List<MessageQueueDTO> readMessageList = new LinkedList<>();
 			while(results.next()) {
-				if(results.getString("receiverName").equals(user.getUsername()) && !results.getBoolean("receiverDelete")) {
+				if(results.getString("receiverName") != null && results.getString("receiverName").equals(user.getUsername()) && !results.getBoolean("receiverDelete")) {
 					if(results.getTimestamp("readOn") == null) {
 						receivedMessageList.add(new MessageQueueDTO(
 							results.getInt("id"), results.getString("title"), results.getTimestamp("date"), results.getInt("messageNum")

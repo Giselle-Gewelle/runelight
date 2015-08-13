@@ -188,7 +188,7 @@ BEGIN
 		LIMIT 1;
 		
 		IF (`in_id` = `lastMessageId`) THEN 
-			SELECT `id`, `date`, `message`, `authorName`, `authorStaff`, `readOn` 
+			SELECT `id`, `title`, `date`, `message`, `authorName`, `authorStaff`, `readOn`, `includeTitleInMsg` 
 			FROM `account_ticketingMessages` 
 			WHERE `topicId` = `out_topicId` 
 				AND `messageNum` <= `out_messageNum` 

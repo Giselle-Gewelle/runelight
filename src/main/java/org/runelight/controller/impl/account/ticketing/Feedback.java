@@ -98,7 +98,7 @@ public final class Feedback extends Controller {
 			return;
 		}
 		
-		String title = "Feedback: " + subject;
+		String title = "Feedback: <strong>" + subject + "</strong>";
 		if(!ticketingDAO.sendMessage(false, 0, title, 1, comment, null, true, true)) {
 			setError(ERROR_UNKNOWN);
 		}

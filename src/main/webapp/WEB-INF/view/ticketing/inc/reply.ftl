@@ -36,7 +36,7 @@
 	</div>
 	
 	<#if loginSession.user.staff>
-		<div class="center"><p>${currentTitle?html}</p></div>
+		<div id="threadTitle"><p>${currentTitle}</p></div>
 	<#else>
 		<br />
 	</#if>
