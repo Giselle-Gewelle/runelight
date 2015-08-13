@@ -61,7 +61,7 @@
 				<input type="hidden" id="inputMessageChars" value="50000" />
 				
 				<textarea id="inputMessage" name="inputMessage" maxlength="50000"></textarea>
-				<div id="formMessageCharlimiter"></div>
+				<div id="inputMessageCharlimiter"></div>
 				
 				<input type="checkbox" id="inputCanReply" name="inputCanReply" checked="checked" value="yes" /> 
 				<label for="inputCanReply">Recipient <strong>CAN</strong> reply</label>
