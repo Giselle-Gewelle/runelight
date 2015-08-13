@@ -20,7 +20,7 @@
 	
 	<#macro queueItem item>
 		<div class="item">
-			<span class="title">${item.title?html}</span>
+			<span class="title">${item.title}</span>
 			<span class="messages">${item.messageNum}</span>
 			<span class="date">${item.date}</span>
 			<span class="actions">

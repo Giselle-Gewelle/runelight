@@ -20,10 +20,11 @@ import org.runelight.controller.Controller;
 import org.runelight.controller.impl.GenericPage;
 import org.runelight.controller.impl.account.CreateAccount;
 import org.runelight.controller.impl.account.management.ChangePassword;
-import org.runelight.controller.impl.account.management.Ticketing;
 import org.runelight.controller.impl.account.sessions.LoginAttempt;
 import org.runelight.controller.impl.account.sessions.LoginForm;
 import org.runelight.controller.impl.account.sessions.LogoutAttempt;
+import org.runelight.controller.impl.account.ticketing.Feedback;
+import org.runelight.controller.impl.account.ticketing.Ticketing;
 import org.runelight.controller.impl.main1.Title;
 import org.runelight.controller.impl.media.News;
 import org.runelight.controller.impl.staff.StaffPage;
@@ -64,6 +65,7 @@ public final class RequestHandler {
 			put("main1 title.ws", Title.class);
 			put("main1 loginform.ws", LoginForm.class);
 			put("main1 detail.ws", GenericPage.class);
+			put("main1 kbase/feedback.ws", GenericPage.class);
 			
 			
 			put("create index.html", CreateAccount.class);
@@ -77,6 +79,12 @@ public final class RequestHandler {
 			put("password_history password.ws", ChangePassword.class);
 			
 			put("ticketing inbox.ws", Ticketing.class);
+			put("ticketing privacy.html", Feedback.class);
+			put("ticketing complaint.html", Feedback.class);
+			put("ticketing other.html", Feedback.class);
+			put("ticketing privacy.ws", Feedback.class);
+			put("ticketing complaint.ws", Feedback.class);
+			put("ticketing other.ws", Feedback.class);
 
 			
 			put("news newsitem.ws", News.class);
@@ -208,8 +216,13 @@ public final class RequestHandler {
 					request.setAttribute("companyName", Config.getCompanyName());
 					request.setAttribute("securePage", controller.isSecure());
 					
+					String page = dest + ".ftl";
+					if(controller.getActualPage() != null) {
+						page = controller.getActualPage();
+					}
+					
 					char s = '/';
-					String location = new StringBuilder().append(s).append("WEB-INF").append(s).append("view").append(s).append(mapMod).append(s).append(dest).append(".ftl").toString();
+					String location = new StringBuilder().append(s).append("WEB-INF").append(s).append("view").append(s).append(mapMod).append(s).append(page).toString();
 					RequestDispatcher dispatcher = request.getRequestDispatcher(location);
 					if(dispatcher != null && !response.isCommitted()) {
 						dispatcher.forward(request, response);

@@ -30,6 +30,10 @@
 		<#--<@navItem mod="main1" dest="screenshots/screenshots.ws" icon="screenshot">View in-game screenshots</@navItem>-->
 	</@navBox>
 	
+	<@navBox title="Knowledge Base">
+		<@navItem mod="main1" dest="kbase/feedback.ws" icon="feedback">Comment on our service</@navItem>
+	</@navBox>
+	
 	<@navBox title="Account Management">
 		<@navItem mod="ticketing" dest="inbox.ws" secure=true icon="ticketing">Read your messages from ${companyName}</@navItem>
 		<@navItem mod="password_history" dest="passchange.html" secure=true icon="changepass">Change your password</@navItem>

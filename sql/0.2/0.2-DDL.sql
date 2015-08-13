@@ -24,11 +24,12 @@ CREATE TABLE `account_ticketingMessages` (
 	`authorStaff`		BIT				NOT NULL, 
 	`authorIP`			VARCHAR(128)	NOT NULL, 
 	`actualAuthorId`	INT(10)			NOT NULL,
-	`receiverName`		VARCHAR(12)		NOT NULL, 
+	`receiverName`		VARCHAR(12)		NULL, 
 	`canReply`			BIT				NOT NULL,
 	`authorDelete`		BIT				NOT NULL DEFAULT 0, 
 	`receiverDelete`	BIT				NOT NULL DEFAULT 0, 
 	`readOn`			DATETIME		NULL,
+	`includeTitleInMsg`	BIT				NOT NULL DEFAULT 0,
 	
 	PRIMARY KEY (`id`), 
 	FOREIGN KEY (`topicId`) REFERENCES `account_ticketingTopics` (`id`)
@@ -63,23 +64,45 @@ BEGIN
 		AND `readOn` IS NULL 
 		AND `receiverDelete` = 0;
 END $$
+	
+	
+DROP PROCEDURE IF EXISTS `account_ticketingActivityCheck` $$
+CREATE PROCEDURE `account_ticketingActivityCheck` (
+	IN `in_username`	VARCHAR(12),
+	IN `in_ip`			VARCHAR(128),
+	IN `in_minDate`		DATETIME,
+	OUT `out_count`		TINYINT(1)
+) 
+BEGIN 
+	SELECT COUNT(`id`) INTO `out_count` 
+	FROM `account_ticketingMessages` 
+	WHERE `receiverName` IS NULL 
+		AND (
+			`authorName` = `in_username` 
+			OR 
+			`authorIP` = `in_ip` 
+		) 
+		AND `date` > `in_minDate` 
+	LIMIT 1;
+END $$
 
 
 DROP PROCEDURE IF EXISTS `account_ticketingSendMessage` $$
 CREATE PROCEDURE `account_ticketingSendMessage` (
-	IN `in_isReply`			BIT,
-	IN `in_topicId`			INT(10), 
-	IN `in_title`			VARCHAR(54),
-	IN `in_messageNum`		SMALLINT(5),
-	IN `in_date`			DATETIME, 
-	IN `in_message`			TEXT, 
-	IN `in_author`			VARCHAR(12),
-	IN `in_authorStaff`		BIT,
-	IN `in_authorIP`		VARCHAR(128),
-	IN `in_authorId`		INT(10),
-	IN `in_receiver`		VARCHAR(12),
-	IN `in_canReply`		BIT,
-	OUT `out_successful`	BIT
+	IN `in_isReply`				BIT,
+	IN `in_topicId`				INT(10), 
+	IN `in_title`				VARCHAR(54),
+	IN `in_messageNum`			SMALLINT(5),
+	IN `in_date`				DATETIME, 
+	IN `in_message`				TEXT, 
+	IN `in_author`				VARCHAR(12),
+	IN `in_authorStaff`			BIT,
+	IN `in_authorIP`			VARCHAR(128),
+	IN `in_authorId`			INT(10),
+	IN `in_receiver`			VARCHAR(12),
+	IN `in_canReply`			BIT,
+	IN `in_includeTitleInMsg`	BIT,
+	OUT `out_successful`		BIT
 ) 
 BEGIN 
 	DECLARE `newTopicId` INT(10) UNSIGNED;
@@ -92,9 +115,9 @@ BEGIN
 	END IF;
 	
 	INSERT INTO `account_ticketingMessages` (
-		`topicId`, `title`, `messageNum`, `date`, `message`, `authorName`, `authorStaff`, `authorIP`, `actualAuthorId`, `receiverName`, `canReply` 
+		`topicId`, `title`, `messageNum`, `date`, `message`, `authorName`, `authorStaff`, `authorIP`, `actualAuthorId`, `receiverName`, `canReply`, `includeTitleInMsg` 
 	) VALUES (
-		`newTopicId`, `in_title`, `in_messageNum`, `in_date`, `in_message`, `in_author`, `in_authorStaff`, `in_authorIP`, `in_authorId`, `in_receiver`, `in_canReply`
+		`newTopicId`, `in_title`, `in_messageNum`, `in_date`, `in_message`, `in_author`, `in_authorStaff`, `in_authorIP`, `in_authorId`, `in_receiver`, `in_canReply`, `in_includeTitleInMsg` 
 	);
 	
 	IF (ROW_COUNT() < 1) THEN
@@ -191,7 +214,7 @@ BEGIN
 		LIMIT 1;
 		
 		IF (`in_id` = `lastMessageId`) THEN 
-			SELECT `id`, `date`, `message`, `authorName`, `authorStaff`, `readOn` 
+			SELECT `id`, `title`, `date`, `message`, `authorName`, `authorStaff`, `readOn`, `includeTitleInMsg` 
 			FROM `account_ticketingMessages` 
 			WHERE `topicId` = `out_topicId` 
 				AND `messageNum` <= `out_messageNum` 

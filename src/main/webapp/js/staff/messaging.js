@@ -6,6 +6,9 @@
 		
 		this.quickMessages = [
 			{
+				/*
+				 * This is not really valid here (since it's a reply), just an example!
+				 */
 				"title": "Noob / newb",
 				"text": "Thank you for contacting {company}.\n\n" +
 						"I can certainly understand your concern and how upset this has made you.\n\n" +
@@ -18,7 +21,13 @@
 		];
 		
 		this.quickMessage = "";
+		
+		this.title = "";
 		this.message = "";
+		
+		this.error = false;
+		
+		var messageCharlimiter = new Charlimiter("inputMessage");
 		
 		this.selectQuickMessage = function() {
 			if(this.quickMessage === null) {
@@ -30,6 +39,22 @@
 				text = text.replace(/{username}/g, username);
 				text = text.replace(/{name}/g, receiverName);
 				this.message = text;
+				messageCharlimiter.update(this.message);
+			}
+		};
+		
+		this.submit = function() {
+			this.error = false;
+			
+			this.title = this.title.trim();
+			this.message = this.message.trim();
+			
+			if(this.title == "" || this.message == "") {
+				this.error = true;
+			}
+			
+			if(!this.error) {
+				$("#messageForm").submit();
 			}
 		};
 		

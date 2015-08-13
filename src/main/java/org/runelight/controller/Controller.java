@@ -103,6 +103,14 @@ public abstract class Controller {
 	}
 	
 	/**
+	 * Gets the actual FTL (FreeMarker) page for this page.
+	 * @return Null if the default path is desired, or a string containing the desired endpoint file.
+	 */
+	public String getActualPage() {
+		return null;
+	}
+	
+	/**
 	 * Whether or not the user must be logged in to view the current page.
 	 * @return True if they must be logged in, false if not.
 	 */

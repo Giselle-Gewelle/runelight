@@ -5,8 +5,8 @@
 	</div>
 </div>
 
-<div class="center">
-	<p>${thread.title?html}</p>
+<div id="threadTitle">
+	<p>${thread.title}</p>
 </div>
 
 <#list thread.messageList as message>
@@ -22,11 +22,17 @@
 		</span> 
 		
 		<span class="messageDetails">
-			<#if message.authorStaff>
-				<span>${replaceNewLines(message.message)}</span>
-			<#else>
-				<span>${replaceNewLines(message.message?html)}</span>
-			</#if>
+			<span class="inner">
+				<#if message.includeTitleInMsg>
+					${message.title}<br /><br />
+				</#if>
+				
+				<#if message.authorStaff>
+					${replaceNewLines(message.message)}
+				<#else>
+					${replaceNewLines(message.message?html)}
+				</#if>
+			</span>
 		</span>
 		
 		<span class="dateDetails">

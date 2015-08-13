@@ -26,9 +26,6 @@ strong {
 thead td {
 	font-weight: bold;
 }
-hr + p {
-	margin: 0 !important;
-}
 
 #content {
 	width: 765px;
@@ -88,8 +85,8 @@ hr + p {
 			h2 {
 				font-weight: bold;
 				display: block;
-				font-size: 22px;
-				margin: 0.5em 0;
+				font-size: 18pt;
+				margin: 10px 0 0.2em;
 			}
 			
 			input[type="text"], input[type="password"], textarea, select {
@@ -114,7 +111,7 @@ hr + p {
 				padding: 0;
 				height: 1px;
 				width: 100%;
-				background-color: #7B4F17;
+				background-color: #382418;
 			}
 			
 			.contentBox {

@@ -19,10 +19,18 @@ function Charlimiter(inputId) {
 		});
 	};
 	
-	this.update = function() {
-		var length = input.val().length;
+	this.update = function(watch) {
+		var length = 0;
+		if(watch !== undefined) {
+			length = watch.length;
+		} else {
+			length = input.val().length;
+		}
 	    if(length > maxChars) {
 	    	input.val(input.val().substring(0, maxChars));
+	    	if(watch !== undefined) {
+	    		watch = watch.substring(0, maxChars);
+	    	}
 	    	length = maxChars;
 	    }
 	    
