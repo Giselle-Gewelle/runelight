@@ -101,10 +101,10 @@ label {
 		margin-bottom: 3px;
 	}
 	
-	input[type="text"], textarea {
+	input[type="text"], textarea, select {
 		display: block;
 	}
-	input[type="text"] {
+	input[type="text"], select {
 		width: 300px;
 	}
 	textarea {
