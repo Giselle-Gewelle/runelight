@@ -17,8 +17,13 @@ import org.runelight.view.dto.account.ticketing.InboxDTO;
 import org.runelight.view.dto.account.ticketing.MessageQueueDTO;
 import org.runelight.view.dto.account.ticketing.MessageViewDTO;
 import org.runelight.view.dto.account.ticketing.ThreadDTO;
+import org.runelight.view.dto.staff.ticketing.TicketDTO;
 import org.runelight.view.dto.staff.ticketing.TicketQueueDTO;
 
+/**
+ * Data Access Object for the Ticketing system.
+ * @author Giselle
+ */
 public final class TicketingDAO {
 	
 	private static final Logger LOG = Logger.getLogger(TicketingDAO.class);
@@ -34,6 +39,27 @@ public final class TicketingDAO {
 	public TicketingDAO(Connection con, UserSessionDTO user) {
 		this.con = con;
 		this.user = user;
+	}
+	
+	public TicketDTO getTicket(int id) {
+		try {
+			CallableStatement stmt = con.prepareCall("CALL `staff_ticketingGetTicket`(?);");
+			stmt.setInt("in_id", id);
+			stmt.execute();
+			
+			ResultSet result = stmt.getResultSet();
+			if(result == null || !result.next()) {
+				return null;
+			}
+			
+			return new TicketDTO(
+				id, result.getString("title"), DateUtil.LONG_TIME_FORMAT.format(result.getTimestamp("date")), result.getString("message"), 
+				StringUtil.formatUsername(result.getString("authorName")), result.getString("authorIP"), result.getInt("actualAuthorId")
+			);
+		} catch(SQLException e) {
+			LOG.error("SQLException occurred while attempting to fetch the ticket [" + id + "].", e);
+			return null;
+		}
 	}
 	
 	public List<TicketQueueDTO> getOpenTickets() {

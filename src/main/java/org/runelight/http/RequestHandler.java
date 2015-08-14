@@ -36,6 +36,10 @@ import org.runelight.controller.impl.staff.news.StaffNewsDelete;
 import org.runelight.db.RSDataSource;
 import org.runelight.util.ModUtil;
 
+/**
+ * Handles all incoming GET and POST requests.
+ * @author Giselle
+ */
 public final class RequestHandler {
 	
 	private static final Logger LOG = Logger.getLogger(RequestHandler.class);
@@ -102,7 +106,8 @@ public final class RequestHandler {
 			put("staff accounts/list.ws", StaffAccounts.class);
 			put("staff accounts/details.ws", StaffAccounts.class);
 			put("staff accounts/sendmsg.ws", StaffMessaging.class);
-			put("staff accounts/ticketqueue.ws", StaffTicketing.class);
+			put("staff accounts/tickets/queue.ws", StaffTicketing.class);
+			put("staff accounts/tickets/details.ws", StaffTicketing.class);
 			
 			put("staff news/article.ws", StaffNewsArticle.class);
 			put("staff news/delete.ws", StaffNewsArticle.class);

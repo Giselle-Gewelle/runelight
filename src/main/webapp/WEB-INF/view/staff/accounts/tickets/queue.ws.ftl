@@ -1,6 +1,6 @@
 <#assign showSessionBar=true />
 <#assign cssImports = [ "staff/accounts" ] />
-<#include "../../inc/header.ftl" />
+<#include "../../../inc/header.ftl" />
 
 <div class="titleFrame">
 	<h1>Open Support Tickets</h1>
@@ -33,8 +33,8 @@
 							<td class="author"><@a mod="staff" dest="accounts/details.ws?accountId=${ticket.authorId}" secure=true>${ticket.authorName}</@a></td>
 							<td class="date">${ticket.date}</td>
 							<td>
-								<@a mod="staff" dest="accounts/ticket/details.ws?id=${ticket.id}" secure=true>View</@a> | 
-								<@a mod="staff" dest="accounts/ticket/delete.ws?id=${ticket.id}" secure=true>Delete</@a>
+								<@a mod="staff" dest="accounts/tickets/details.ws?id=${ticket.id}" secure=true>View</@a> | 
+								<@a mod="staff" dest="accounts/tickets/delete.ws?id=${ticket.id}" secure=true>Delete</@a>
 							</td>
 						</tr>
 					</#list>
@@ -49,4 +49,4 @@
 	<div class="bottom"></div>
 </div>
 
-<#include "../../inc/footer.ftl" />
+<#include "../../../inc/footer.ftl" />

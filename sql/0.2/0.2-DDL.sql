@@ -40,6 +40,20 @@ CREATE TABLE `account_ticketingMessages` (
 DELIMITER $$ 
 
 
+DROP PROCEDURE IF EXISTS `staff_ticketingGetTicket` $$
+CREATE PROCEDURE `staff_ticketingGetTicket` (
+	IN `in_id`		BIGINT(20)
+) 
+BEGIN 
+	SELECT `title`, `date`, `message`, `authorName`, `authorIP`, `actualAuthorId` 
+	FROM `account_ticketingMessages` 
+	WHERE `receiverName` IS NULL 
+		AND `receiverDelete` = 0 
+		AND `id` = `in_id` 
+	LIMIT 1;
+END $$
+
+
 DROP PROCEDURE IF EXISTS `staff_ticketingGetOpenTickets` $$
 CREATE PROCEDURE `staff_ticketingGetOpenTickets` () 
 BEGIN 
