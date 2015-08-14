@@ -22,6 +22,15 @@
 				</span>
 			</a>
 			
+			<a href="${url('staff', 'accounts/ticketqueue.ws', true)}" class="box">
+				<span class="bg"></span>
+				
+				<span class="inner">
+					<span>Open Support Tickets</span>
+					<span>View and respond to open Customer Support Tickets.</span>
+				</span>
+			</a>
+			
 			<a href="${url('staff', 'news/article.ws', true)}" class="box">
 				<span class="bg"></span>
 				

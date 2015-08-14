@@ -43,7 +43,7 @@
 							
 							<#if loginSession.user.staff>
 								<@a mod="ticketing" dest="inbox.ws" secure=true>Inbox (${loginSession.user.unreadMessages})</@a> | 
-								<@a mod="staff" dest="account/tickets.ws" secure=true>Support Tickets (${loginSession.user.supportQueries})</@a> | 
+								<@a mod="staff" dest="accounts/ticketqueue.ws" secure=true>Support Tickets (${loginSession.user.supportQueries})</@a> | 
 							</#if>
 							
 							<@a mod=currentMod dest="logout.ws" secure=true>Logout</@a>

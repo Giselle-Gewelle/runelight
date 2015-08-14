@@ -23,7 +23,7 @@ tr.lower {
 	}
 }
 
-#accountList {
+#accountList, #ticketList {
 	width: 100%;
 	margin: 1em 0;
 	border: 1px solid #7B4F17;
@@ -58,6 +58,18 @@ tr.lower {
 		padding: 5px;
 		text-align: left;
 		vertical-align: middle;
+	}
+}
+
+#ticketList {
+	.title {
+		width: 40%;
+	}
+	.author {
+		width: 15%;
+	}
+	.date {
+		width: 25%;
 	}
 }
 

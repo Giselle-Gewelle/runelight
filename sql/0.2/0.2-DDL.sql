@@ -40,8 +40,19 @@ CREATE TABLE `account_ticketingMessages` (
 DELIMITER $$ 
 
 
-DROP PROCEDURE IF EXISTS `account_ticketingGetOpenTickets` $$
-CREATE PROCEDURE `account_ticketingGetOpenTickets` (
+DROP PROCEDURE IF EXISTS `staff_ticketingGetOpenTickets` $$
+CREATE PROCEDURE `staff_ticketingGetOpenTickets` () 
+BEGIN 
+	SELECT `id`, `title`, `authorName`, `actualAuthorId`, `date` 
+	FROM `account_ticketingMessages` 
+	WHERE `receiverName` IS NULL 
+		AND `receiverDelete` = 0 
+	ORDER BY `date` ASC;
+END $$
+
+
+DROP PROCEDURE IF EXISTS `staff_ticketingGetOpenTicketCount` $$
+CREATE PROCEDURE `staff_ticketingGetOpenTicketCount` (
 	OUT `out_count`		INT(10)	
 ) 
 BEGIN 

@@ -11,11 +11,13 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.runelight.util.DateUtil;
+import org.runelight.util.StringUtil;
 import org.runelight.view.dto.account.UserSessionDTO;
 import org.runelight.view.dto.account.ticketing.InboxDTO;
 import org.runelight.view.dto.account.ticketing.MessageQueueDTO;
 import org.runelight.view.dto.account.ticketing.MessageViewDTO;
 import org.runelight.view.dto.account.ticketing.ThreadDTO;
+import org.runelight.view.dto.staff.ticketing.TicketQueueDTO;
 
 public final class TicketingDAO {
 	
@@ -32,6 +34,34 @@ public final class TicketingDAO {
 	public TicketingDAO(Connection con, UserSessionDTO user) {
 		this.con = con;
 		this.user = user;
+	}
+	
+	public List<TicketQueueDTO> getOpenTickets() {
+		try {
+			CallableStatement stmt = con.prepareCall("CALL `staff_ticketingGetOpenTickets`();");
+			stmt.execute();
+			
+			ResultSet results = stmt.getResultSet();
+			if(results == null) {
+				return null;
+			}
+			
+			List<TicketQueueDTO> tickets = new LinkedList<>();
+			while(results.next()) {
+				tickets.add(new TicketQueueDTO(
+					results.getInt("id"), results.getString("title"), results.getInt("actualAuthorId"), StringUtil.formatUsername(results.getString("authorName")), results.getTimestamp("date")
+				));
+			}
+			
+			if(tickets.size() < 1) {
+				return null;
+			}
+			
+			return tickets;
+		} catch(SQLException e) {
+			LOG.error("SQLException occurred while attempting to fetch all of the open Support Tickets.", e);
+			return null;
+		}
 	}
 	
 	public int getActivity(Date minDate) {

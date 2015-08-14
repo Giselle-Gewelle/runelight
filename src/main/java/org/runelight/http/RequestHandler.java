@@ -30,6 +30,7 @@ import org.runelight.controller.impl.media.News;
 import org.runelight.controller.impl.staff.StaffPage;
 import org.runelight.controller.impl.staff.accounts.StaffAccounts;
 import org.runelight.controller.impl.staff.accounts.StaffMessaging;
+import org.runelight.controller.impl.staff.accounts.StaffTicketing;
 import org.runelight.controller.impl.staff.news.StaffNewsArticle;
 import org.runelight.controller.impl.staff.news.StaffNewsDelete;
 import org.runelight.db.RSDataSource;
@@ -101,6 +102,7 @@ public final class RequestHandler {
 			put("staff accounts/list.ws", StaffAccounts.class);
 			put("staff accounts/details.ws", StaffAccounts.class);
 			put("staff accounts/sendmsg.ws", StaffMessaging.class);
+			put("staff accounts/ticketqueue.ws", StaffTicketing.class);
 			
 			put("staff news/article.ws", StaffNewsArticle.class);
 			put("staff news/delete.ws", StaffNewsArticle.class);

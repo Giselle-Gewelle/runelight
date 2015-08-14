@@ -63,7 +63,7 @@ public final class LoginSessionDAO {
 				unreadMessages = stmt.getInt("out_count");
 				
 				// Unactioned Support Ticket Count
-				stmt = con.prepareCall("CALL `account_ticketingGetOpenTickets`(?);");
+				stmt = con.prepareCall("CALL `staff_ticketingGetOpenTicketCount`(?);");
 				stmt.registerOutParameter("out_count", Types.INTEGER);
 				stmt.execute();
 				
