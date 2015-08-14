@@ -3,9 +3,9 @@ package org.runelight.controller.impl.staff.accounts;
 import org.runelight.controller.impl.staff.StaffPage;
 import org.runelight.db.dao.account.TicketingDAO;
 import org.runelight.db.dao.staff.StaffAccountsDAO;
+import org.runelight.dto.AccountDetailsDTO;
 import org.runelight.http.HttpRequestType;
 import org.runelight.util.URLUtil;
-import org.runelight.view.dto.staff.AccountDetailsDTO;
 
 public final class StaffMessaging extends StaffPage {
 

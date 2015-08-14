@@ -9,14 +9,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.runelight.controller.impl.account.CreateAccount;
 import org.runelight.controller.impl.staff.accounts.StaffAccounts;
+import org.runelight.dto.AccountDetailsDTO;
+import org.runelight.dto.IPDateDTO;
+import org.runelight.dto.SessionDetailsDTO;
+import org.runelight.util.CountryUtil;
 import org.runelight.util.DateUtil;
 import org.runelight.util.StringUtil;
 import org.runelight.view.dto.account.UserDTO;
-import org.runelight.view.dto.staff.AccountDetailsDTO;
 import org.runelight.view.dto.staff.AccountListDTO;
-import org.runelight.view.dto.staff.accountDetails.IPDateDTO;
-import org.runelight.view.dto.staff.accountDetails.SessionDetailsDTO;
 
 public final class StaffAccountsDAO {
 	
@@ -47,7 +49,7 @@ public final class StaffAccountsDAO {
 			
 			if(secondaryResults != null) {
 				while(secondaryResults.next()) {
-					passwordChangeList.add(new IPDateDTO(secondaryResults.getString("ip"), secondaryResults.getTimestamp("date")));
+					passwordChangeList.add(new IPDateDTO(secondaryResults.getString("ip"), DateUtil.SHORT_TIME_FORMAT.format(secondaryResults.getTimestamp("date"))));
 				}
 			}
 			
@@ -60,7 +62,8 @@ public final class StaffAccountsDAO {
 			
 			if(secondaryResults != null) {
 				while(secondaryResults.next()) {
-					sessionList.add(new SessionDetailsDTO(secondaryResults.getString("ip"), secondaryResults.getTimestamp("startDate"), secondaryResults.getTimestamp("endDate"), 
+					sessionList.add(new SessionDetailsDTO(secondaryResults.getString("ip"), 
+							DateUtil.SHORT_TIME_FORMAT.format(secondaryResults.getTimestamp("startDate")), DateUtil.SHORT_TIME_FORMAT.format(secondaryResults.getTimestamp("endDate")), 
 							secondaryResults.getString("startMod"), secondaryResults.getString("currentMod"), secondaryResults.getString("startDest"), secondaryResults.getString("currentDest"),
 							secondaryResults.getBoolean("secure")));
 				}
@@ -75,13 +78,16 @@ public final class StaffAccountsDAO {
 			
 			if(secondaryResults != null) {
 				while(secondaryResults.next()) {
-					loginAttemptList.add(new IPDateDTO(secondaryResults.getString("ip"), secondaryResults.getTimestamp("date")));
+					loginAttemptList.add(new IPDateDTO(secondaryResults.getString("ip"), DateUtil.SHORT_TIME_FORMAT.format(secondaryResults.getTimestamp("date"))));
 				}
 			}
 			
 			return new AccountDetailsDTO(
-				results.getInt("accountId"), results.getString("username"), results.getString("ageRange"), results.getString("countryCode"), 
-				results.getTimestamp("creationDate"), results.getString("creationIP"), results.getTimestamp("lastLoginDate"), results.getString("currentIP"), 
+				results.getInt("accountId"), results.getString("username"), StringUtil.formatUsername(results.getString("username")), 
+				CreateAccount.AGE_RANGE_MAP.get(results.getString("ageRange")), CountryUtil.COUNTRY_MAP.get(results.getString("countryCode")), 
+				DateUtil.SHORT_TIME_FORMAT.format(results.getTimestamp("creationDate")), results.getString("creationIP"), 
+				(results.getTimestamp("lastLoginDate") == null ? null : DateUtil.SHORT_TIME_FORMAT.format(results.getTimestamp("lastLoginDate"))), 
+				results.getString("currentIP"), 
 				results.getBoolean("staff"), results.getBoolean("fmod"), results.getBoolean("pmod"), 
 				(passwordChangeList.size() < 1 ? null : passwordChangeList), 
 				(sessionList.size() < 1 ? null : sessionList), 
