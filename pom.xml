@@ -49,9 +49,80 @@
 			      	<includePath>${basedir}/src/main/sass/plugins/</includePath>
 			   	</configuration>
 			</plugin>
+			
+            <plugin>
+                <groupId>org.jvnet.jaxb2.maven2</groupId>
+                <artifactId>maven-jaxb2-plugin</artifactId>
+                <version>0.8.0</version>
+                
+                <configuration>
+                    <schemaDirectory>src/main/resources</schemaDirectory>
+                    <bindingDirectory>src/main/resources</bindingDirectory>
+                    <generatePackage>org.runelight.dto</generatePackage>
+                    <strict>false</strict>
+                    <extension>true</extension>
+                    
+                    <args>
+                    	<arg>-Xvalue-constructor</arg>
+                    </args>
+                    
+                    <plugins>
+                        <plugin>
+                            <groupId>org.jvnet.jaxb2_commons</groupId>
+                            <artifactId>jaxb2-basics</artifactId>
+                            <version>0.6.2</version>
+                        </plugin>
+                        
+                        <plugin>
+                            <groupId>org.jvnet.jaxb2_commons</groupId>
+                            <artifactId>jaxb2-basics-annotate</artifactId>
+                            <version>0.6.2</version>
+                        </plugin>
+                        
+                        <plugin>
+                            <groupId>org.jvnet.jaxb2_commons</groupId>
+                            <artifactId>jaxb2-value-constructor</artifactId>
+                            <version>3.0</version>
+                        </plugin>
+                    </plugins>
+                </configuration>
+                
+                <executions>
+                    <execution>
+                        <id>generate</id>
+						<phase>generate-sources</phase>
+                        
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.8</version>
+				
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						
+						<configuration>
+							<sources>
+								<source>target/generated-sources/xjc</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 		
-		<finalName>RuneLight</finalName>
 		<pluginManagement>
 			<plugins>
 				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
@@ -77,6 +148,26 @@
 											<goal>compile</goal>
 										</goals>
 									</pluginExecutionFilter>
+									
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.jvnet.jaxb2.maven2
+										</groupId>
+										<artifactId>
+											maven-jaxb2-plugin
+										</artifactId>
+										<versionRange>
+											[0.8.0,)
+										</versionRange>
+										<goals>
+											<goal>generate</goal>
+										</goals>
+									</pluginExecutionFilter>
 									<action>
 										<ignore></ignore>
 									</action>
@@ -87,6 +178,8 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		
+		<finalName>RuneLight</finalName>
 	</build>
 
 	<groupId>org.runelight</groupId>
@@ -144,6 +237,23 @@
     		<version>20141113</version>
 		</dependency>
 		
+		
+		<!-- 
+		JAXB
+		-->
+		
+        <dependency>
+            <groupId>org.jvnet.jaxb2_commons</groupId>
+            <artifactId>jaxb2-basics-runtime</artifactId>
+            <version>0.6.2</version>
+        </dependency>
+        
+        <dependency>
+			<groupId>org.jvnet.jaxb2_commons</groupId>
+			<artifactId>jaxb2-value-constructor</artifactId>
+			<version>3.0</version>
+		</dependency>
+		        
 		
 		<!-- 
 		Unit Test Dependencies

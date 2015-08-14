@@ -10,6 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.runelight.dto.TicketDTO;
+import org.runelight.dto.TicketQueueDTO;
 import org.runelight.util.DateUtil;
 import org.runelight.util.StringUtil;
 import org.runelight.view.dto.account.UserSessionDTO;
@@ -17,8 +19,6 @@ import org.runelight.view.dto.account.ticketing.InboxDTO;
 import org.runelight.view.dto.account.ticketing.MessageQueueDTO;
 import org.runelight.view.dto.account.ticketing.MessageViewDTO;
 import org.runelight.view.dto.account.ticketing.ThreadDTO;
-import org.runelight.view.dto.staff.ticketing.TicketDTO;
-import org.runelight.view.dto.staff.ticketing.TicketQueueDTO;
 
 /**
  * Data Access Object for the Ticketing system.
@@ -75,7 +75,8 @@ public final class TicketingDAO {
 			List<TicketQueueDTO> tickets = new LinkedList<>();
 			while(results.next()) {
 				tickets.add(new TicketQueueDTO(
-					results.getInt("id"), results.getString("title"), results.getInt("actualAuthorId"), StringUtil.formatUsername(results.getString("authorName")), results.getTimestamp("date")
+					results.getInt("id"), results.getString("title"), results.getInt("actualAuthorId"), StringUtil.formatUsername(results.getString("authorName")), 
+					DateUtil.SHORT_TIME_FORMAT.format(results.getTimestamp("date"))
 				));
 			}
 			

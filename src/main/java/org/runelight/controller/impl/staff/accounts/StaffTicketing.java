@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.runelight.controller.impl.staff.StaffPage;
 import org.runelight.db.dao.account.TicketingDAO;
+import org.runelight.dto.TicketDTO;
+import org.runelight.dto.TicketQueueDTO;
 import org.runelight.util.URLUtil;
-import org.runelight.view.dto.staff.ticketing.TicketDTO;
-import org.runelight.view.dto.staff.ticketing.TicketQueueDTO;
 
 /**
  * Controller for the Ticketing section of the Staff Center.
