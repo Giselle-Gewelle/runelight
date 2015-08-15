@@ -50,7 +50,7 @@ public final class StaffTicketing extends StaffPage {
 	
 	private void setupTicketQueue() {
 		List<TicketQueueDTO> tickets = dao.getOpenTickets();
-		if(tickets != null) {
+		if(tickets.size() > 0) {
 			getRequest().setAttribute("ticketList", tickets);
 		}
 	}

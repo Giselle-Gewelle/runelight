@@ -5,7 +5,7 @@
 	<div class="titleFrame">
 		<h1>
 			<#if newsItem??>
-				${newsItem.category.name2} 
+				${categoryMap[newsItem.category?string].name2} 
 			</#if> 
 			News
 		</h1>

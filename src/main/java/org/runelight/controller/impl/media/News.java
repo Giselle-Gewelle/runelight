@@ -5,9 +5,9 @@ import java.util.Map;
 
 import org.runelight.controller.Controller;
 import org.runelight.db.dao.media.NewsDAO;
+import org.runelight.dto.NewsItemDTO;
+import org.runelight.dto.NewsListDTO;
 import org.runelight.util.URLUtil;
-import org.runelight.view.dto.media.news.NewsItemDTO;
-import org.runelight.view.dto.media.news.NewsListDTO;
 
 public final class News extends Controller {
 
@@ -22,18 +22,22 @@ public final class News extends Controller {
 		BEHIND_THE_SCENES(6, "Behind the Scenes");
 		
 		
-		private static Map<Integer, NewsCategory> categoryMap;
+		private static Map<String, NewsCategory> categoryMap;
 		
 		static {
 			categoryMap = new HashMap<>();
 			
 			for(NewsCategory cat : NewsCategory.values()) {
-				categoryMap.put(cat.getId(), cat);
+				categoryMap.put(String.valueOf(cat.getId()), cat);
 			}
 		}
 		
 		public static NewsCategory forId(int id) {
 			return categoryMap.get(id);
+		}
+		
+		public static Map<String, NewsCategory> getCategoryMap() {
+			return categoryMap;
 		}
 		
 		
@@ -74,6 +78,8 @@ public final class News extends Controller {
 
 	@Override
 	public void init() {
+		getRequest().setAttribute("categoryMap", NewsCategory.getCategoryMap());
+		
 		switch(getDest()) {
 			case "newsitem.ws":
 				fetchNewsItem();
@@ -108,7 +114,7 @@ public final class News extends Controller {
 			getRequest().setAttribute("pageCount", newsList.getPageCount());
 			getRequest().setAttribute("categoryId", newsList.getCategoryId());
 			
-			if(newsList.getNewsList() != null) {
+			if(newsList.getNewsList().size() > 0) {
 				getRequest().setAttribute("newsList", newsList.getNewsList());
 			}
 			

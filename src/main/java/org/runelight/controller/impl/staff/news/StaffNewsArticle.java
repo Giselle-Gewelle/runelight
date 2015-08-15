@@ -18,9 +18,9 @@ import org.runelight.controller.impl.media.News.NewsCategory;
 import org.runelight.controller.impl.staff.StaffPage;
 import org.runelight.db.dao.media.NewsDAO;
 import org.runelight.db.dao.staff.StaffNewsDAO;
+import org.runelight.dto.NewsItemDTO;
 import org.runelight.http.HttpRequestType;
 import org.runelight.util.URLUtil;
-import org.runelight.view.dto.media.news.NewsItemDTO;
 
 public final class StaffNewsArticle extends StaffPage {
 	

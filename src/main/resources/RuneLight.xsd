@@ -5,6 +5,10 @@
 		   xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" 
 		   targetNamespace="http://org.runelight">
 			   
+	<!-- 
+	Ticketing
+	-->
+	
 	<xs:complexType name="TicketDTO">
 		<xs:sequence>
 			<xs:element name="id" 			type="xs:int" 		minOccurs="1" maxOccurs="1" />
@@ -26,6 +30,11 @@
 			<xs:element name="date" 		type="xs:string" 	minOccurs="1" maxOccurs="1" />
 		</xs:sequence>
 	</xs:complexType>
+		
+			   
+	<!-- 
+	Staff Center Accounts
+	-->
 	
 	<xs:complexType name="IPDateDTO">
 		<xs:sequence>
@@ -61,9 +70,76 @@
 			<xs:element name="staff"	 			type="xs:boolean"			minOccurs="1" maxOccurs="1" />
 			<xs:element name="fmod"		 			type="xs:boolean"			minOccurs="1" maxOccurs="1" />
 			<xs:element name="pmod"		 			type="xs:boolean"			minOccurs="1" maxOccurs="1" />
-			<xs:element name="passwordChangeList"	type="IPDateDTO"			minOccurs="0" maxOccurs="unbounded" nillable="true" />
-			<xs:element name="sessionList"			type="SessionDetailsDTO"	minOccurs="0" maxOccurs="unbounded" nillable="true" />
-			<xs:element name="loginAttemptList"		type="IPDateDTO"			minOccurs="0" maxOccurs="unbounded" nillable="true" />
+			<xs:element name="passwordChangeList"	type="IPDateDTO"			minOccurs="1" maxOccurs="unbounded" />
+			<xs:element name="sessionList"			type="SessionDetailsDTO"	minOccurs="1" maxOccurs="unbounded" />
+			<xs:element name="loginAttemptList"		type="IPDateDTO"			minOccurs="1" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="AccountListDTO">
+		<xs:sequence>
+			<xs:element name="currentPage"		type="xs:int"		minOccurs="1" maxOccurs="1" />
+			<xs:element name="pageCount"		type="xs:int"		minOccurs="1" maxOccurs="1" />
+			<xs:element name="usernameSearch"	type="xs:string"	minOccurs="1" maxOccurs="1" />
+			<xs:element name="ipSearch"			type="xs:string"	minOccurs="1" maxOccurs="1" />
+			<xs:element name="accountList"		type="UserDTO"		minOccurs="1" maxOccurs="unbounded" />
+			<xs:element name="sort"				type="xs:string"	minOccurs="1" maxOccurs="1" />
+			<xs:element name="sortDir"			type="xs:string"	minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+		
+		   
+	<!-- 
+	Misc Accounts
+	-->
+	
+	<xs:complexType name="UserDTO">
+		<xs:annotation>
+			<xs:documentation>
+				Used for Logging in, as well at in the Staff Center account list.
+			</xs:documentation>
+		</xs:annotation>
+		
+		<xs:sequence>
+			<xs:element name="accountId"			type="xs:int"		minOccurs="1" maxOccurs="1" />
+			<xs:element name="username"				type="xs:string"	minOccurs="1" maxOccurs="1" />
+			<xs:element name="formattedUsername"	type="xs:string"	minOccurs="1" maxOccurs="1" />
+			<xs:element name="passwordHash"			type="xs:string"	minOccurs="1" maxOccurs="1" />
+			<xs:element name="passwordSalt"			type="xs:string"	minOccurs="1" maxOccurs="1" />
+			<xs:element name="currentIP"			type="xs:string"	minOccurs="1" maxOccurs="1" />
+			<xs:element name="creationDate"			type="xs:string"	minOccurs="1" maxOccurs="1" />
+			<xs:element name="creationIP"			type="xs:string"	minOccurs="1" maxOccurs="1" />
+			<xs:element name="staff"	 			type="xs:boolean"			minOccurs="1" maxOccurs="1" />
+			<xs:element name="fmod"		 			type="xs:boolean"			minOccurs="1" maxOccurs="1" />
+			<xs:element name="pmod"		 			type="xs:boolean"			minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+		
+		   
+	<!-- 
+	News
+	-->
+	
+	<xs:complexType name="NewsItemDTO">
+		<xs:sequence>
+			<xs:element name="id"			type="xs:int"		minOccurs="1" maxOccurs="1" />
+			<xs:element name="title"		type="xs:string"	minOccurs="1" maxOccurs="1" />
+			<xs:element name="date"			type="xs:string"	minOccurs="1" maxOccurs="1" />
+			<xs:element name="category"		type="xs:int"		minOccurs="1" maxOccurs="1" />
+			<xs:element name="iconName"		type="xs:string"	minOccurs="1" maxOccurs="1" />
+			<xs:element name="description"	type="xs:string"	minOccurs="1" maxOccurs="1" />
+			<xs:element name="body"			type="xs:string"	minOccurs="1" maxOccurs="1" />
+			<xs:element name="nextId"		type="xs:int"		minOccurs="1" maxOccurs="1" />
+			<xs:element name="prevId"		type="xs:int"		minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="NewsListDTO">
+		<xs:sequence>
+			<xs:element name="newsList"		type="NewsItemDTO"	minOccurs="1" maxOccurs="unbounded" />
+			<xs:element name="currentPage"	type="xs:int"		minOccurs="1" maxOccurs="1" />
+			<xs:element name="pageCount"	type="xs:int"		minOccurs="1" maxOccurs="1" />
+			<xs:element name="categoryId"	type="xs:int"		minOccurs="1" maxOccurs="1" />
 		</xs:sequence>
 	</xs:complexType>
 

@@ -80,10 +80,6 @@ public final class TicketingDAO {
 				));
 			}
 			
-			if(tickets.size() < 1) {
-				return null;
-			}
-			
 			return tickets;
 		} catch(SQLException e) {
 			LOG.error("SQLException occurred while attempting to fetch all of the open Support Tickets.", e);

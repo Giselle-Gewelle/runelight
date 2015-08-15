@@ -67,7 +67,7 @@
 				<tbody>
 					<#list newsList as newsItem>
 						<tr>
-							<td class="category"><img src="${url('main1', 'img/media/news/${newsItem.category.iconName}.png')}" alt="" /> ${newsItem.category.name1}</td>
+							<td class="category"><img src="${url('main1', 'img/media/news/${categoryMap[newsItem.category?string].iconName}.png')}" alt="" /> ${categoryMap[newsItem.category?string].name1}</td>
 							<td class="title"><a href="${url('news', 'newsitem.ws?id=${newsItem.id}')}">${newsItem.title?html}</a></td>
 							<td class="date">${newsItem.date}</td>
 						</tr>

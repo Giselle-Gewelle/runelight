@@ -8,8 +8,8 @@ import java.util.regex.Pattern;
 import org.runelight.controller.impl.staff.StaffPage;
 import org.runelight.db.dao.staff.StaffAccountsDAO;
 import org.runelight.dto.AccountDetailsDTO;
+import org.runelight.dto.AccountListDTO;
 import org.runelight.util.URLUtil;
-import org.runelight.view.dto.staff.AccountListDTO;
 
 public final class StaffAccounts extends StaffPage {
 	

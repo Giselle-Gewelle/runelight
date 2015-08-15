@@ -91,7 +91,7 @@
 				</div>
 				
 				<div class="body">
-					<#if account.passwordChangeList??>
+					<#if account.passwordChangeList?size != 0>
 						<table class="full">
 							<thead>
 								<tr>
@@ -125,7 +125,7 @@
 				</div>
 				
 				<div class="body">
-					<#if account.sessionList??>
+					<#if account.sessionList?size != 0>
 						<table class="full">
 							<thead>
 								<tr>
@@ -165,7 +165,7 @@
 				</div>
 				
 				<div class="body">
-					<#if account.loginAttemptList??>
+					<#if account.loginAttemptList?size != 0>
 						<table class="full">
 							<thead>
 								<tr>

@@ -12,13 +12,13 @@ import org.apache.log4j.Logger;
 import org.runelight.controller.impl.account.CreateAccount;
 import org.runelight.controller.impl.staff.accounts.StaffAccounts;
 import org.runelight.dto.AccountDetailsDTO;
+import org.runelight.dto.AccountListDTO;
 import org.runelight.dto.IPDateDTO;
 import org.runelight.dto.SessionDetailsDTO;
+import org.runelight.dto.UserDTO;
 import org.runelight.util.CountryUtil;
 import org.runelight.util.DateUtil;
 import org.runelight.util.StringUtil;
-import org.runelight.view.dto.account.UserDTO;
-import org.runelight.view.dto.staff.AccountListDTO;
 
 public final class StaffAccountsDAO {
 	
@@ -63,7 +63,7 @@ public final class StaffAccountsDAO {
 			if(secondaryResults != null) {
 				while(secondaryResults.next()) {
 					sessionList.add(new SessionDetailsDTO(secondaryResults.getString("ip"), 
-							DateUtil.SHORT_TIME_FORMAT.format(secondaryResults.getTimestamp("startDate")), DateUtil.SHORT_TIME_FORMAT.format(secondaryResults.getTimestamp("endDate")), 
+							DateUtil.MSG_CENTER_FORMAT.format(secondaryResults.getTimestamp("startDate")), DateUtil.MSG_CENTER_FORMAT.format(secondaryResults.getTimestamp("endDate")), 
 							secondaryResults.getString("startMod"), secondaryResults.getString("currentMod"), secondaryResults.getString("startDest"), secondaryResults.getString("currentDest"),
 							secondaryResults.getBoolean("secure")));
 				}
@@ -89,9 +89,7 @@ public final class StaffAccountsDAO {
 				(results.getTimestamp("lastLoginDate") == null ? null : DateUtil.SHORT_TIME_FORMAT.format(results.getTimestamp("lastLoginDate"))), 
 				results.getString("currentIP"), 
 				results.getBoolean("staff"), results.getBoolean("fmod"), results.getBoolean("pmod"), 
-				(passwordChangeList.size() < 1 ? null : passwordChangeList), 
-				(sessionList.size() < 1 ? null : sessionList), 
-				(loginAttemptList.size() < 1 ? null : loginAttemptList)
+				passwordChangeList, sessionList, loginAttemptList
 			);
 		} catch(SQLException e) {
 			LOG.error("SQLException occurred while attempting to load user account details for [" + accountId + "].", e);

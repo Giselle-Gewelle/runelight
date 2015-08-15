@@ -200,13 +200,13 @@ public final class Ticketing extends Controller {
 	private void prepareInbox() {
 		InboxDTO inbox = mainDao.getInbox();
 		
-		if(inbox.getReceivedMessageList() != null) {
+		if(inbox.getReceivedMessageList().size() > 0) {
 			getRequest().setAttribute("receivedList", inbox.getReceivedMessageList());
 		}
-		if(inbox.getReadMessageList() != null) {
+		if(inbox.getReadMessageList().size() > 0) {
 			getRequest().setAttribute("readList", inbox.getReadMessageList());
 		}
-		if(inbox.getSentMessageList() != null) {
+		if(inbox.getSentMessageList().size() > 0) {
 			getRequest().setAttribute("sentList", inbox.getSentMessageList());
 		}
 	}

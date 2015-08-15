@@ -10,8 +10,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.runelight.controller.impl.media.News;
-import org.runelight.view.dto.media.news.NewsItemDTO;
-import org.runelight.view.dto.media.news.NewsListDTO;
+import org.runelight.dto.NewsItemDTO;
+import org.runelight.dto.NewsListDTO;
+import org.runelight.util.DateUtil;
 
 public final class NewsDAO {
 	
@@ -35,11 +36,16 @@ public final class NewsDAO {
 			
 			if(results != null) {
 				while(results.next()) {
-					newsList.add(NewsItemDTO.createNewsListDTO(results.getInt("id"), results.getString("title"), results.getTimestamp("date"), results.getInt("category")));
+					NewsItemDTO item = new NewsItemDTO();
+					item.setId(results.getInt("id"));
+					item.setTitle(results.getString("title"));
+					item.setDate(DateUtil.SHORT_NEWS_FORMAT.format(results.getTimestamp("date")));
+					item.setCategory(results.getInt("category"));
+					newsList.add(item);
 				}
 			}
 			
-			return new NewsListDTO(newsList.size() < 1 ? null : newsList, realPage, pageCount, cat);
+			return new NewsListDTO(newsList, realPage, pageCount, cat);
 		} catch(SQLException e) {
 			LOG.error("SQLException occurred while attempting to fetch the news list with the parameters (" + cat + ", " + page + ")");
 			return null;
@@ -65,10 +71,18 @@ public final class NewsDAO {
 			if(nextId < 1) nextId = -1;
 			if(prevId < 1) prevId = -1;
 			
-			return NewsItemDTO.createNewsItemDTO(
-				result.getInt("id"), result.getString("title"), result.getTimestamp("date"), result.getInt("category"), 
-				result.getString("description"), result.getString("body"), result.getString("iconName"), nextId, prevId
-			);
+			NewsItemDTO item = new NewsItemDTO();
+			item.setId(result.getInt("id"));
+			item.setTitle(result.getString("title"));
+			item.setDate(DateUtil.LONG_NEWS_FORMAT.format(result.getTimestamp("date")));
+			item.setCategory(result.getInt("category"));
+			item.setDescription(result.getString("description"));
+			item.setBody(result.getString("body"));
+			item.setIconName(result.getString("iconName"));
+			item.setNextId(nextId);
+			item.setPrevId(prevId);
+			
+			return item;
 		} catch(SQLException e) {
 			LOG.error("SQLException occurred while attempting to fetch a news item with the id " + id);
 			return null;
@@ -88,13 +102,14 @@ public final class NewsDAO {
 			
 			List<NewsItemDTO> newsList = new LinkedList<>();
 			while(results.next()) {
-				newsList.add(NewsItemDTO.createTitleNewsDTO(
-					results.getInt("id"), results.getString("title"), results.getTimestamp("date"), results.getString("iconName"), results.getString("description")
-				));
-			}
-			
-			if(newsList.size() < 1) {
-				return null;
+				NewsItemDTO item = new NewsItemDTO();
+				item.setId(results.getInt("id"));
+				item.setTitle(results.getString("title"));
+				item.setDate(DateUtil.SHORT_NEWS_FORMAT.format(results.getTimestamp("date")));
+				item.setIconName(results.getString("iconName"));
+				item.setDescription(results.getString("description"));
+				
+				newsList.add(item);
 			}
 			
 			return newsList;

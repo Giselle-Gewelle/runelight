@@ -12,12 +12,13 @@ import org.apache.log4j.Logger;
 import org.runelight.Config;
 import org.runelight.controller.Controller;
 import org.runelight.db.dao.account.LoginSessionDAO;
+import org.runelight.dto.UserDTO;
 import org.runelight.http.HttpRequestType;
 import org.runelight.http.RequestHandler;
 import org.runelight.security.LoginSession;
+import org.runelight.security.Password;
 import org.runelight.util.ModUtil;
 import org.runelight.util.URLUtil;
-import org.runelight.view.dto.account.UserDTO;
 
 public final class LoginAttempt extends Controller {
 
@@ -102,7 +103,8 @@ public final class LoginAttempt extends Controller {
 			return 2;
 		}
 		
-		if(!user.getPassword().equals(password)) {
+		Password currentPassword = new Password(user.getPasswordHash(), user.getPasswordSalt());
+		if(!currentPassword.equals(password)) {
 			return 2;
 		}
 		

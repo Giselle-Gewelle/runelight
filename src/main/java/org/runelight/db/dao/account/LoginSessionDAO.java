@@ -9,13 +9,12 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
+import org.runelight.dto.UserDTO;
 import org.runelight.http.RequestHandler;
 import org.runelight.security.Hashing;
 import org.runelight.security.LoginSession;
-import org.runelight.security.Password;
 import org.runelight.util.DateUtil;
 import org.runelight.view.dto.account.SessionCheckDTO;
-import org.runelight.view.dto.account.UserDTO;
 import org.runelight.view.dto.account.UserSessionDTO;
 
 public final class LoginSessionDAO {
@@ -209,7 +208,9 @@ public final class LoginSessionDAO {
 				return null;
 			}
 			
-			UserDTO user = new UserDTO(new Password(results.getString("passwordHash"), results.getString("passwordSalt")));
+			UserDTO user = new UserDTO();
+			user.setPasswordHash(results.getString("passwordHash"));
+			user.setPasswordSalt(results.getString("passwordSalt"));
 			user.setAccountId(results.getInt("accountId"));
 			return user;
 		} catch(SQLException e) {
