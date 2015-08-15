@@ -10,15 +10,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.runelight.dto.InboxDTO;
+import org.runelight.dto.MessageQueueDTO;
+import org.runelight.dto.MessageViewDTO;
+import org.runelight.dto.ThreadDTO;
 import org.runelight.dto.TicketDTO;
 import org.runelight.dto.TicketQueueDTO;
+import org.runelight.dto.UserSessionDTO;
 import org.runelight.util.DateUtil;
 import org.runelight.util.StringUtil;
-import org.runelight.view.dto.account.UserSessionDTO;
-import org.runelight.view.dto.account.ticketing.InboxDTO;
-import org.runelight.view.dto.account.ticketing.MessageQueueDTO;
-import org.runelight.view.dto.account.ticketing.MessageViewDTO;
-import org.runelight.view.dto.account.ticketing.ThreadDTO;
 
 /**
  * Data Access Object for the Ticketing system.
@@ -205,8 +205,9 @@ public final class TicketingDAO {
 			List<MessageViewDTO> messageList = new LinkedList<>();
 			while(results.next()) {
 				messageList.add(new MessageViewDTO(
-					results.getInt("id"), results.getString("title"), results.getTimestamp("date"), results.getString("message"), results.getString("authorName"), 
-					results.getBoolean("authorStaff"), results.getTimestamp("readOn"), results.getBoolean("includeTitleInMsg")
+					results.getInt("id"), results.getString("title"), DateUtil.MSG_CENTER_FORMAT.format(results.getTimestamp("date")), results.getString("message"), 
+					StringUtil.formatUsername(results.getString("authorName")), 
+					results.getBoolean("authorStaff"), (results.getTimestamp("readOn") != null), results.getBoolean("includeTitleInMsg")
 				));
 			}
 			
@@ -214,9 +215,20 @@ public final class TicketingDAO {
 				return null;
 			}
 			
-			return new ThreadDTO(
+			boolean canReply = true;
+			if(!stmt.getBoolean("out_canReply")) {
+				canReply = false;
+			} else {
+				if(stmt.getString("out_authorName").equals(user.getUsername())) {
+					canReply = false;
+				} else {
+					canReply = true;
+				}
+			}
+			return new ThreadDTO(topicId, lastMessageId, stmt.getInt("out_messageNum"), stmt.getString("out_mainTitle"), canReply, messageList);
+			/*return new ThreadDTO(
 				topicId, lastMessageId, stmt.getInt("out_messageNum"), stmt.getString("out_mainTitle"), stmt.getBoolean("out_canReply"), stmt.getString("out_authorName"), user.getUsername(), messageList
-			);
+			);*/
 		} catch(SQLException e) {
 			LOG.error("SQLException occurred while attempting to fetch the messages before [" + lastMessageId + "], requested by [" + user.getFormattedUsername() + "].", e);
 			return null;
@@ -241,16 +253,16 @@ public final class TicketingDAO {
 				if(results.getString("receiverName") != null && results.getString("receiverName").equals(user.getUsername()) && !results.getBoolean("receiverDelete")) {
 					if(results.getTimestamp("readOn") == null) {
 						receivedMessageList.add(new MessageQueueDTO(
-							results.getInt("id"), results.getString("title"), results.getTimestamp("date"), results.getInt("messageNum")
+							results.getInt("id"), results.getString("title"), DateUtil.MSG_CENTER_FORMAT.format(results.getTimestamp("date")), results.getInt("messageNum")
 						));
 					} else {
 						readMessageList.add(new MessageQueueDTO(
-							results.getInt("id"), results.getString("title"), results.getTimestamp("date"), results.getInt("messageNum")
+							results.getInt("id"), results.getString("title"), DateUtil.MSG_CENTER_FORMAT.format(results.getTimestamp("date")), results.getInt("messageNum")
 						));
 					}
 				} else if(results.getString("authorName").equals(user.getUsername()) && !results.getBoolean("authorDelete")) {
 					sentMessageList.add(new MessageQueueDTO(
-						results.getInt("id"), results.getString("title"), results.getTimestamp("date"), results.getInt("messageNum")
+						results.getInt("id"), results.getString("title"), DateUtil.MSG_CENTER_FORMAT.format(results.getTimestamp("date")), results.getInt("messageNum")
 					));
 				}
 			}

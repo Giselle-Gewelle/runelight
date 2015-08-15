@@ -7,12 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.runelight.controller.Controller;
 import org.runelight.db.dao.account.TicketingDAO;
+import org.runelight.dto.InboxDTO;
+import org.runelight.dto.MessageViewDTO;
+import org.runelight.dto.ThreadDTO;
 import org.runelight.http.HttpRequestType;
 import org.runelight.util.StringUtil;
 import org.runelight.util.URLUtil;
-import org.runelight.view.dto.account.ticketing.InboxDTO;
-import org.runelight.view.dto.account.ticketing.MessageViewDTO;
-import org.runelight.view.dto.account.ticketing.ThreadDTO;
 
 public final class Ticketing extends Controller {
 
@@ -60,7 +60,7 @@ public final class Ticketing extends Controller {
 			return true;
 		}
 		
-		if(!thread.getCanReply()) {
+		if(!thread.isCanReply()) {
 			return false;
 		}
 		

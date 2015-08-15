@@ -9,13 +9,14 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
+import org.runelight.dto.SessionCheckDTO;
 import org.runelight.dto.UserDTO;
+import org.runelight.dto.UserSessionDTO;
 import org.runelight.http.RequestHandler;
 import org.runelight.security.Hashing;
 import org.runelight.security.LoginSession;
 import org.runelight.util.DateUtil;
-import org.runelight.view.dto.account.SessionCheckDTO;
-import org.runelight.view.dto.account.UserSessionDTO;
+import org.runelight.util.StringUtil;
 
 public final class LoginSessionDAO {
 	
@@ -70,7 +71,8 @@ public final class LoginSessionDAO {
 			}
 			
 			return new UserSessionDTO(
-				results.getInt("accountId"), results.getString("username"), results.getBoolean("staff"), results.getBoolean("fmod"), results.getBoolean("pmod"), results.getString("currentIP"),
+				results.getInt("accountId"), results.getString("username"), StringUtil.formatUsername(results.getString("username")), 
+				results.getBoolean("staff"), results.getBoolean("fmod"), results.getBoolean("pmod"), results.getString("currentIP"),
 				sessionId, hash, secure, mod, dest, unreadMessages, supportQueries
 			);
 		} catch(SQLException e) {

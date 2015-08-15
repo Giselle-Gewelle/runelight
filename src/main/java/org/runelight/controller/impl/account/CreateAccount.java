@@ -12,11 +12,11 @@ import org.apache.log4j.Logger;
 import org.runelight.Config;
 import org.runelight.controller.Controller;
 import org.runelight.db.dao.account.CreateAccountDAO;
+import org.runelight.dto.CreateAccountDTO;
 import org.runelight.http.HttpRequestType;
 import org.runelight.security.Password;
 import org.runelight.util.CountryUtil;
 import org.runelight.util.StringUtil;
-import org.runelight.view.dto.account.CreateAccountDTO;
 
 public final class CreateAccount extends Controller {
 

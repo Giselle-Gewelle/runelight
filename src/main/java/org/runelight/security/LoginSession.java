@@ -6,9 +6,9 @@ import java.util.Calendar;
 import org.apache.log4j.Logger;
 import org.runelight.controller.Controller;
 import org.runelight.db.dao.account.LoginSessionDAO;
+import org.runelight.dto.SessionCheckDTO;
+import org.runelight.dto.UserSessionDTO;
 import org.runelight.util.DateUtil;
-import org.runelight.view.dto.account.SessionCheckDTO;
-import org.runelight.view.dto.account.UserSessionDTO;
 
 public final class LoginSession {
 	
