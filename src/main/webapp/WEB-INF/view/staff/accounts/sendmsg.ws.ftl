@@ -4,12 +4,14 @@
 
 <#assign angular = 'ng-app="MessagingApp" ng-controller="MessagingCtrl as ctrl"' />
 
-<#macro script>
-	var receiverName = "${account.formattedUsername}";
-	var username = "${loginSession.user.formattedUsername}";
-	var company = "${companyName}";
-	var game = "${gameName}";
-</#macro>
+<#if account??>
+	<#macro script>
+		var receiverName = "${account.formattedUsername}";
+		var username = "${loginSession.user.formattedUsername}";
+		var company = "${companyName}";
+		var game = "${gameName}";
+	</#macro>
+</#if>
 
 <#include "../../inc/header.ftl" />
 

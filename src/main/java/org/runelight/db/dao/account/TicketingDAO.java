@@ -41,6 +41,18 @@ public final class TicketingDAO {
 		this.user = user;
 	}
 	
+	public void setTicketActioned(int id) {
+		try {
+			CallableStatement stmt = con.prepareCall("CALL `staff_ticketingMarkActioned`(?, ?, ?);");
+			stmt.setInt("in_id", id);
+			stmt.setString("in_username", user.getUsername());
+			stmt.setString("in_date", DateUtil.SQL_DATETIME_FORMAT.format(new Date()));
+			stmt.execute();
+		} catch(SQLException e) {
+			LOG.error("SQLException occurred while attempting to flag a ticket as actioned.", e);
+		}
+	}
+	
 	public TicketDTO getTicket(int id) {
 		try {
 			CallableStatement stmt = con.prepareCall("CALL `staff_ticketingGetTicket`(?);");
@@ -53,7 +65,7 @@ public final class TicketingDAO {
 			}
 			
 			return new TicketDTO(
-				id, result.getString("title"), DateUtil.LONG_TIME_FORMAT.format(result.getTimestamp("date")), result.getString("message"), 
+				id, result.getInt("topicId"), result.getString("title"), DateUtil.LONG_TIME_FORMAT.format(result.getTimestamp("date")), result.getString("message"), 
 				StringUtil.formatUsername(result.getString("authorName")), result.getString("authorIP"), result.getInt("actualAuthorId")
 			);
 		} catch(SQLException e) {

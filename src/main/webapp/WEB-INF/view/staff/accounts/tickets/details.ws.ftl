@@ -7,7 +7,7 @@
 	<@a mod="staff" dest="index.ws" secure=true>Staff Center</@a> - <@a mod="staff" dest="accounts/tickets/queue.ws" secure=true>Ticket Queue</@a>
 </div>
 
-<div id="userDetails" class="scroll">
+<div id="ticketDetails" class="scroll">
 	<div class="top"></div>
 	
 	<div class="content">
@@ -16,6 +16,12 @@
 		<hr />
 		
 		<#if ticket??>
+			<@a mod="staff" dest="accounts/tickets/reply.ws?id=${ticket.id}" secure=true>Reply to Ticket</@a>
+			&nbsp;-&nbsp;
+			<@a mod="staff" dest="accounts/tickets/delete.ws?id=${ticket.id}" secure=true>Delete Ticket</@a>
+				
+			<hr />
+			
 			<h3>Author</h2>
 			<@a mod="staff" dest="accounts/details.ws?accountId=${ticket.authorId}" secure=true>${ticket.authorName}</@a>
 			
@@ -24,9 +30,10 @@
 			
 			<h3>Message</h3>
 			${replaceNewLines(ticket.message?html)}
+			
+			<br /><br />
 		<#else>
-			<p>The specified Support Ticket was not found.</p>
-			<p><@a mod="staff" dest="accounts/tickets/queue.ws" secure=true>Return to Ticket Queue.</@a></p>
+			<#include "notfound.ftl" />
 		</#if>
 	</div>
 	

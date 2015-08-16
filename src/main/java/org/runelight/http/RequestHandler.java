@@ -108,6 +108,8 @@ public final class RequestHandler {
 			put("staff accounts/sendmsg.ws", StaffMessaging.class);
 			put("staff accounts/tickets/queue.ws", StaffTicketing.class);
 			put("staff accounts/tickets/details.ws", StaffTicketing.class);
+			put("staff accounts/tickets/reply.ws", StaffTicketing.class);
+			put("staff accounts/tickets/delete.ws", StaffTicketing.class);
 			
 			put("staff news/article.ws", StaffNewsArticle.class);
 			put("staff news/delete.ws", StaffNewsArticle.class);

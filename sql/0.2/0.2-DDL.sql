@@ -40,12 +40,27 @@ CREATE TABLE `account_ticketingMessages` (
 DELIMITER $$ 
 
 
+DROP PROCEDURE IF EXISTS `staff_ticketingMarkActioned` $$
+CREATE PROCEDURE `staff_ticketingMarkActioned` (
+	IN `in_id`			BIGINT(20),
+	IN `in_username`	VARCHAR(12),
+	IN `in_date`		DATETIME
+) 
+BEGIN 
+	UPDATE `account_ticketingMessages` 
+	SET `receiverName` = `in_username`, 
+		`readOn` = `in_date` 
+	WHERE `id` = `in_id` 
+	LIMIT 1;
+END $$
+
+
 DROP PROCEDURE IF EXISTS `staff_ticketingGetTicket` $$
 CREATE PROCEDURE `staff_ticketingGetTicket` (
 	IN `in_id`		BIGINT(20)
 ) 
 BEGIN 
-	SELECT `title`, `date`, `message`, `authorName`, `authorIP`, `actualAuthorId` 
+	SELECT `topicId`, `title`, `date`, `message`, `authorName`, `authorIP`, `actualAuthorId` 
 	FROM `account_ticketingMessages` 
 	WHERE `receiverName` IS NULL 
 		AND `receiverDelete` = 0 

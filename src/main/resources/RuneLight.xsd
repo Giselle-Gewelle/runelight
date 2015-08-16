@@ -64,6 +64,7 @@
 	<xs:complexType name="TicketDTO">
 		<xs:sequence>
 			<xs:element name="id" 			type="xs:int" 		minOccurs="1" maxOccurs="1" />
+			<xs:element name="topicId" 		type="xs:int" 		minOccurs="1" maxOccurs="1" />
 			<xs:element name="title" 		type="xs:string" 	minOccurs="1" maxOccurs="1" />
 			<xs:element name="date" 		type="xs:string" 	minOccurs="1" maxOccurs="1" />
 			<xs:element name="message" 		type="xs:string" 	minOccurs="1" maxOccurs="1" />

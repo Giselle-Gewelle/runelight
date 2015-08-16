@@ -15,6 +15,12 @@
 		
 		<hr />
 		
+		<#if ticketDeleted??>
+			<p><strong>Ticket successfully deleted.</strong></p>
+			
+			<hr />
+		</#if>
+		
 		<#if ticketList??>
 			<table id="ticketList">
 				<thead>
