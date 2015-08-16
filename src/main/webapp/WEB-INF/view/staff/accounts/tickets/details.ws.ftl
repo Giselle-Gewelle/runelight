@@ -18,7 +18,7 @@
 		<#if ticket??>
 			<@a mod="staff" dest="accounts/tickets/reply.ws?id=${ticket.id}" secure=true>Reply to Ticket</@a>
 			&nbsp;-&nbsp;
-			<@a mod="staff" dest="accounts/tickets/delete.ws?id=${ticket.id}" secure=true>Delete Ticket</@a>
+			<@a mod="staff" dest="accounts/tickets/delete.ws?id=${ticket.id}" secure=true>Remove from Queue</@a>
 				
 			<hr />
 			

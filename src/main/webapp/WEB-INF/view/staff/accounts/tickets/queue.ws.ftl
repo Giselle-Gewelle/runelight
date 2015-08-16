@@ -15,8 +15,13 @@
 		
 		<hr />
 		
+		<@a mod="staff" dest="accounts/tickets/queue.ws" secure=true>Refresh Queue</@a>
+		
+		<hr />
+		
 		<#if ticketDeleted??>
-			<p><strong>Ticket successfully deleted.</strong></p>
+			<p><strong>Ticket successfully removed from the queue.</p>
+			<p>The ticket will now appear in your Message Center inbox until deleted or replied to.</strong></p>
 			
 			<hr />
 		</#if>
@@ -40,7 +45,7 @@
 							<td class="date">${ticket.date}</td>
 							<td>
 								<@a mod="staff" dest="accounts/tickets/details.ws?id=${ticket.id}" secure=true>View</@a> | 
-								<@a mod="staff" dest="accounts/tickets/delete.ws?id=${ticket.id}" secure=true>Delete</@a>
+								<@a mod="staff" dest="accounts/tickets/delete.ws?id=${ticket.id}" secure=true>Remove</@a>
 							</td>
 						</tr>
 					</#list>
