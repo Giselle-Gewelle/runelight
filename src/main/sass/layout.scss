@@ -7,7 +7,7 @@ html, body, h1, h2, h3, h4, h5, h6, table, thead, tbody, tr, th, td, hr, img, st
 	border-collapse: collapse;
 }
 body {
-	background: #000000 url('../img/bg/default.jpg') repeat-y center top;
+	background: #000000 url('../img/bg/default.png') repeat-y center top;
 	padding: 20px 0px;
 	font-family: Arial, Helvetica, sans-serif;
 	color: #FFFFFF;
@@ -87,12 +87,13 @@ thead td {
 				display: block;
 				font-size: 18pt;
 				margin: 10px 0 0.2em;
+				color: #382418;
 			}
 			h3 {
 				font-weight: bold;
 				display: block;
-				font-size: 12pt;
-				margin: 10px 0 0.1em;
+				font-size: 14pt;
+				margin: 1em 0 0;
 			}
 			
 			input[type="text"], input[type="password"], textarea, select {
