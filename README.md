@@ -1,4 +1,4 @@
-# RuneLight
+# RuneLights
 
 RSPS website project.
 
